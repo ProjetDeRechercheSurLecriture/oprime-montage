@@ -1,1 +1,5 @@
-{}
+{
+    "name": "Experiment",
+    "description": "Manages the logic for the experiment stimuli etc.",
+    "iconUrl": "experiment.png"
+}
