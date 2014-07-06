@@ -12,11 +12,11 @@
     "url": "https://github.com/OpenSourceFieldlinguistics/OPrime/issues"
   },
   "dependencies": {
-    "montage": "git://github.com/cesine/montage.git#chromeApp",
-    "digit": "~0.4.0",
-    "q": "~1.0.0",
-    "matte": "~0.1.4",
-    "frb": "~0.2.17"
+    "digit": "^0.5.1",
+    "frb": "^0.2.17",
+    "matte": "^0.2.0",
+    "montage": "^0.14.11",
+    "q": "^1.0.1"
   },
   "devDependencies": {
     "grunt-exec": "~0.4.5",
