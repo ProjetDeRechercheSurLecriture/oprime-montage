@@ -1,8 +1,19 @@
 .ExperimentReport {
 	min-width: 20em;
+	color: #fff !important;
 }
 
 .ExperimentReport-json{
 	min-height: 10em;
 	width: 100%;
+}
+
+.ExperimentReport .experiment_description {
+	color: hsl(0,0%,0%) !important;
+	text-shadow: 0 0px 0 hsla(0,0%,100%,0) !important;
+}
+
+.ExperimentReport .experiment_title {
+	color: hsl(0,0%,0%) !important;
+	text-shadow: 0 0px 0 hsla(0,0%,100%,0) !important;
 }
