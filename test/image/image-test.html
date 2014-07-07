@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <title>Main</title>
+
+    <script type="text/montage-serialization">
+    {
+
+        "owner": {
+            "properties": {
+                "element": {"#": "main"},
+                "visualChoiceA": "http://localhost:8000/ic_sails128.png"
+            }
+        },
+
+        "visualChoiceA": {
+            "prototype": "ui/image.reel",
+            "properties": {
+                "element": {"#": "visualChoiceA"},
+                "crossOrigin": "*"
+            },
+            "bindings": {
+                "src": {"<-": "@owner.visualChoiceA"}
+            }
+        }
+    }
+    </script>
+</head>
+<body>
+    <div data-montage-id="main" data-montage-skin="light" class="Main">
+        <img data-montage-id="visualChoiceA">
+        <img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="/>
+    </div>
+</body>
+</html>

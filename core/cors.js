@@ -74,7 +74,12 @@ CORS.makeCORSRequest = function(options) {
             self.debug("Response from CORS request to " + options.url + ": " + text);
         }
         if (text) {
-            promiseForData.resolve(JSON.parse(text));
+            try {
+                text = JSON.parse(text);
+            } catch (e) {
+                console.log("Response was not json.");
+            }
+            promiseForData.resolve(text);
         } else {
             self.bug("There was no content in the server's response text. Please report this.");
             console.log(e, f, g);
