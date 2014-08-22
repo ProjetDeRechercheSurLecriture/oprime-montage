@@ -692,45 +692,6 @@ exports.ParticipantsSelect = Component.specialize( /** @lends ParticipantsSelect
 				"api": "participants",
 				"_deleted_conflicts": ["2-8af3309a4d38427505d98888192ca79d", "2-653577b1f888058c0f9553782f3a97a4"]
 			}];
-			this.content = [{
-				"firstname": "Child2",
-				"text": "Child",
-				"_id": "Participant",
-				"key": "participant",
-				"gamifiedKey": "child",
-				"selected": true
-			}, {
-				"firstname": "Teacher",
-				"text": "Teacher",
-				"_id": "Administrator",
-				"key": "experimentAdministrator"
-			}, {
-				"firstname": "Parent",
-				"text": "Parent",
-				"_id": "Parent",
-				"key": "parent"
-			}, {
-				"firstname": "SLP",
-				"text": "SLP",
-				"_id": "Administrator",
-				"key": "experimentAdministratorSpecialist"
-			}, {
-				"firstname": "School Records",
-				"text": "School Records",
-				"_id": "Report",
-				"key": "resultReport",
-				"gamifiedKey": "school_records"
-			}, {
-				"firstname": "Debug",
-				"text": "Debug",
-				"_id": "Debug",
-				"key": "debug"
-			}, {
-				"firstname": "Default",
-				"text": "Default",
-				"_id": "Default",
-				"key": "default"
-			}];
 			this.confidential = new Confidential({
 				secretkey: "8ead93f2-0b65-42e9-88b0-449e1c88d24f"
 			});
