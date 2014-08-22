@@ -181,7 +181,8 @@ exports.Experiment = ContextualizableComponent.specialize( /** @lends Experiment
 	run: {
 		value: function() {
 			console.log("currentlyPlaying: " + this.currentlyPlaying);
-
+			alert("Refusing to run until experiment load is refactored to come from the db instead of codebase");
+			return;
 			this.experimentalDesign.jsonType = "experiment";
 			this.experimentalDesign.experimentType = this.experimentType;
 			var self = this;
