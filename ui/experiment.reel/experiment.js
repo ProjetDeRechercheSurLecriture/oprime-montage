@@ -8,7 +8,7 @@ var ContextualizableComponent = require("core/contextualizable-component").Conte
 	PromiseController = require("montage/core/promise-controller").PromiseController,
 	Promise = require("montage/core/promise").Promise,
 	AudioPlayer = require("core/audio-player").AudioPlayer,
-	Database = require("core/data/database");
+	CorpusMask = require("fielddb/api/corpus/CorpusMask").CorpusMask;
 
 /**
  * @class Experiment
@@ -51,13 +51,29 @@ exports.Experiment = ContextualizableComponent.specialize( /** @lends Experiment
 			}
 			var self = this;
 
+			var resultDBname = this.dbname || window.location.hash.replace("#/","").replace(/\//g, "-");
+			this.application.corpus = this.application.corpus || new CorpusMask({
+				dbname: resultDBname
+			});
+			this.corpus = this.application.corpus;
+
+			this.application.stimuliCorpus = this.application.stimuliCorpus || new CorpusMask({
+				dbname: this.stimuliDBname
+			});
+			this.stimuliCorpus = this.application.stimuliCorpus;
+
+			if (this.dbUrl) {
+				this.application.corpus.url = this.dbUrl;
+				this.application.stimuliCorpus.url = this.dbUrl;
+			}
+
 			// console.log(" Loaded in the experimental Design." + designToForceIncludeInMop);
 			// self.experimentalDesign = JSON.parse(designToForceIncludeInMop);
 			self.experimentalDesign = designToForceIncludeInMop;
 
 			self.iconSrc = self.experimentalDesign.iconSrc;
 			console.log("iconSrc" + self.iconSrc);
-			this.experimentalDesign.congratulationsImageSrc = this.experimentalDesign.imageAssetsPath + "/" +this.experimentalDesign.congratulationsImageSrc;
+			this.experimentalDesign.congratulationsImageSrc = this.experimentalDesign.imageAssetsPath + "/" + this.experimentalDesign.congratulationsImageSrc;
 			this.gamify = true;
 			this.tutorialMode = false;
 			this.currentlyPlaying = false;
@@ -316,7 +332,7 @@ exports.Experiment = ContextualizableComponent.specialize( /** @lends Experiment
 		value: function(finalIndex) {
 			var self = this;
 			console.log("experimentBlockLoaded");
-			
+
 			if (finalIndex) {
 				this._currentStimulusIndex = this._currentTestBlock.trials.length - 1;
 			} else {
@@ -361,8 +377,8 @@ exports.Experiment = ContextualizableComponent.specialize( /** @lends Experiment
 		}
 	},
 
-	resumePreviousGame:{
-		value: function(){
+	resumePreviousGame: {
+		value: function() {
 			console.log("TODO show a list of previous games, let the user select one, then go through the game design, find the stimulus that wasnt completed, and display all the trials and stimuli to the test administarator so they can choose where to resume.");
 		}
 	},
@@ -372,9 +388,7 @@ exports.Experiment = ContextualizableComponent.specialize( /** @lends Experiment
 			var self = this;
 
 			this.experimentalDesign.timestamp = Date.now();
-			Database.databaseUrl = this.experimentalDesign.database;
-			Database.set(this.experimentalDesign.experimentType + this.experimentalDesign.timestamp, this.experimentalDesign);
-
+			this.application.corpus.set(this.experimentalDesign.experimentType + this.experimentalDesign.timestamp, this.experimentalDesign);
 
 			this.confirm(this.application.contextualizer.localize(this.experimentalDesign.end_instructions.for_child)).then(function() {
 				console.log("Experiment is complete.");
