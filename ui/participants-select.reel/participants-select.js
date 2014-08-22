@@ -13,20 +13,6 @@ var Participant = require("fielddb/api/user/Participant").Participant;
 exports.ParticipantsSelect = Component.specialize( /** @lends ParticipantsSelect# */ {
 	constructor: {
 		value: function ParticipantsSelect() {
-
-			var self = this;
-			this.confidential = new Confidential({
-				secretkey: "8ead93f2-0b65-42e9-88b0-449e1c88d24f"
-			});
-			this.application.corpus.fetchCollection("participants").then(function(rawParticipants) {
-				console.log("fetched participants", rawParticipants);
-				self.content = rawParticipants.map(function(rawParticipant) {
-					rawParticipant.confidential = self.confidential;
-					rawParticipant = new Participant(rawParticipant);
-					// rawParticipant.decryptedMode = true;
-					return rawParticipant;
-				});
-			});
 		}
 	},
 
@@ -35,11 +21,22 @@ exports.ParticipantsSelect = Component.specialize( /** @lends ParticipantsSelect
 			this.super(firstTime);
 
 			if (firstTime) {
+				var self = this;
+
+				this.application.corpus.fetchCollection("participants").then(function(rawParticipants) {
+					console.log("fetched participants", rawParticipants);
+					self.content = rawParticipants.map(function(rawParticipant) {
+						rawParticipant.confidential = self.application.corpus.confidential;
+						rawParticipant = new Participant(rawParticipant);
+						// rawParticipant.decryptedMode = true;
+						return rawParticipant;
+					});
+				});
+				
 				var rangeController = this.templateObjects.rangeController;
 				//Observe the selection for changes
 
 				// rangeController.content = this.content;
-				var self = this;
 				if (this.content) {
 					this.content.map(function(audience) {
 						if (audience.selected) {

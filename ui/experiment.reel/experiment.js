@@ -8,7 +8,7 @@ var ContextualizableComponent = require("core/contextualizable-component").Conte
 	PromiseController = require("montage/core/promise-controller").PromiseController,
 	Promise = require("montage/core/promise").Promise,
 	AudioPlayer = require("core/audio-player").AudioPlayer,
-	CorpusMask = require("fielddb/api/corpus/CorpusMask").CorpusMask;
+	Corpus = require("fielddb/api/corpus/Corpus").Corpus;
 
 /**
  * @class Experiment
@@ -51,13 +51,23 @@ exports.Experiment = ContextualizableComponent.specialize( /** @lends Experiment
 			}
 			var self = this;
 
-			var resultDBname = this.dbname || window.location.hash.replace("#/","").replace(/\//g, "-");
-			this.application.corpus = this.application.corpus || new CorpusMask({
-				dbname: resultDBname
-			});
+			if (!this.application.corpus) {
+				var resultDBname = this.dbname || window.location.hash.replace("#/", "").replace(/\//g, "-");
+				this.application.corpus = new Corpus({
+					dbname: resultDBname
+				});
+				if (this.dbUrl) {
+					this.application.corpus.url = this.dbUrl;
+				}
+				this.application.corpus.loadOrCreateCorpusByPouchName(resultDBname).then(function(result) {
+					console.log("Corpus is loaded, data can be decrypted.", result);
+				}, function(result) {
+					console.log("Corpus cannot be loaded, data cannot be decrypted.", result);
+				});
+			}
 			this.corpus = this.application.corpus;
 
-			this.application.stimuliCorpus = this.application.stimuliCorpus || new CorpusMask({
+			this.application.stimuliCorpus = this.application.stimuliCorpus || new Corpus({
 				dbname: this.stimuliDBname
 			});
 			this.stimuliCorpus = this.application.stimuliCorpus;
