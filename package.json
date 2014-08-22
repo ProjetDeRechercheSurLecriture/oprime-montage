@@ -12,11 +12,12 @@
     "url": "https://github.com/OpenSourceFieldlinguistics/OPrime/issues"
   },
   "dependencies": {
-    "montage": "^0.14.11",
     "digit": "^0.5.1",
-    "q": "^1.0.1",
+    "fielddb": "*",
+    "frb": "^0.2.17",
     "matte": "^0.2.0",
-    "frb": "^0.2.17"
+    "montage": "^0.14.11",
+    "q": "^1.0.1"
   },
   "devDependencies": {
     "grunt": "~0.4.2",
