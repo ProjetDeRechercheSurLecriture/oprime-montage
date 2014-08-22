@@ -34,6 +34,7 @@ exports.AudioPlayer = Component.specialize( /** @lends AudioPlayer# */ {
 
 	isCordova: {
 		get: function() {
+			// return false;
 			try {
 				if (!Media) {
 					console.log("We are most likely in Cordova, using Cordova instead of HTML5 audio");
@@ -91,6 +92,7 @@ exports.AudioPlayer = Component.specialize( /** @lends AudioPlayer# */ {
 			}
 
 			this.mediaController.src = this._src;
+			console.log("Set the src in core/audio-player " + this._src);
 		}
 	},
 
@@ -100,7 +102,10 @@ exports.AudioPlayer = Component.specialize( /** @lends AudioPlayer# */ {
 				this.src = optionalSource;
 			}
 			if (this.mediaController) {
+				console.log("this.mediaController.play " + this._src);
 				this.mediaController.play(this._src, optionalDelay);
+			} else {
+				console.log("couldnt play " + this._src);
 			}
 		}
 	},

@@ -90,7 +90,7 @@ exports.Audio = Component.specialize( /** @lends Audio# */ {
             if (optionalSource) {
                 this.src = optionalSource;
             }
-            console.log("Requested play of audio file " + optionalSource);
+            console.log("Requesting play of audio file " + optionalSource);
 
             if (this._audioElement) {
                 if(this._audioElement.src === this.src && this.isPaused){
@@ -153,7 +153,7 @@ exports.Audio = Component.specialize( /** @lends Audio# */ {
                         }
                     }
                 };
-                console.log("Requested play of audio file " + audioElementToPlay.src);
+                console.log("Requested play of audio file when canplaythrough " + audioElementToPlay.src);
                 audioElementToPlay.addEventListener('ended', window.audioEndListener);
                 audioElementToPlay.addEventListener('canplaythrough', window.actuallyPlayAudio);
 

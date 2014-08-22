@@ -12,23 +12,24 @@
     "url": "https://github.com/OpenSourceFieldlinguistics/OPrime/issues"
   },
   "dependencies": {
-    "montage": "git://github.com/cesine/montage.git#chromeApp",
-    "digit": "~0.4.0",
-    "q": "~1.0.0",
-    "matte": "~0.1.4",
-    "frb": "~0.2.17"
+    "digit": "^0.5.1",
+    "fielddb": "*",
+    "frb": "^0.2.17",
+    "matte": "^0.2.0",
+    "montage": "^0.14.11",
+    "q": "^1.0.1"
   },
   "devDependencies": {
-    "grunt-exec": "~0.4.5",
+    "grunt": "~0.4.2",
     "grunt-contrib-concat": "~0.3.0",
-    "grunt-jasmine-node": "~0.1.0",
+    "grunt-contrib-copy": "~0.5.0",
     "grunt-contrib-jshint": "~0.8.0",
     "grunt-contrib-watch": "~0.5.3",
+    "grunt-exec": "~0.4.5",
+    "grunt-jasmine-node": "~0.1.0",
     "grunt-jsdoc": "~0.5.1",
-    "grunt-contrib-copy": "~0.5.0",
-    "mop": "0.13.6",
-    "montage-testing": "~0.3.0",
-    "grunt": "~0.4.2"
+    "montage-testing": "^0.4.1",
+    "mop": "0.15.0"
   },
   "exclude": [
     "run-tests.html",

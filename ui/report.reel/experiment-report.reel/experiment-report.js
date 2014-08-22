@@ -4,7 +4,6 @@
  */
 var Component = require("montage/ui/component").Component,
     RangeController = require("montage/core/range-controller").RangeController,
-    Database = require("core/data/database"),
     ResultOnlyView = require("core/data/result_only");
 
 /**
@@ -31,11 +30,8 @@ exports.ExperimentReport = Component.specialize( /** @lends ExperimentReport# */
             if (firsttime) {
                 if (!this.experimentalDesign && this.experimentId) {
                     var self  = this;
-                    if (!this.application.database) {
-                        this.application.database = Database;
-                    }
-                    this.application.database.databaseUrl = "https://corpusdev.lingsync.org/testingphophlo-debugging";
-                    this.application.database.get(this.experimentId).then(function(doc) {
+
+                    this.corpus.get(this.experimentId).then(function(doc) {
                         if (doc) {
                             self.experimentalDesign = doc;
                             self.calculateScore();

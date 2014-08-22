@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="participants-select.css">
+    <script type="text/montage-serialization">
+    {
+        "owner": {
+            "properties": {
+                "element": {"#": "owner"}
+            }
+        },
+
+        "instructions": {
+            "prototype": "montage/ui/text.reel",
+            "properties": {
+                "element": {"#": "instructions"},
+                "value": "Choisir l’enfant à évaluer:"
+            }
+        },
+        "repetition": {
+            "prototype": "montage/ui/repetition.reel",
+            "properties": {
+                "element": {"#": "repetition"},
+                "isSelectionEnabled": true,
+                "contentController": {"@": "rangeController"}
+            }
+        },
+        "rangeController": {
+            "prototype": "montage/core/range-controller",
+            "properties": {
+                "selection": []
+            },
+            "bindings": {
+                "content": {"<-": "@owner.content"}
+            }
+        },
+
+        "name": {
+            "prototype": "montage/ui/text.reel",
+            "properties": {
+                "element": {"#": "name"}
+            },
+            "bindings": {
+                "value": {"<-": "@repetition:iteration.object.name"}
+            }
+        },
+        
+        "currentAudience": {
+            "prototype": "montage/ui/text.reel",
+            "properties": {
+                "element": {"#": "currentAudience"}
+            },
+            "bindings": {
+                "value": {"<-": "@owner._currentAudience.name"}
+            }
+        },
+        
+        "select": {
+            "prototype": "digit/ui/select.reel",
+            "properties": {
+                "element": {"#": "select"},
+                "contentController": {"@": "rangeController"},
+                "labelPropertyName": "name"
+            }
+        },
+        
+        "log": {
+            "prototype": "montage/ui/text.reel",
+            "properties": {
+                "element": {"#": "log"}
+            },
+            "bindings": {
+                "value": {"<-": "@owner.message"}
+            }
+        }
+    }
+    </script>
+</head>
+<body>
+    <div data-montage-id="owner" class="ParticipantsSelect">
+        <span data-montage-id="instructions"></span>
+        <span hidden data-montage-id="currentAudience">
+        </span>
+        <select data-montage-id="select">
+        </select>
+        <div hidden data-montage-id="repetition">
+            <span data-montage-id="name">
+            </span>
+        </div>
+        <span hidden data-montage-id="log">
+        </span>
+        
+    </div>
+</body>
+</html>

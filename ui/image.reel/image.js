@@ -3,7 +3,7 @@
  * @requires montage/ui/component
  */
 var Component = require("montage/ui/component").Component;
-CORS = require("core/cors").CORS;
+CORS = require("fielddb/api/CORS").CORS;
 
 /**
  * @class Image
