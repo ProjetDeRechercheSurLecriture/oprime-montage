@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="image.css">
+    <script type="text/montage-serialization">
+    {
+        "owner": {
+            "properties": {
+                "element": {"#": "owner"}
+            },
+            "listeners": [{
+                "type": "change",
+                "useCapture": false,
+                "listener": {"@": "imageChangeListener"}
+            }]
+        },
+
+        "imageChangeListener": {
+            "prototype": "montage/core/event/action-event-listener",
+            "properties": {
+                "action": "verifyImageLoadability",
+                "handler": {"@": "owner"}
+            },
+            "_dev": {
+                "isHidden": true
+            }
+        },
+
+        "showImageCondition": {
+            "prototype": "montage/ui/condition.reel",
+            "properties": {
+                "element": {"#": "showImageCondition"}
+            },
+            "bindings": {
+                "condition": {"<-": "@owner.showImage"}
+            }
+        },
+        
+        "image": {
+            "prototype": "digit/ui/image.reel",
+            "properties": {
+                "element": {"#": "image"},
+                "crossOrigin": null,
+                "src": "blank.png"
+            }
+        }
+    }
+    </script>
+</head>
+<body>
+    <div data-montage-id="owner" class="Image">
+        <div data-montage-id="showImageCondition">
+         <img data-montage-id="image" src="blank.png">
+     </div>
+ </div>
+</body>
+</html>

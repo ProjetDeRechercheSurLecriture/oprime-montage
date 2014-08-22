@@ -104,7 +104,7 @@ exports.Experiment = ContextualizableComponent.specialize( /** @lends Experiment
 			window.setTimeout(function() {
 				/* hack to make the tutorial mode seem like its working */
 				if (!self.currentlyPlaying) {
-					self.confirm(this.application.contextualizer.localize("prompt_show_tutorial")).then(function() {
+					self.confirm(self.application.contextualizer.localize("prompt_show_tutorial")).then(function() {
 						console.log("Showing tutorial mode");
 						self.toggleTutorialArea();
 					}, function(reason) {
