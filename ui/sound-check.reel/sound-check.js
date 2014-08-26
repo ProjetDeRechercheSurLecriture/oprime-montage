@@ -3,24 +3,91 @@
  * @requires ui/Confirm
  */
 var Confirm = require("ui/confirm.reel").Confirm,
-    Popup = require("matte/ui/popup/popup.reel").Popup
+    Popup = require("matte/ui/popup/popup.reel").Popup;
 
 /**
  * @class SoundCheck
  * @extends Confirm
  */
 var SoundCheck = Confirm.specialize( /** @lends SoundCheck# */ {
-	constructor: {
-		value: function SoundCheck() {
-			this.super();
-		}
-	},
+    constructor: {
+        value: function SoundCheck() {
+            this.super();
+        }
+    },
 
-	hasTemplate: {
-		value: true
-	}
+    hasTemplate: {
+        value: true
+    }
 
-},{
+}, {
+    videoCheck: {
+        value: function() {
+            var application = this.application;
+            window.setTimeout(function() {
+
+                /* access camera and microphone
+                    http://www.html5rocks.com/en/tutorials/getusermedia/intro/
+                 */
+                navigator.getUserMedia = navigator.getUserMedia ||
+                    navigator.webkitGetUserMedia ||
+                    navigator.mozGetUserMedia ||
+                    navigator.msGetUserMedia;
+
+                if (navigator.getUserMedia) {
+                    console.log("hasGetUserMedia");
+
+                    var video = document.getElementById("video-preview");
+                    var canvas = document.getElementById("video-snapshot-canvas");
+                    canvas.width = 640;
+                    canvas.height = 360;
+                    var ctx = canvas.getContext("2d");
+
+
+                    var errorCallback = function(e) {
+                        console.log("User refused access to camera and microphone!", e);
+                    };
+
+                    navigator.getUserMedia({
+                            video: {
+                                mandatory: {
+                                    maxWidth: canvas.width,
+                                    maxHeight: canvas.height
+                                }
+                            },
+                            audio: true
+                        },
+                        function(localMediaStream) {
+                            video.src = window.URL.createObjectURL(localMediaStream);
+
+                            var snapshot = function snapshot() {
+                                if (localMediaStream) {
+                                    ctx.drawImage(video, 0, 0);
+                                    // "image/webp" works in Chrome.
+                                    // Other browsers will fall back to image/png.
+                                    document.getElementById("video-snapshot").src = canvas.toDataURL("image/webp");
+                                }
+                            };
+                            video.addEventListener("click", snapshot, false);
+
+
+                            // Note: onloadedmetadata doesn't fire in Chrome when using it with getUserMedia.
+                            // See crbug.com/110938.
+                            video.onloadedmetadata = function(e) {
+                                // Ready to go. Do some stuff.
+                                console.log("Video preview is working, take note of this in application so user can continue to the game.");
+                                application.videoRecordingVerified = true;
+                            };
+                        },
+                        errorCallback
+                    );
+
+                } else {
+                    alert("The Microphone is not supported in your browser");
+                }
+            }, 2000);
+        }
+    },
     /**
         Description TODO
         @type {Function}
@@ -38,44 +105,47 @@ var SoundCheck = Confirm.specialize( /** @lends SoundCheck# */ {
     show: {
         value: function(options, okCallback, cancelCallback) {
             var popup = this.application._soundCheckPopup,
-                confirm;
+                confirmDialog;
+
             if (!popup) {
                 popup = new Popup();
                 this.popup = popup;
 
-                popup.type = 'confirm';
-                popup.title = 'Confirmation 2';
+                popup.type = "confirmDialog";
+                popup.title = "Confirmation 2";
                 popup.modal = true;
                 this.application._soundCheckPopup = popup;
 
-                confirm = new SoundCheck();
-                popup.content = confirm;
+                confirmDialog = new SoundCheck();
+                popup.content = confirmDialog;
             }
 
-            confirm = popup.content;
+            confirmDialog = popup.content;
+            var self = this.application._soundCheckPopup;
 
             if (this.application.contextualizer) {
                 this.application.contextualizer.currentLocale = this.application.interfaceLocale.iso;
                 this.okLabel = this.application.contextualizer.localize("okay");
                 this.cancelLabel = this.application.contextualizer.localize("cancel");
             } else {
-                console.log("Not localizing the confirm buttons");
+                console.log("Not localizing the confirmDialog buttons");
             }
             if (typeof(options) === "string") {
-                confirm.msg = options;
-                confirm.okLabel = this.okLabel;
-                confirm.cancelLabel = this.cancelLabel;
+                confirmDialog.msg = options;
+                confirmDialog.okLabel = this.okLabel;
+                confirmDialog.cancelLabel = this.cancelLabel;
             } else {
-                confirm.iconSrc = options.iconSrc;
-                confirm.msg = options.message;
-                confirm.okLabel = options.okLabel || this.okLabel;
-                confirm.cancelLabel = options.cancelLabel || this.cancelLabel;
+                confirmDialog.iconSrc = options.iconSrc;
+                confirmDialog.msg = options.message;
+                confirmDialog.okLabel = options.okLabel || this.okLabel;
+                confirmDialog.cancelLabel = options.cancelLabel || this.cancelLabel;
             }
 
-            confirm.okCallback = okCallback || null;
-            confirm.cancelCallback = cancelCallback || null;
+            confirmDialog.okCallback = okCallback || null;
+            confirmDialog.cancelCallback = cancelCallback || null;
 
             popup.show();
+            this.videoCheck();
         }
     }
 });

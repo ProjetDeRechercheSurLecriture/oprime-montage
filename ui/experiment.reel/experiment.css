@@ -51,6 +51,14 @@
     opacity: .5;
     z-index: 200;
 }
+.Experiment-headphones-warning {
+    background: #cccccc;
+    width: 100%;
+    height: 10%;
+    padding: 2em;
+    opacity: .5;
+    z-index: 400;
+}
 
 /* creates space for an overlay footer with experiment details */
 .Experiment footer {
