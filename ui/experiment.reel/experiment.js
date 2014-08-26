@@ -179,6 +179,23 @@ exports.Experiment = ContextualizableComponent.specialize( /** @lends Experiment
 		}
 	},
 
+	handleShowSoundCheckAction: {
+	    value: function() {
+
+	        SoundCheck.show({
+	            iconSrc: this.iconSrc,
+	            message: this.application.contextualizer.localize("plug_in_headphones"),
+	            // okLabel: "Continue",
+	            // cancelLabel: "Pause"
+	        }, function() {
+	           console.log("User completed the sound check");
+
+	        }, function() {
+	            console.log("Waiting for user to plug in head phones");
+	        });
+	    }
+	},
+
 	run: {
 		value: function() {
 			console.log("currentlyPlaying: " + this.currentlyPlaying);
@@ -200,7 +217,7 @@ exports.Experiment = ContextualizableComponent.specialize( /** @lends Experiment
 			} else {
 				SoundCheck.show({
 					iconSrc: this.iconSrc,
-					message: this.application.contextualizer.localize("plug_in_headphones")
+					message: this.application.contextualizer.localize("plug_in_headphones"),
 					// okLabel: "Continue",
 					// cancelLabel: "Pause"
 				}, function() {
