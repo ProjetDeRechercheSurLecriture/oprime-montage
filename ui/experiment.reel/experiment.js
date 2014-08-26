@@ -4,6 +4,7 @@
  */
 var ContextualizableComponent = require("core/contextualizable-component").ContextualizableComponent,
 	Confirm = require("ui/confirm.reel").Confirm,
+	SoundCheck = require("ui/sound-check.reel").SoundCheck,
 	RangeController = require("montage/core/range-controller").RangeController,
 	PromiseController = require("montage/core/promise-controller").PromiseController,
 	Promise = require("montage/core/promise").Promise,
@@ -181,12 +182,17 @@ exports.Experiment = ContextualizableComponent.specialize( /** @lends Experiment
 	run: {
 		value: function() {
 			console.log("currentlyPlaying: " + this.currentlyPlaying);
-			
+
 			this.experimentalDesign.jsonType = "experiment";
 			this.experimentalDesign.experimentType = this.experimentType;
 			var self = this;
-			this.confirm(this.application.contextualizer.localize("plug_in_headphones")).then(function() {
 
+			SoundCheck.show({
+				iconSrc: this.iconSrc,
+				message: this.application.contextualizer.localize("plug_in_headphones")
+				// okLabel: "Continue",
+				// cancelLabel: "Pause"
+			}, function() {
 				self.currentlyPlaying = true;
 				self.experimentalDesign.timestamp = Date.now();
 
@@ -197,9 +203,11 @@ exports.Experiment = ContextualizableComponent.specialize( /** @lends Experiment
 				self.loadTestBlock(0);
 
 				self.templateObjects.tutorial.playInstructions();
-
-			}, function(reason) {
+			}, function() {
 				console.log("Waiting for user to plug in head phones");
+				// [Q] Unhandled rejection reasons (should be empty): ["(no stack) The user clicked cancel."] 
+				// https://github.com/kriskowal/q/issues/292
+				// https://github.com/kriskowal/q/issues/238 TODO seems to be nothing i can do about it...
 			});
 
 		}
