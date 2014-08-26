@@ -37,7 +37,7 @@ exports.Experiment = ContextualizableComponent.specialize( /** @lends Experiment
         value: function Experiment() {
             this.super();
             this.application.audioPlayer = new AudioPlayer();
-
+            this.application.videoRecordingVerified = true;// For debugging, dont force user to verify their mic and video
         }
     },
 
