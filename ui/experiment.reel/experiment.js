@@ -179,12 +179,25 @@ exports.Experiment = ContextualizableComponent.specialize( /** @lends Experiment
         }
     },
 
+    recordUsingMicrophoneOnly: {
+        get: function() {
+            return this._recordUsingMicrophoneOnly;
+        },
+        set: function(value) {
+            if (value == this._recordUsingMicrophoneOnly) {
+                return;
+            }
+            this._recordUsingMicrophoneOnly = value;
+        }
+    },
+
     handleShowSoundCheckAction: {
         value: function() {
 
             SoundCheck.show({
                 iconSrc: this.iconSrc,
                 message: this.application.contextualizer.localize("plug_in_headphones"),
+                microphoneOnly: this.recordUsingMicrophoneOnly
                 // okLabel: "Continue",
                 // cancelLabel: "Pause"
             }, function() {
@@ -218,6 +231,7 @@ exports.Experiment = ContextualizableComponent.specialize( /** @lends Experiment
                 SoundCheck.show({
                     iconSrc: this.iconSrc,
                     message: this.application.contextualizer.localize("plug_in_headphones"),
+                    microphoneOnly: this.recordUsingMicrophoneOnly
                     // okLabel: "Continue",
                     // cancelLabel: "Pause"
                 }, function() {

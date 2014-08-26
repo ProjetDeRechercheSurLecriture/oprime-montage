@@ -165,8 +165,11 @@ var SoundCheck = Confirm.specialize( /** @lends SoundCheck# */ {
             confirmDialog.cancelCallback = cancelCallback || null;
 
             popup.show();
-            // this.videoCheck();
-            this.microphoneCheck();
+            if (options.microphoneOnly) {
+                this.microphoneCheck();
+            } else {
+                this.videoCheck();
+            }
         }
     }
 });
