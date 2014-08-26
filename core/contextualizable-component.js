@@ -3,7 +3,7 @@
  * @requires montage/ui/component
  */
 var Component = require("montage/ui/component").Component,
-	Contextualizer = require("core/contextualizer").Contextualizer;
+	Contextualizer = require("fielddb/api/locales/contextualizer").Contextualizer;
 
 /**
  * @class ContextualizableComponent
