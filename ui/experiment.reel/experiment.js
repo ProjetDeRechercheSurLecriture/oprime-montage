@@ -186,13 +186,7 @@ exports.Experiment = ContextualizableComponent.specialize( /** @lends Experiment
 			this.experimentalDesign.jsonType = "experiment";
 			this.experimentalDesign.experimentType = this.experimentType;
 			var self = this;
-
-			SoundCheck.show({
-				iconSrc: this.iconSrc,
-				message: this.application.contextualizer.localize("plug_in_headphones")
-				// okLabel: "Continue",
-				// cancelLabel: "Pause"
-			}, function() {
+			if (this.application.videoRecordingVerified) {
 				self.currentlyPlaying = true;
 				self.experimentalDesign.timestamp = Date.now();
 
@@ -203,12 +197,32 @@ exports.Experiment = ContextualizableComponent.specialize( /** @lends Experiment
 				self.loadTestBlock(0);
 
 				self.templateObjects.tutorial.playInstructions();
-			}, function() {
-				console.log("Waiting for user to plug in head phones");
-				// [Q] Unhandled rejection reasons (should be empty): ["(no stack) The user clicked cancel."] 
-				// https://github.com/kriskowal/q/issues/292
-				// https://github.com/kriskowal/q/issues/238 TODO seems to be nothing i can do about it...
-			});
+			} else {
+				SoundCheck.show({
+					iconSrc: this.iconSrc,
+					message: this.application.contextualizer.localize("plug_in_headphones")
+					// okLabel: "Continue",
+					// cancelLabel: "Pause"
+				}, function() {
+					self.currentlyPlaying = true;
+					self.experimentalDesign.timestamp = Date.now();
+
+					self._currentStimulus = self.templateObjects.currentStimulus;
+					self._currentStimulus.imageAssetsPath = self.experimentalDesign.imageAssetsPath;
+					self._currentStimulus.audioAssetsPath = self.experimentalDesign.audioAssetsPath;
+					// self.templateObjects.currentStimulus.templateObjects.reinforcement = self.templateObjects.reinforcement;
+					self.loadTestBlock(0);
+
+					self.templateObjects.tutorial.playInstructions();
+				}, function() {
+					console.log("Waiting for user to plug in head phones");
+					// [Q] Unhandled rejection reasons (should be empty): ["(no stack) The user clicked cancel."] 
+					// https://github.com/kriskowal/q/issues/292
+					// https://github.com/kriskowal/q/issues/238 TODO seems to be nothing i can do about it...
+				});
+
+			}
+
 
 		}
 	},
