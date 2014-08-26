@@ -46,11 +46,10 @@ exports.Experiment = ContextualizableComponent.specialize( /** @lends Experiment
     },
 
     loadDesign: {
-        value: function(designToForceIncludeInMop) {
+        value: function(optionalExperimentalDesignObject) {
             if (!this.experimentalDesignSrc) {
                 throw "Experimential design source file is undefined, not loading the experiment";
             }
-            var self = this;
 
             if (!this.application.corpus) {
                 var resultDBname = this.dbname || window.location.hash.replace("#/", "").replace(/\//g, "-");
@@ -78,21 +77,34 @@ exports.Experiment = ContextualizableComponent.specialize( /** @lends Experiment
                 this.application.stimuliCorpus.url = this.dbUrl;
             }
 
-            // console.log(" Loaded in the experimental Design." + designToForceIncludeInMop);
-            // self.experimentalDesign = JSON.parse(designToForceIncludeInMop);
-            self.experimentalDesign = designToForceIncludeInMop;
+            if (optionalExperimentalDesignObject) {
+                this.experimentalDesign = optionalExperimentalDesignObject;
+                this.iconSrc = this.experimentalDesign.iconSrc;
+                console.log("iconSrc" + this.iconSrc);
+                this.experimentalDesign.congratulationsImageSrc = this.experimentalDesign.imageAssetsPath + "/" + this.experimentalDesign.congratulationsImageSrc;
+                this.gamify = true;
+                this.tutorialMode = false;
+                this.currentlyPlaying = false;
+                this.resultsReportMode = false;
 
-            self.iconSrc = self.experimentalDesign.iconSrc;
-            console.log("iconSrc" + self.iconSrc);
-            this.experimentalDesign.congratulationsImageSrc = this.experimentalDesign.imageAssetsPath + "/" + this.experimentalDesign.congratulationsImageSrc;
-            this.gamify = true;
-            this.tutorialMode = false;
-            this.currentlyPlaying = false;
-            this.resultsReportMode = false;
+                /* This makes essentially a slideshow of images, useful for debugging and reviewing */
+                this.autoPlaySlideshowOfStimuli = false;
+                // this.application.audioPlayer.play("assets/gammatone.wav");
+            } else {
+                var self = this;
+                this.stimuliCorpus.get(this.experimentalDesignSrc).then(function(doc) {
+                    if (doc) {
+                        console.log("Looping with request to load experimental design");
+                        self.loadDesign.apply(self, [doc]);
+                    } else {
+                        throw "Experimential design doc file contained errors, not loading the experiment";
+                    }
+                }, function(error) {
+                    console.warn("Could not load the design doc. ", error);
+                    throw "Experimential design doc file could not be loaded from the server, not loading the experiment";
+                });
+            }
 
-            /* This makes essentially a slideshow of images, useful for debugging and reviewing */
-            this.autoPlaySlideshowOfStimuli = false;
-            // this.application.audioPlayer.play("assets/gammatone.wav");
 
 
         }
@@ -184,7 +196,7 @@ exports.Experiment = ContextualizableComponent.specialize( /** @lends Experiment
             return this._recordUsingMicrophoneOnly;
         },
         set: function(value) {
-            if (value == this._recordUsingMicrophoneOnly) {
+            if (value === this._recordUsingMicrophoneOnly) {
                 return;
             }
             this._recordUsingMicrophoneOnly = value;
