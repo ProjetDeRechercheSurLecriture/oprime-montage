@@ -14,6 +14,12 @@
 	"no": {
 		"message": "Non"
 	},
+	"sound_check_warning": {
+		"message": "Ce jeu demande l’utilisation d’écouteurs, pour la présentation du son, et l’enregistrement de la parole."
+	},
+	"sound_check_button_text": {
+		"message": "Cliquez ici pour vérifier vos périphériques d’entrée et de sortie!"
+	},
 	"plug_in_headphones": {
 		"message": "S'il vous plaît, connecter des écouteurs afin de continuer le jeu."
 	},

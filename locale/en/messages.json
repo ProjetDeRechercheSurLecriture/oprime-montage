@@ -14,6 +14,12 @@
 	"no": {
 		"message": "No"
 	},
+	"sound_check_warning": {
+		"message": "This game needs you to use your microphone and speakers."
+	},
+	"sound_check_button_text": {
+		"message": "Click here to check your sound"
+	},
 	"plug_in_headphones": {
 		"message": "Please plug in headphones to continue."
 	},
