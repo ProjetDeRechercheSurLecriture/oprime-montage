@@ -21,10 +21,20 @@ var SoundCheck = Confirm.specialize( /** @lends SoundCheck# */ {
     }
 
 }, {
+    microphoneCheck: {
+        value: function() {
+            this.periphialsCheck(false);
+        }
+    },
     videoCheck: {
         value: function() {
+            this.periphialsCheck(true);
+        }
+    },
+    periphialsCheck: {
+        value: function(withVideo) {
             var application = this.application;
-            window.setTimeout(function() {
+            var waitUntilVideoElementIsRendered = function() {
 
                 /* access camera and microphone
                     http://www.html5rocks.com/en/tutorials/getusermedia/intro/
@@ -39,6 +49,7 @@ var SoundCheck = Confirm.specialize( /** @lends SoundCheck# */ {
 
                     var video = document.getElementById("video-preview");
                     var canvas = document.getElementById("video-snapshot-canvas");
+                    var snapshotImage = document.getElementById("video-snapshot");
                     canvas.width = 640;
                     canvas.height = 360;
                     var ctx = canvas.getContext("2d");
@@ -58,17 +69,21 @@ var SoundCheck = Confirm.specialize( /** @lends SoundCheck# */ {
                             audio: true
                         },
                         function(localMediaStream) {
+                            if (withVideo) {
+                                video.removeAttribute("hidden");
+                                snapshotImage.removeAttribute("hidden");
+                            }
                             video.src = window.URL.createObjectURL(localMediaStream);
 
-                            var snapshot = function snapshot() {
+                            var takeSnapshot = function takeSnapshot() {
                                 if (localMediaStream) {
                                     ctx.drawImage(video, 0, 0);
                                     // "image/webp" works in Chrome.
                                     // Other browsers will fall back to image/png.
-                                    document.getElementById("video-snapshot").src = canvas.toDataURL("image/webp");
+                                    snapshotImage.src = canvas.toDataURL("image/webp");
                                 }
                             };
-                            video.addEventListener("click", snapshot, false);
+                            video.addEventListener("click", takeSnapshot, false);
 
 
                             // Note: onloadedmetadata doesn't fire in Chrome when using it with getUserMedia.
@@ -85,7 +100,12 @@ var SoundCheck = Confirm.specialize( /** @lends SoundCheck# */ {
                 } else {
                     alert("The Microphone is not supported in your browser");
                 }
-            }, 2000);
+            };
+            if (!document.getElementById("video-preview")) {
+                window.setTimeout(waitUntilVideoElementIsRendered, 2000);
+            } else {
+                waitUntilVideoElementIsRendered();
+            }
         }
     },
     /**
@@ -145,7 +165,8 @@ var SoundCheck = Confirm.specialize( /** @lends SoundCheck# */ {
             confirmDialog.cancelCallback = cancelCallback || null;
 
             popup.show();
-            this.videoCheck();
+            // this.videoCheck();
+            this.microphoneCheck();
         }
     }
 });
