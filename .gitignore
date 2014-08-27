@@ -15,6 +15,7 @@ lib-cov
 pids
 logs
 results
+.DS_store
 
 npm-debug.log
 node_modules
