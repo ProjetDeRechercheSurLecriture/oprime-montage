@@ -37,7 +37,7 @@ exports.Experiment = ContextualizableComponent.specialize( /** @lends Experiment
         value: function Experiment() {
             this.super();
             this.application.audioPlayer = new AudioPlayer();
-            this.application.videoRecordingVerified = true;// For debugging, dont force user to verify their mic and video
+            // this.application.videoRecordingVerified = true;// For debugging, dont force user to verify their mic and video
         }
     },
 
@@ -117,7 +117,7 @@ exports.Experiment = ContextualizableComponent.specialize( /** @lends Experiment
             window.setTimeout(function() {
                 /* hack to make the tutorial mode seem like its working */
                 if (!self.currentlyPlaying) {
-                    self.confirm(self.application.contextualizer.localize("prompt_show_tutorial")).then(function() {
+                    self.confirm(self.application.contextualizer.localize("locale_prompt_show_tutorial")).then(function() {
                         console.log("Showing tutorial mode");
                         self.toggleTutorialArea();
                     }, function(reason) {
@@ -208,7 +208,7 @@ exports.Experiment = ContextualizableComponent.specialize( /** @lends Experiment
 
             SoundCheck.show({
                 iconSrc: this.iconSrc,
-                message: this.application.contextualizer.localize("plug_in_headphones"),
+                message: this.contextualizer.localize("locale_plug_in_headphones"),
                 microphoneOnly: this.recordUsingMicrophoneOnly
                 // okLabel: "Continue",
                 // cancelLabel: "Pause"
@@ -242,7 +242,7 @@ exports.Experiment = ContextualizableComponent.specialize( /** @lends Experiment
             } else {
                 SoundCheck.show({
                     iconSrc: this.iconSrc,
-                    message: this.application.contextualizer.localize("plug_in_headphones"),
+                    message: this.contextualizer.localize("locale_plug_in_headphones"),
                     microphoneOnly: this.recordUsingMicrophoneOnly
                     // okLabel: "Continue",
                     // cancelLabel: "Pause"
@@ -438,7 +438,7 @@ exports.Experiment = ContextualizableComponent.specialize( /** @lends Experiment
             this.templateObjects.reinforcement.showFirst();
 
             if (this._currentTestBlock.promptUserBeforeContinuing) {
-                this.confirm(this.application.contextualizer.localize(this._currentTestBlock.promptUserBeforeContinuing.text)).then(function() {
+                this.confirm(this.contextualizer.localize(this._currentTestBlock.promptUserBeforeContinuing.text)).then(function() {
                     self.nextStimulus();
                 }).fail(function(reason) {
                     console.log("TODO add a button for resume?");
@@ -465,7 +465,7 @@ exports.Experiment = ContextualizableComponent.specialize( /** @lends Experiment
             this.experimentalDesign.timestamp = Date.now();
             this.application.corpus.set(this.experimentalDesign.experimentType + this.experimentalDesign.timestamp, this.experimentalDesign);
 
-            this.confirm(this.application.contextualizer.localize(this.experimentalDesign.end_instructions.for_child)).then(function() {
+            this.confirm(this.contextualizer.localize(this.experimentalDesign.end_instructions.for_child)).then(function() {
                 console.log("Experiment is complete.");
                 self.currentlyPlaying = false;
                 self.canBeResumed = false;

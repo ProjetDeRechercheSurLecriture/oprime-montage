@@ -145,8 +145,8 @@ var SoundCheck = Confirm.specialize( /** @lends SoundCheck# */ {
 
             if (this.application.contextualizer) {
                 this.application.contextualizer.currentLocale = this.application.interfaceLocale.iso;
-                this.okLabel = this.application.contextualizer.localize("okay");
-                this.cancelLabel = this.application.contextualizer.localize("cancel");
+                this.okLabel = this.application.contextualizer.localize("locale_okay");
+                this.cancelLabel = this.application.contextualizer.localize("locale_cancel");
             } else {
                 console.log("Not localizing the confirmDialog buttons");
             }

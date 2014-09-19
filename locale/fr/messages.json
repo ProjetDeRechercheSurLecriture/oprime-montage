@@ -1,32 +1,32 @@
 {
-	"change_language": {
+	"locale_change_language": {
 		"message": "Changer la langue"
 	},
-	"okay": {
+	"locale_okay": {
 		"message": "OK"
 	},
-	"cancel": {
+	"locale_cancel": {
 		"message": "Annuler"
 	},
-	"yes": {
+	"locale_yes": {
 		"message": "Oui"
 	},
-	"no": {
+	"locale_no": {
 		"message": "Non"
 	},
-	"sound_check_warning": {
+	"locale_sound_check_warning": {
 		"message": "Ce jeu demande l’utilisation d’écouteurs, pour la présentation du son, et l’enregistrement de la parole."
 	},
-	"sound_check_button_text": {
+	"locale_sound_check_button_text": {
 		"message": "Cliquez ici pour vérifier vos périphériques d’entrée et de sortie!"
 	},
-	"plug_in_headphones": {
+	"locale_plug_in_headphones": {
 		"message": "S'il vous plaît, connecter des écouteurs afin de continuer le jeu."
 	},
-	"confirm_choice": {
+	"locale_confirm_choice": {
 		"message": "Es-tu sûr de ta réponse?"
 	},
-	"prompt_show_tutorial":{
+	"locale_prompt_show_tutorial":{
 		"message": "Est-ce que tu veux voir un tutoriel?"
 	}
 }

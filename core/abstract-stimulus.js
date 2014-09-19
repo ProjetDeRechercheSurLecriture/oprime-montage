@@ -66,8 +66,8 @@ exports.AbstractStimulus = Component.specialize( /** @lends Stimulus# */ {
 			var self = this;
 			var continueToNextStimulus = Promise.defer();
 			if (this.confirmResponseChoiceMessage) {
-				this.application.contextualizer.currentLocale = this.application.interfaceLocale.iso;
-				var confirmChoicePrompt = this.application.contextualizer.localize(this.confirmResponseChoiceMessage); 
+				this.contextualizer.currentLocale = this.application.interfaceLocale;
+				var confirmChoicePrompt = this.contextualizer.localize(this.confirmResponseChoiceMessage);
 				var options = {
 					iconSrc: self.ownerComponent.iconSrc,
 					message: confirmChoicePrompt
@@ -140,8 +140,8 @@ exports.AbstractStimulus = Component.specialize( /** @lends Stimulus# */ {
 			var self = this;
 			var continueToNextStimulus = Promise.defer();
 			if (this.confirmResponseChoiceMessage) {
-				this.application.contextualizer.currentLocale = this.application.interfaceLocale.iso;
-				var confirmChoicePrompt = this.application.contextualizer.localize(this.confirmResponseChoiceMessage); 
+				this.contextualizer.currentLocale = this.application.interfaceLocale;
+				var confirmChoicePrompt = this.contextualizer.localize(this.confirmResponseChoiceMessage);
 				var options = {
 					iconSrc: self.ownerComponent.iconSrc,
 					message: confirmChoicePrompt
@@ -152,7 +152,7 @@ exports.AbstractStimulus = Component.specialize( /** @lends Stimulus# */ {
 					continueToNextStimulus.reject(new Error("The x prevented the cancel?"));
 				});
 			} else {
-				if(!dontAutoAdvance){
+				if (!dontAutoAdvance) {
 					continueToNextStimulus.resolve();
 				}
 			}
@@ -166,7 +166,7 @@ exports.AbstractStimulus = Component.specialize( /** @lends Stimulus# */ {
 					self.playAudio();
 				}
 			});
-			
+
 			var response = {
 				"reactionTimeAudioOffset": reactionTimeEnd - this.reactionTimeStart - audioDuration,
 				"reactionTimeAudioOnset": reactionTimeEnd - this.reactionTimeStart,

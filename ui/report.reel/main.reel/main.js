@@ -16,15 +16,18 @@ exports.Main = ContextualizableComponent.specialize( /** @lends Main# */ {
 		value: function Main() {
 			this.super();
 
-			this.contextualizer.addMessagesToContextualizedStrings(enLocales, "en");
-			this.contextualizer.addMessagesToContextualizedStrings(frLocales, "fr");
+			if (!this.application.contextualizer) {
+				this.application.contextualizer = this.application.contextualizer || new Contextualizer();
+				this.application.contextualizer.addMessagesToContextualizedStrings("en", enLocales);
+				this.application.contextualizer.addMessagesToContextualizedStrings("fr", frLocales);
+			}
 		}
 	},
 
 	handleLocalesAction: {
 		value: function(e) {
 			console.log("handleLocalesAction", e);
-			this.contextualizer.currentLocale = e.target.value.iso;
+			this.contextualizer.currentLocale = e.target.value;
 			this.needsDraw = true;
 		}
 	},
