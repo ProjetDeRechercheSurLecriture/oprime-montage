@@ -2,25 +2,16 @@
  * @module ui/report.reel/main.reel
  * @requires core/contextualizable-component
  */
-var ContextualizableComponent = require("core/contextualizable-component").ContextualizableComponent;
-
-var enLocales = require("locale/en/messages.json");
-var frLocales = require("locale/fr/messages.json");
+var OPrimeMain = require("ui/main.reel").Main;
 
 /**
  * @class Main
- * @extends ContextualizableComponent
+ * @extends OPrimeMain
  */
-exports.Main = ContextualizableComponent.specialize( /** @lends Main# */ {
+exports.Main = OPrimeMain.specialize( /** @lends Main# */ {
 	constructor: {
 		value: function Main() {
 			this.super();
-
-			if (!this.application.contextualizer) {
-				this.application.contextualizer = this.application.contextualizer || new Contextualizer();
-				this.application.contextualizer.addMessagesToContextualizedStrings("en", enLocales);
-				this.application.contextualizer.addMessagesToContextualizedStrings("fr", frLocales);
-			}
 		}
 	},
 

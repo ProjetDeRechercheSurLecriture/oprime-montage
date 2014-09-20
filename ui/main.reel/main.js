@@ -3,10 +3,10 @@
  * @requires core/contextualizable-component
  */
 var ContextualizableComponent = require("core/contextualizable-component").ContextualizableComponent,
-	Contextualizer = require("core/contextualizer").Contextualizer;
+	Contextualizer = require("core/experiment-contextualizer").Contextualizer;
 
-var enLocales = require("oprime-montage/locale/en/messages.json");
-var frLocales = require("oprime-montage/locale/fr/messages.json");
+var enLocales = require("locale/en/messages.json");
+var frLocales = require("locale/fr/messages.json");
 /**
  * @class Main
  * @extends ContextualizableComponent
