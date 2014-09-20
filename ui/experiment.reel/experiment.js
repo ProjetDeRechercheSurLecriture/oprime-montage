@@ -81,7 +81,9 @@ exports.Experiment = ContextualizableComponent.specialize( /** @lends Experiment
                 this.experimentalDesign = optionalExperimentalDesignObject;
                 this.iconSrc = this.experimentalDesign.iconSrc;
                 console.log("iconSrc" + this.iconSrc);
-                this.experimentalDesign.congratulationsImageSrc = this.experimentalDesign.imageAssetsPath + "/" + this.experimentalDesign.congratulationsImageSrc;
+                if (this.experimentalDesign.congratulationsImageSrc.indexOf("://") === -1) {
+                    this.experimentalDesign.congratulationsImageSrc = this.experimentalDesign.imageAssetsPath + "/" + this.experimentalDesign.congratulationsImageSrc;
+                }
                 this.gamify = true;
                 this.tutorialMode = false;
                 this.currentlyPlaying = false;
