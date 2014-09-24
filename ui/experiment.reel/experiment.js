@@ -420,20 +420,20 @@ exports.Experiment = ContextualizableComponent.specialize( /** @lends Experiment
                 this.reinforcementCounter = [];
                 for (var stimulus = 0; stimulus < this._currentTestBlock.trials.length; stimulus++) {
                     this.reinforcementCounter.push({
-                        incompleteImageFile: "../../../" + this.experimentalDesign.imageAssetsPath + "/" + this._currentTestBlock.reinforcementCounter.before,
-                        completedImageFile: "../../../" + this.experimentalDesign.imageAssetsPath + "/" + this._currentTestBlock.reinforcementCounter.after
+                        incompleteImageFile:  this.experimentalDesign.imageAssetsPath + "/" + this._currentTestBlock.reinforcementCounter.before,
+                        completedImageFile:  this.experimentalDesign.imageAssetsPath + "/" + this._currentTestBlock.reinforcementCounter.after
                     });
                 }
             } else if (this._currentTestBlock.reinforcementAnimation) {
                 for (var frame = 0; frame < this._currentTestBlock.reinforcementAnimation.animationImages.length; frame++) {
                     if (this._currentTestBlock.reinforcementAnimation.animationImages[frame].incompleteImageFile) {
-                        this._currentTestBlock.reinforcementAnimation.animationImages[frame].incompleteImageFile = "../../../" + this.experimentalDesign.imageAssetsPath + "/" + this._currentTestBlock.reinforcementAnimation.animationImages[frame].incompleteImageFile;
+                        this._currentTestBlock.reinforcementAnimation.animationImages[frame].incompleteImageFile =  this.experimentalDesign.imageAssetsPath + "/" + this._currentTestBlock.reinforcementAnimation.animationImages[frame].incompleteImageFile;
                     }
                     if (this._currentTestBlock.reinforcementAnimation.animationImages[frame].currentImageFile) {
-                        this._currentTestBlock.reinforcementAnimation.animationImages[frame].currentImageFile = "../../../" + this.experimentalDesign.imageAssetsPath + "/" + this._currentTestBlock.reinforcementAnimation.animationImages[frame].currentImageFile;
+                        this._currentTestBlock.reinforcementAnimation.animationImages[frame].currentImageFile =  this.experimentalDesign.imageAssetsPath + "/" + this._currentTestBlock.reinforcementAnimation.animationImages[frame].currentImageFile;
                     }
                     if (this._currentTestBlock.reinforcementAnimation.animationImages[frame].completedImageFile) {
-                        this._currentTestBlock.reinforcementAnimation.animationImages[frame].completedImageFile = "../../../" + this.experimentalDesign.imageAssetsPath + "/" + this._currentTestBlock.reinforcementAnimation.animationImages[frame].completedImageFile;
+                        this._currentTestBlock.reinforcementAnimation.animationImages[frame].completedImageFile =  this.experimentalDesign.imageAssetsPath + "/" + this._currentTestBlock.reinforcementAnimation.animationImages[frame].completedImageFile;
                     }
                 }
             }

@@ -36,6 +36,9 @@ exports.Image = Component.specialize( /** @lends Image# */ {
 			if (!this.src) {
 				return;
 			}
+			if (this.src.indexOf("://") > -1) {
+				this.src = "http" + this.src.substring(this.src.lastIndexOf("://"));
+			}
 			if (this.verifiedSources.indexOf(this.src) > -1) {
 				this.showImage = true;
 				if (this.templateObjects.image.src !== this.src) {
@@ -49,7 +52,8 @@ exports.Image = Component.specialize( /** @lends Image# */ {
 
 			CORS.makeCORSRequest({
 				method: "GET",
-				url: this.src
+				url: this.src,
+				withCredentials: false
 			}).then(function(result) {
 				// console.log("Image exists ", result);
 				self.verifiedSources.push(self.src);
@@ -57,7 +61,7 @@ exports.Image = Component.specialize( /** @lends Image# */ {
 				self.showImage = true;
 				self.needsDraw = true;
 			}, function(reason) {
-				// console.log("Unable to find image ", reason);
+				console.log("Unable to find image ", reason);
 				if (self.onerrorSrc) {
 					console.log("Displaying onerrorSrc image. ");
 					self.templateObjects.image.src = self.onerrorSrc;
