@@ -394,13 +394,13 @@ exports.Experiment = ContextualizableComponent.specialize( /** @lends Experiment
                 this.experimentCompleted();
                 return;
             }
-            if (!this.experimentalDesign.subexperiments[blockIndexToLoad]) {
+            if (!this.experimentalDesign.subexperiments._collection[blockIndexToLoad]) {
                 console.warn("Something is wrong, there are no test bock so I can't go to the next. ");
                 return;
             }
 
             this._currentTestBlockIndex = blockIndexToLoad;
-            this._currentTestBlock = this.experimentalDesign.subexperiments[blockIndexToLoad];
+            this._currentTestBlock = this.experimentalDesign.subexperiments._collection[blockIndexToLoad];
             console.log("Loaded block " + blockIndexToLoad);
             this.experimentBlockLoaded(finalIndex);
         }
