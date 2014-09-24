@@ -18,14 +18,18 @@ exports.Main = ContextualizableComponent.specialize( /** @lends Main# */ {
 			// localStorage.setItem("montage_locale", "fr");
 			this.super();
 
-			FieldDBObject.warn = function(){
+			FieldDBObject.warn = function() {
 				//dont warn
+			};
+			FieldDBObject.bug = function(message) {
+				console.log(message);
 			};
 			if (!this.application.contextualizer) {
 				this.application.contextualizer = this.application.contextualizer || new Contextualizer();
 				this.application.contextualizer.addMessagesToContextualizedStrings("en", enLocales);
 				this.application.contextualizer.addMessagesToContextualizedStrings("fr", frLocales);
 			}
+
 		}
 	}
 });
