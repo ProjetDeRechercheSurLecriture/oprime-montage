@@ -9,7 +9,9 @@ var ContextualizableComponent = require("core/contextualizable-component").Conte
     PromiseController = require("montage/core/promise-controller").PromiseController,
     Promise = require("montage/core/promise").Promise,
     AudioPlayer = require("core/audio-player").AudioPlayer,
-    Corpus = require("fielddb/api/corpus/Corpus").Corpus;
+    Corpus = require("fielddb/api/corpus/Corpus").Corpus,
+    SubExperiment = require("fielddb/api/data_list/SubExperimentDataList").SubExperimentDataList,
+    FieldDB = require("fielddb/api/fielddb").FieldDB;
 
 /**
  * @class Experiment
@@ -78,7 +80,13 @@ exports.Experiment = ContextualizableComponent.specialize( /** @lends Experiment
             }
 
             if (optionalExperimentalDesignObject) {
-                this.experimentalDesign = optionalExperimentalDesignObject;
+                this.experimentalDesign = new SubExperiment(optionalExperimentalDesignObject);
+                var self = this;
+                this.application.stimuliCorpus.fetchCollection(this.experimentalDesign.subexperiments).then(function(results) {
+                    console.log(" downloaded sub experiments ", results);
+                    self.experimentalDesign.populate(results);
+                });
+
                 this.iconSrc = this.experimentalDesign.iconSrc;
                 console.log("iconSrc" + this.iconSrc);
                 if (this.experimentalDesign.congratulationsImageSrc.indexOf("://") === -1) {
@@ -420,20 +428,20 @@ exports.Experiment = ContextualizableComponent.specialize( /** @lends Experiment
                 this.reinforcementCounter = [];
                 for (var stimulus = 0; stimulus < this._currentTestBlock.trials.length; stimulus++) {
                     this.reinforcementCounter.push({
-                        incompleteImageFile:  this.experimentalDesign.imageAssetsPath + "/" + this._currentTestBlock.reinforcementCounter.before,
-                        completedImageFile:  this.experimentalDesign.imageAssetsPath + "/" + this._currentTestBlock.reinforcementCounter.after
+                        incompleteImageFile: this.experimentalDesign.imageAssetsPath + "/" + this._currentTestBlock.reinforcementCounter.before,
+                        completedImageFile: this.experimentalDesign.imageAssetsPath + "/" + this._currentTestBlock.reinforcementCounter.after
                     });
                 }
             } else if (this._currentTestBlock.reinforcementAnimation) {
                 for (var frame = 0; frame < this._currentTestBlock.reinforcementAnimation.animationImages.length; frame++) {
                     if (this._currentTestBlock.reinforcementAnimation.animationImages[frame].incompleteImageFile) {
-                        this._currentTestBlock.reinforcementAnimation.animationImages[frame].incompleteImageFile =  this.experimentalDesign.imageAssetsPath + "/" + this._currentTestBlock.reinforcementAnimation.animationImages[frame].incompleteImageFile;
+                        this._currentTestBlock.reinforcementAnimation.animationImages[frame].incompleteImageFile = this.experimentalDesign.imageAssetsPath + "/" + this._currentTestBlock.reinforcementAnimation.animationImages[frame].incompleteImageFile;
                     }
                     if (this._currentTestBlock.reinforcementAnimation.animationImages[frame].currentImageFile) {
-                        this._currentTestBlock.reinforcementAnimation.animationImages[frame].currentImageFile =  this.experimentalDesign.imageAssetsPath + "/" + this._currentTestBlock.reinforcementAnimation.animationImages[frame].currentImageFile;
+                        this._currentTestBlock.reinforcementAnimation.animationImages[frame].currentImageFile = this.experimentalDesign.imageAssetsPath + "/" + this._currentTestBlock.reinforcementAnimation.animationImages[frame].currentImageFile;
                     }
                     if (this._currentTestBlock.reinforcementAnimation.animationImages[frame].completedImageFile) {
-                        this._currentTestBlock.reinforcementAnimation.animationImages[frame].completedImageFile =  this.experimentalDesign.imageAssetsPath + "/" + this._currentTestBlock.reinforcementAnimation.animationImages[frame].completedImageFile;
+                        this._currentTestBlock.reinforcementAnimation.animationImages[frame].completedImageFile = this.experimentalDesign.imageAssetsPath + "/" + this._currentTestBlock.reinforcementAnimation.animationImages[frame].completedImageFile;
                     }
                 }
             }
