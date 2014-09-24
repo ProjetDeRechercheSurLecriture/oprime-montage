@@ -9,8 +9,11 @@ var ContextualizableComponent = require("core/contextualizable-component").Conte
     PromiseController = require("montage/core/promise-controller").PromiseController,
     Promise = require("montage/core/promise").Promise,
     AudioPlayer = require("core/audio-player").AudioPlayer,
+
     Corpus = require("fielddb/api/corpus/Corpus").Corpus,
     SubExperiment = require("fielddb/api/data_list/SubExperimentDataList").SubExperimentDataList,
+    Participant = require("fielddb/api/user/Participant").Participant,
+    UserMask = require("fielddb/api/user/UserMask").UserMask,
     FieldDB = require("fielddb/api/fielddb").FieldDB;
 
 /**
@@ -38,8 +41,81 @@ exports.Experiment = ContextualizableComponent.specialize( /** @lends Experiment
     constructor: {
         value: function Experiment() {
             this.super();
+
+
+            if (!this.application.participants) {
+                this.application.participants = [new Participant({
+                    anonymousCode: Date.now()
+                })];
+            }
+            var experimenters = this.experimenters;
+            console.log("priming existance of an experimenter from session tokens");
+
             this.application.audioPlayer = new AudioPlayer();
-            // this.application.videoRecordingVerified = true;// For debugging, dont force user to verify their mic and video
+            this.application.videoRecordingVerified = true;
+
+            console.warn("============== turning off sound check =================="); // For debugging, dont force user to verify their mic and video
+            console.warn("============== turning off sound check =================="); // For debugging, dont force user to verify their mic and video
+            console.warn("============== turning off sound check =================="); // For debugging, dont force user to verify their mic and video
+            console.warn("============== turning off sound check =================="); // For debugging, dont force user to verify their mic and video
+            console.warn("============== turning off sound check =================="); // For debugging, dont force user to verify their mic and video
+            console.warn("============== turning off sound check =================="); // For debugging, dont force user to verify their mic and video
+        }
+    },
+
+    experimenters: {
+        get: function() {
+            if (this.application.experimenters) {
+                return this.application.experimenters;
+            } else {
+
+            }
+        }
+    },
+
+    experimenter: {
+        get: function() {
+            if (this.application.experimenters && this.application.experimenters.length > 0) {
+                return this.application.experimenters[0];
+            } else {
+                if (this.application.corpus && this.application.corpus.resumeAuthenticationSession) {
+                    var self = this;
+                    this.application.corpus.resumeAuthenticationSession().then(function(sessionInfo) {
+                        console.log("guessing user from authentication session", sessionInfo);
+                        self.application.experimenters = [new UserMask({
+                            id: Date.now()
+                        })];
+                    });
+                }
+            }
+        }
+    },
+
+    participants: {
+        get: function() {
+            if (this.application.participants) {
+                return this.application.participants;
+            } else {
+
+            }
+        }
+    },
+
+    participant: {
+        get: function() {
+            if (this.application.participants && this.application.participants.length > 0) {
+                return this.application.participants[0];
+            } else {
+                if (this.application.corpus && this.application.corpus.resumeAuthenticationSession) {
+                    var self = this;
+                    this.application.corpus.resumeAuthenticationSession().then(function(sessionInfo) {
+                        console.log("guessing user from authentication session", sessionInfo);
+                        self.application.participants = [new UserMask({
+                            id: Date.now()
+                        })];
+                    });
+                }
+            }
         }
     },
 
@@ -322,13 +398,20 @@ exports.Experiment = ContextualizableComponent.specialize( /** @lends Experiment
             this._currentStimulusIndex++;
             console.log("Showing stimulus " + this._currentStimulusIndex + " of block " + this._currentTestBlockIndex);
 
-            if (!this._currentTestBlock.trials[this._currentStimulusIndex]) {
+            if (!this._currentTestBlock.trials._collection[this._currentStimulusIndex]) {
                 console.warn("Something is wrong, there was no stimulus.");
                 return;
             }
             this.templateObjects.reinforcement.next();
-            this._currentTestBlock.trials[this._currentStimulusIndex].id = this._currentTestBlock.label + "_" + this._currentStimulusIndex;
-            this._currentStimulus.load(this._currentTestBlock.trials[this._currentStimulusIndex]);
+
+            console.log("Cloning stimulus to create the new response for this participant");
+            var stimulusResponse = this._currentTestBlock.trials._collection[this._currentStimulusIndex];
+            stimulusResponse.participantId = this.participant.id;
+            // stimulusResponse.id = this._currentTestBlock.label + "_" + this._currentStimulusIndex;
+            stimulusResponse.experimenterId = this.experimenter.id;
+
+            this._currentTestBlock.trials._collection[this._currentStimulusIndex] = stimulusResponse;
+            this._currentStimulus.load(stimulusResponse);
 
             if (this.autoPlaySlideshowOfStimuli) {
                 window.setTimeout(function() {
@@ -343,7 +426,7 @@ exports.Experiment = ContextualizableComponent.specialize( /** @lends Experiment
         value: function() {
             console.log("Replaying stimulus");
             // this.application.audioPlayer.play();
-            this._currentStimulus.load(this._currentTestBlock.trials[this._currentStimulusIndex]);
+            this._currentStimulus.load(this._currentTestBlock.trials._collection[this._currentStimulusIndex]);
         }
     },
 
@@ -371,7 +454,7 @@ exports.Experiment = ContextualizableComponent.specialize( /** @lends Experiment
             console.log("Showing stimulus " + this._currentStimulusIndex + " of block " + this._currentTestBlockIndex);
 
             this.templateObjects.reinforcement.previous();
-            this._currentStimulus.load(this._currentTestBlock.trials[this._currentStimulusIndex]);
+            this._currentStimulus.load(this._currentTestBlock.trials._collection[this._currentStimulusIndex]);
         }
     },
 
@@ -402,6 +485,20 @@ exports.Experiment = ContextualizableComponent.specialize( /** @lends Experiment
             this._currentTestBlockIndex = blockIndexToLoad;
             this._currentTestBlock = this.experimentalDesign.subexperiments._collection[blockIndexToLoad];
             console.log("Loaded block " + blockIndexToLoad);
+            if (this._currentTestBlock.trials && this._currentTestBlock.trials.length > 0 && typeof this._currentTestBlock.trials[0] !== "object") {
+                var self = this;
+                this.application.stimuliCorpus.fetchCollection(this._currentTestBlock.trials).then(function(results) {
+                    console.log(" downloaded trials ", results);
+                    results = results.map(function(stimulus) {
+                        stimulus = new FieldDB.Stimulus(stimulus);
+                        var stimulusResponse = new FieldDB.Response(stimulus.clone());
+                        stimulusResponse.id = FieldDBObject.uuidGenerator();
+                        return stimulusResponse;
+                    });
+
+                    self._currentTestBlock.populate(results);
+                });
+            }
             this.experimentBlockLoaded(finalIndex);
         }
     },
@@ -427,21 +524,40 @@ exports.Experiment = ContextualizableComponent.specialize( /** @lends Experiment
             if (this._currentTestBlock.reinforcementCounter) {
                 this.reinforcementCounter = [];
                 for (var stimulus = 0; stimulus < this._currentTestBlock.trials.length; stimulus++) {
-                    this.reinforcementCounter.push({
-                        incompleteImageFile: this.experimentalDesign.imageAssetsPath + "/" + this._currentTestBlock.reinforcementCounter.before,
-                        completedImageFile: this.experimentalDesign.imageAssetsPath + "/" + this._currentTestBlock.reinforcementCounter.after
-                    });
+                    var reinforcementItem = {
+                        incompleteImageFile: this._currentTestBlock.reinforcementCounter.before,
+                        completedImageFile: this._currentTestBlock.reinforcementCounter.after
+                    };
+                    if (this._currentTestBlock.reinforcementCounter.before.indexOf("://") > -1) {
+                        reinforcementItem.incompleteImageFile = this.experimentalDesign.imageAssetsPath + "/" + this._currentTestBlock.reinforcementCounter.before;
+                    }
+                    if (this._currentTestBlock.reinforcementCounter.after.indexOf("://") > -1) {
+                        reinforcementItem.completedImageFile = this.experimentalDesign.imageAssetsPath + "/" + this._currentTestBlock.reinforcementCounter.after;
+                    }
+                    this.reinforcementCounter.push(reinforcementItem);
                 }
             } else if (this._currentTestBlock.reinforcementAnimation) {
                 for (var frame = 0; frame < this._currentTestBlock.reinforcementAnimation.animationImages.length; frame++) {
                     if (this._currentTestBlock.reinforcementAnimation.animationImages[frame].incompleteImageFile) {
-                        this._currentTestBlock.reinforcementAnimation.animationImages[frame].incompleteImageFile = this.experimentalDesign.imageAssetsPath + "/" + this._currentTestBlock.reinforcementAnimation.animationImages[frame].incompleteImageFile;
+                        if (this._currentTestBlock.reinforcementAnimation.animationImages[frame].incompleteImageFile.indexOf("://") > -1) {
+                            this._currentTestBlock.reinforcementAnimation.animationImages[frame].incompleteImageFile = this.experimentalDesign.imageAssetsPath + "/" + this._currentTestBlock.reinforcementAnimation.animationImages[frame].incompleteImageFile;
+                        } else {
+                            this._currentTestBlock.reinforcementAnimation.animationImages[frame].incompleteImageFile = this._currentTestBlock.reinforcementAnimation.animationImages[frame].incompleteImageFile;
+                        }
                     }
                     if (this._currentTestBlock.reinforcementAnimation.animationImages[frame].currentImageFile) {
-                        this._currentTestBlock.reinforcementAnimation.animationImages[frame].currentImageFile = this.experimentalDesign.imageAssetsPath + "/" + this._currentTestBlock.reinforcementAnimation.animationImages[frame].currentImageFile;
+                        if (this._currentTestBlock.reinforcementAnimation.animationImages[frame].currentImageFile.indexOf("://") > -1) {
+                            this._currentTestBlock.reinforcementAnimation.animationImages[frame].currentImageFile = this.experimentalDesign.imageAssetsPath + "/" + this._currentTestBlock.reinforcementAnimation.animationImages[frame].currentImageFile;
+                        } else {
+                            this._currentTestBlock.reinforcementAnimation.animationImages[frame].currentImageFile = this._currentTestBlock.reinforcementAnimation.animationImages[frame].currentImageFile;
+                        }
                     }
                     if (this._currentTestBlock.reinforcementAnimation.animationImages[frame].completedImageFile) {
-                        this._currentTestBlock.reinforcementAnimation.animationImages[frame].completedImageFile = this.experimentalDesign.imageAssetsPath + "/" + this._currentTestBlock.reinforcementAnimation.animationImages[frame].completedImageFile;
+                        if (this._currentTestBlock.reinforcementAnimation.animationImages[frame].completedImageFile.indexOf("://") > -1) {
+                            this._currentTestBlock.reinforcementAnimation.animationImages[frame].completedImageFile = this.experimentalDesign.imageAssetsPath + "/" + this._currentTestBlock.reinforcementAnimation.animationImages[frame].completedImageFile;
+                        } else {
+                            this._currentTestBlock.reinforcementAnimation.animationImages[frame].completedImageFile = this._currentTestBlock.reinforcementAnimation.animationImages[frame].completedImageFile;
+                        }
                     }
                 }
             }
