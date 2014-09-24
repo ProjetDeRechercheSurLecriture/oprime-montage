@@ -83,7 +83,7 @@ exports.Experiment = ContextualizableComponent.specialize( /** @lends Experiment
                     this.application.corpus.resumeAuthenticationSession().then(function(sessionInfo) {
                         console.log("guessing user from authentication session", sessionInfo);
                         self.application.experimenters = [new UserMask({
-                            id: Date.now()
+                            id: sessionInfo.userCtx.name
                         })];
                     });
                 }
@@ -322,7 +322,7 @@ exports.Experiment = ContextualizableComponent.specialize( /** @lends Experiment
                 self._currentStimulus.imageAssetsPath = self.experimentalDesign.imageAssetsPath;
                 self._currentStimulus.audioAssetsPath = self.experimentalDesign.audioAssetsPath;
                 // self.templateObjects.currentStimulus.templateObjects.reinforcement = self.templateObjects.reinforcement;
-                self.loadTestBlock(0);
+                self.loadTestBlock.apply(self, [0]);
 
                 self.templateObjects.tutorial.playInstructions();
             } else {
@@ -340,7 +340,7 @@ exports.Experiment = ContextualizableComponent.specialize( /** @lends Experiment
                     self._currentStimulus.imageAssetsPath = self.experimentalDesign.imageAssetsPath;
                     self._currentStimulus.audioAssetsPath = self.experimentalDesign.audioAssetsPath;
                     // self.templateObjects.currentStimulus.templateObjects.reinforcement = self.templateObjects.reinforcement;
-                    self.loadTestBlock(0);
+                    self.loadTestBlock.apply(self, [0]);
 
                     self.templateObjects.tutorial.playInstructions();
                 }, function() {
@@ -391,14 +391,14 @@ exports.Experiment = ContextualizableComponent.specialize( /** @lends Experiment
             }
             if (this._currentStimulusIndex >= this._currentTestBlock.trials.length - 1) {
                 this.templateObjects.reinforcement.showLast();
-                this.loadTestBlock(this._currentTestBlockIndex + 1);
+                this.loadTestBlock.apply(this, [this._currentTestBlockIndex + 1]);
                 return;
             }
 
             this._currentStimulusIndex++;
             console.log("Showing stimulus " + this._currentStimulusIndex + " of block " + this._currentTestBlockIndex);
 
-            if (!this._currentTestBlock.trials._collection[this._currentStimulusIndex]) {
+            if (!this._currentTestBlock.trials._collection || !this._currentTestBlock.trials._collection[this._currentStimulusIndex]) {
                 console.warn("Something is wrong, there was no stimulus.");
                 return;
             }
@@ -446,7 +446,7 @@ exports.Experiment = ContextualizableComponent.specialize( /** @lends Experiment
                 return;
             }
             if (this._currentStimulusIndex === 0) {
-                this.loadTestBlock(this._currentTestBlockIndex - 1, "finalIndex");
+                this.loadTestBlock.apply(this, [this._currentTestBlockIndex - 1, "finalIndex"]);
                 return;
             }
 
@@ -492,14 +492,15 @@ exports.Experiment = ContextualizableComponent.specialize( /** @lends Experiment
                     results = results.map(function(stimulus) {
                         stimulus = new FieldDB.Stimulus(stimulus);
                         var stimulusResponse = new FieldDB.Response(stimulus.clone());
-                        stimulusResponse.id = FieldDBObject.uuidGenerator();
+                        stimulusResponse.id = FieldDB.FieldDBObject.uuidGenerator();
                         return stimulusResponse;
                     });
 
                     self._currentTestBlock.populate(results);
+                    self.experimentBlockLoaded(finalIndex);
                 });
             }
-            this.experimentBlockLoaded(finalIndex);
+            
         }
     },
 
