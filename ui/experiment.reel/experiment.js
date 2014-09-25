@@ -41,25 +41,25 @@ exports.Experiment = ContextualizableComponent.specialize( /** @lends Experiment
     constructor: {
         value: function Experiment() {
             this.super();
-
+            this.application.experiment = this;
 
             if (!this.application.participants) {
                 this.application.participants = [new Participant({
                     anonymousCode: Date.now()
                 })];
             }
-            var experimenters = this.experimenters;
+            var experimenter = this.experimenter;
             console.log("priming existance of an experimenter from session tokens");
 
             this.application.audioPlayer = new AudioPlayer();
-            this.application.videoRecordingVerified = true;
 
-            console.warn("============== turning off sound check =================="); // For debugging, dont force user to verify their mic and video
-            console.warn("============== turning off sound check =================="); // For debugging, dont force user to verify their mic and video
-            console.warn("============== turning off sound check =================="); // For debugging, dont force user to verify their mic and video
-            console.warn("============== turning off sound check =================="); // For debugging, dont force user to verify their mic and video
-            console.warn("============== turning off sound check =================="); // For debugging, dont force user to verify their mic and video
-            console.warn("============== turning off sound check =================="); // For debugging, dont force user to verify their mic and video
+            // this.application.videoRecordingVerified = true;
+            // console.warn("============== turning off sound check =================="); // For debugging, dont force user to verify their mic and video
+            // console.warn("============== turning off sound check =================="); // For debugging, dont force user to verify their mic and video
+            // console.warn("============== turning off sound check =================="); // For debugging, dont force user to verify their mic and video
+            // console.warn("============== turning off sound check =================="); // For debugging, dont force user to verify their mic and video
+            // console.warn("============== turning off sound check =================="); // For debugging, dont force user to verify their mic and video
+            // console.warn("============== turning off sound check =================="); // For debugging, dont force user to verify their mic and video
         }
     },
 
@@ -67,8 +67,6 @@ exports.Experiment = ContextualizableComponent.specialize( /** @lends Experiment
         get: function() {
             if (this.application.experimenters) {
                 return this.application.experimenters;
-            } else {
-
             }
         }
     },
@@ -85,9 +83,12 @@ exports.Experiment = ContextualizableComponent.specialize( /** @lends Experiment
                         self.application.experimenters = [new UserMask({
                             id: sessionInfo.userCtx.name
                         })];
+                    }, function() {
+
                     });
                 }
             }
+            return {};
         }
     },
 
@@ -95,8 +96,6 @@ exports.Experiment = ContextualizableComponent.specialize( /** @lends Experiment
         get: function() {
             if (this.application.participants) {
                 return this.application.participants;
-            } else {
-
             }
         }
     },
@@ -116,6 +115,7 @@ exports.Experiment = ContextualizableComponent.specialize( /** @lends Experiment
                     });
                 }
             }
+            return {};
         }
     },
 
@@ -137,10 +137,16 @@ exports.Experiment = ContextualizableComponent.specialize( /** @lends Experiment
                 if (this.dbUrl) {
                     this.application.corpus.url = this.dbUrl;
                 }
+                if (!resultDBname) {
+                    resultDBname = "phophlo-demo_data";
+                }
                 this.application.corpus.loadOrCreateCorpusByPouchName(resultDBname).then(function(result) {
                     console.log("Corpus is loaded, data can be decrypted.", result);
                 }, function(result) {
-                    console.log("Corpus cannot be loaded, data cannot be decrypted.", result);
+                    console.log("Corpus cannot be loaded, data cannot be decrypted, removing this db from the url.", result);
+                    window.location.replace(window.location.href.replace(/#.*$/, ""));
+                    window.location.reload();
+                    return;
                 });
             }
             this.corpus = this.application.corpus;
@@ -149,21 +155,23 @@ exports.Experiment = ContextualizableComponent.specialize( /** @lends Experiment
                 dbname: this.stimuliDBname
             });
             this.stimuliCorpus = this.application.stimuliCorpus;
-
+            var self = this;
             if (this.dbUrl) {
                 this.application.corpus.url = this.dbUrl;
                 this.application.stimuliCorpus.url = this.dbUrl;
             }
 
             if (optionalExperimentalDesignObject) {
-                this.experimentalDesign = new SubExperiment(optionalExperimentalDesignObject);
-                var self = this;
+                var originalDesign = new SubExperiment(optionalExperimentalDesignObject);
+                this.experimentalDesign = new SubExperiment(originalDesign.clone());
+
                 this.application.stimuliCorpus.fetchCollection(this.experimentalDesign.subexperiments).then(function(results) {
                     console.log(" downloaded sub experiments ", results);
                     self.experimentalDesign.populate(results);
                 });
-
+                // this.iconSrc = "blank.png";
                 this.iconSrc = this.experimentalDesign.iconSrc;
+                this.needsDraw = true;
                 console.log("iconSrc" + this.iconSrc);
                 if (this.experimentalDesign.congratulationsImageSrc.indexOf("://") === -1) {
                     this.experimentalDesign.congratulationsImageSrc = this.experimentalDesign.imageAssetsPath + "/" + this.experimentalDesign.congratulationsImageSrc;
@@ -177,7 +185,6 @@ exports.Experiment = ContextualizableComponent.specialize( /** @lends Experiment
                 this.autoPlaySlideshowOfStimuli = false;
                 // this.application.audioPlayer.play("assets/gammatone.wav");
             } else {
-                var self = this;
                 this.stimuliCorpus.get(this.experimentalDesignSrc).then(function(doc) {
                     if (doc) {
                         console.log("Looping with request to load experimental design");
@@ -187,7 +194,19 @@ exports.Experiment = ContextualizableComponent.specialize( /** @lends Experiment
                     }
                 }, function(error) {
                     console.warn("Could not load the design doc. ", error);
-                    throw "Experimential design doc file could not be loaded from the server, not loading the experiment";
+                    //try logging in as an anonymoussailsuser
+                    self.application.stimuliCorpus.login({
+                        username: "anonymoussailsuser",
+                        password: "none"
+                    }).then(function(loginresult) {
+                        console.warn("logged in as anonymoussailsuser", loginresult);
+                        window.location.replace(window.location.href.replace(/#.*$/, "#/phophlo/demo_data"));
+                        window.location.reload();
+                        return;
+                    }, function(err) {
+                        console.log("Could not login either.", err);
+                        // throw "Experimential design doc file could not be loaded from the server, not loading the experiment";
+                    });
                 });
             }
 
@@ -404,14 +423,9 @@ exports.Experiment = ContextualizableComponent.specialize( /** @lends Experiment
             }
             this.templateObjects.reinforcement.next();
 
-            console.log("Cloning stimulus to create the new response for this participant");
-            var stimulusResponse = this._currentTestBlock.trials._collection[this._currentStimulusIndex];
-            stimulusResponse.participantId = this.participant.id;
-            // stimulusResponse.id = this._currentTestBlock.label + "_" + this._currentStimulusIndex;
-            stimulusResponse.experimenterId = this.experimenter.id;
-
-            this._currentTestBlock.trials._collection[this._currentStimulusIndex] = stimulusResponse;
-            this._currentStimulus.load(stimulusResponse);
+            this._currentTestBlock.trials._collection[this._currentStimulusIndex].visualChoiceA = this.experimentalDesign.visualChoiceA;
+            this._currentTestBlock.trials._collection[this._currentStimulusIndex].visualChoiceB = this.experimentalDesign.visualChoiceB;
+            this._currentStimulus.load(this._currentTestBlock.trials._collection[this._currentStimulusIndex]);
 
             if (this.autoPlaySlideshowOfStimuli) {
                 window.setTimeout(function() {
@@ -500,7 +514,7 @@ exports.Experiment = ContextualizableComponent.specialize( /** @lends Experiment
                     self.experimentBlockLoaded(finalIndex);
                 });
             }
-            
+
         }
     },
 
@@ -590,7 +604,21 @@ exports.Experiment = ContextualizableComponent.specialize( /** @lends Experiment
             var self = this;
 
             this.experimentalDesign.timestamp = Date.now();
-            this.application.corpus.set(this.experimentalDesign.experimentType + this.experimentalDesign.timestamp, this.experimentalDesign);
+            // delete this.experimentalDesign.rev;
+            this.application.corpus.set(this.experimentalDesign.experimentType + this.experimentalDesign.timestamp, this.experimentalDesign).then(function(saveresult) {
+                console.log("saved results", saveresult);
+            }, function(saveerror) {
+                console.warn("unable to save results, logging in as an anonymous user", saveerror);
+                self.application.corpus.login({
+                    username: "anonymoussailsuser",
+                    password: "none"
+                }).then(function(loginresults) {
+                    console.log("Logged in", loginresults);
+                    self.application.corpus.set(self.experimentalDesign.experimentType + self.experimentalDesign.timestamp, self.experimentalDesign);
+                }, function(error2) {
+                    console.warn("gave up on saving experiment.", error2);
+                });
+            });
 
             this.confirm(this.contextualizer.localize(this.experimentalDesign.end_instructions.for_child)).then(function() {
                 console.log("Experiment is complete.");
