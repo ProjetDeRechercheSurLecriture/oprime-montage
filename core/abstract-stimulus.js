@@ -2,7 +2,7 @@
  * @module ui/stimulus.reel
  * @requires montage/ui/component
  */
-var Component = require("montage/ui/component").Component,
+var ContextualizableComponent = require("core/contextualizable-component").ContextualizableComponent,
 	Confirm = require("ui/confirm.reel").Confirm,
 	Response = require("ui/response.reel").Response,
 	PressComposer = require("montage/composer/press-composer").PressComposer,
@@ -11,9 +11,9 @@ var Component = require("montage/ui/component").Component,
 
 /**
  * @class Stimulus
- * @extends Component
+ * @extends ContextualizableComponent
  */
-exports.AbstractStimulus = Component.specialize( /** @lends Stimulus# */ {
+exports.AbstractStimulus = ContextualizableComponent.specialize( /** @lends Stimulus# */ {
 	constructor: {
 		value: function Stimulus() {
 			this.super();
@@ -342,7 +342,8 @@ exports.AbstractStimulus = Component.specialize( /** @lends Stimulus# */ {
 			}
 			this.nonResponses = [];
 			this.responsesController = new RangeController().initWithContent(this.responses);
-
+			this.experimenterId = this.application.experiment.experimenter.id;
+			this.participantId = this.application.experiment.participant.id;
 			// Not playing audio by default, child must call it.
 			// this.playAudio(2000);
 		}
