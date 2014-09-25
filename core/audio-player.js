@@ -77,6 +77,8 @@ exports.AudioPlayer = Component.specialize( /** @lends AudioPlayer# */ {
 			} else {
 				if (!value.match(/^[^:]+:\/\//)) {
 					this._src = document.location.href.replace(document.location.pathname, "/" + value);
+				} else {
+					this._src = value;
 				}
 				if (!this.mediaController._audioElement) {
 					//Try to use the full path to the audio file if its a relative path 
