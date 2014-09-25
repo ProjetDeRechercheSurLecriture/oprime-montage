@@ -28,7 +28,7 @@ exports.Main = ContextualizableComponent.specialize( /** @lends Main# */ {
 			FieldDB.Database.prototype.BASE_DB_URL = "https://corpusdev.example.org";
 			FieldDB.Database.prototype.BASE_AUTH_URL = "https://authdev.example.org";
 			FieldDB.AudioVideo.prototype.BASE_SPEECH_URL = "https://speechdev.example.org";
-
+			FieldDB.FieldDBObject.application = this.application;
 
 			if (!this.application.contextualizer) {
 				this.application.contextualizer = this.application.contextualizer || new Contextualizer();
