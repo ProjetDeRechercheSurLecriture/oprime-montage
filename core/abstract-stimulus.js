@@ -2,7 +2,7 @@
  * @module ui/stimulus.reel
  * @requires montage/ui/component
  */
-var ContextualizableComponent = require("core/contextualizable-component").ContextualizableComponent,
+var FieldDBObject = require("fielddb/api/FieldDBObject").FieldDBObject,
 	Confirm = require("ui/confirm.reel").Confirm,
 	Response = require("ui/response.reel").Response,
 	PressComposer = require("montage/composer/press-composer").PressComposer,
@@ -10,15 +10,23 @@ var ContextualizableComponent = require("core/contextualizable-component").Conte
 	Promise = require("montage/core/promise").Promise;
 
 /**
- * @class Stimulus
- * @extends ContextualizableComponent
+ * @class AbstractStimulus
+ * @extends FieldDBObject
  */
-exports.AbstractStimulus = ContextualizableComponent.specialize( /** @lends Stimulus# */ {
-	constructor: {
-		value: function Stimulus() {
-			this.super();
-			this.responses = [];
 
+var AbstractStimulus = function AbstractStimulus(options) {
+	this.debug("Constructing AbstractStimulus ", options);
+	FieldDBObject.apply(this, arguments);
+};
+
+AbstractStimulus.prototype = Object.create(FieldDBObject.prototype, /** @lends AbstractStimulus.prototype */ {
+	constructor: {
+		value: AbstractStimulus
+	},
+
+	contextualizer: {
+		get: function() {
+			return this.application.contextualizer;
 		}
 	},
 
@@ -37,14 +45,19 @@ exports.AbstractStimulus = ContextualizableComponent.specialize( /** @lends Stim
 	//    },
 
 	responsesController: {
-		value: null
+		value: null,
+		configurable: true
 	},
 
 	responses: {
-		value: null
+		value: null,
+		configurable: true
+
 	},
 	pauseAudioWhenConfirmingResponse: {
-		value: null
+		value: null,
+		configurable: true
+
 	},
 	addResponse: {
 		value: function(responseEvent, stimulusId) {
@@ -349,3 +362,5 @@ exports.AbstractStimulus = ContextualizableComponent.specialize( /** @lends Stim
 		}
 	}
 });
+
+exports.AbstractStimulus = AbstractStimulus;
