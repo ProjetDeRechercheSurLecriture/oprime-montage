@@ -19,7 +19,7 @@
                 "crossOrigin": null
             },
             "bindings": {
-                "src": {"<-": "'../../../../../'+ @owner.firstImageSrc ?? '../../../assets/img/blank.png'"},
+                "src": {"<-": "@owner.firstImageSrc ?? '../../../assets/img/blank.png'"},
                 "classList.has('montage-invisible')": {
                     "<-": "!@owner.shouldShowFirst"
                 }
@@ -33,7 +33,7 @@
                 "crossOrigin": null
             },
             "bindings": {
-                "src": {"<-": "'../../../../../'+ @owner.lastImageSrc ?? '../../../assets/img/blank.png'"},
+                "src": {"<-": "@owner.lastImageSrc ?? '../../../assets/img/blank.png'"},
                 "classList.has('montage-invisible')": {
                     "<-": "!@owner.shouldShowLast"
                 }
