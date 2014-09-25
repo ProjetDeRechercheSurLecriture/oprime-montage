@@ -2,7 +2,7 @@
  * @module ui/stimulus.reel
  * @requires montage/ui/component
  */
-var FieldDBObject = require("fielddb/api/FieldDBObject").FieldDBObject,
+var Response = require("fielddb/api/datum/Response").Response,
 	Confirm = require("ui/confirm.reel").Confirm,
 	Response = require("ui/response.reel").Response,
 	PressComposer = require("montage/composer/press-composer").PressComposer,
@@ -11,15 +11,15 @@ var FieldDBObject = require("fielddb/api/FieldDBObject").FieldDBObject,
 
 /**
  * @class AbstractStimulus
- * @extends FieldDBObject
+ * @extends Response
  */
 
 var AbstractStimulus = function AbstractStimulus(options) {
 	this.debug("Constructing AbstractStimulus ", options);
-	FieldDBObject.apply(this, arguments);
+	Response.apply(this, arguments);
 };
 
-AbstractStimulus.prototype = Object.create(FieldDBObject.prototype, /** @lends AbstractStimulus.prototype */ {
+AbstractStimulus.prototype = Object.create(Response.prototype, /** @lends AbstractStimulus.prototype */ {
 	constructor: {
 		value: AbstractStimulus
 	},
