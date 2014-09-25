@@ -50,6 +50,10 @@ var SoundCheck = Confirm.specialize( /** @lends SoundCheck# */ {
                     var video = document.getElementById("video-preview");
                     var canvas = document.getElementById("video-snapshot-canvas");
                     var snapshotImage = document.getElementById("video-snapshot");
+                    if (!canvas) {
+                        console.warn("video-snapshot-canvas is not present, cant verify periphialsCheck");
+                        return;
+                    }
                     canvas.width = 640;
                     canvas.height = 360;
                     var ctx = canvas.getContext("2d");
