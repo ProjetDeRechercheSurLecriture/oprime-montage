@@ -131,14 +131,12 @@ exports.Experiment = ContextualizableComponent.specialize( /** @lends Experiment
 
             if (!this.application.corpus) {
                 var resultDBname = this.dbname || window.location.hash.replace("#/", "").replace(/\//g, "-");
-                this.application.corpus = new Corpus({
-                    dbname: resultDBname
-                });
+                if (!resultDBname || resultDBname === this.stimuliDBname) {
+                    resultDBname = "phophlo-demo_data";
+                }
+                this.application.corpus = new Corpus({});
                 if (this.dbUrl) {
                     this.application.corpus.url = this.dbUrl;
-                }
-                if (!resultDBname) {
-                    resultDBname = "phophlo-demo_data";
                 }
                 this.application.corpus.loadOrCreateCorpusByPouchName(resultDBname).then(function(result) {
                     console.log("Corpus is loaded, data can be decrypted.", result);
@@ -423,8 +421,6 @@ exports.Experiment = ContextualizableComponent.specialize( /** @lends Experiment
             }
             this.templateObjects.reinforcement.next();
 
-            this._currentTestBlock.trials._collection[this._currentStimulusIndex].visualChoiceA = this.experimentalDesign.visualChoiceA;
-            this._currentTestBlock.trials._collection[this._currentStimulusIndex].visualChoiceB = this.experimentalDesign.visualChoiceB;
             this._currentStimulus.load(this._currentTestBlock.trials._collection[this._currentStimulusIndex]);
 
             if (this.autoPlaySlideshowOfStimuli) {
