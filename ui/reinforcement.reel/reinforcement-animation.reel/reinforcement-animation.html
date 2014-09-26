@@ -19,7 +19,7 @@
                 "crossOrigin": null
             },
             "bindings": {
-                "src": {"<-": "@owner.firstImageSrc ?? '../../../assets/img/blank.png'"},
+                "src": {"<-": "@owner.firstImageSrc ?? '/assets/img/blank.png'"},
                 "classList.has('montage-invisible')": {
                     "<-": "!@owner.shouldShowFirst"
                 }
@@ -33,7 +33,7 @@
                 "crossOrigin": null
             },
             "bindings": {
-                "src": {"<-": "@owner.lastImageSrc ?? '../../../assets/img/blank.png'"},
+                "src": {"<-": "@owner.lastImageSrc ?? '/assets/img/blank.png'"},
                 "classList.has('montage-invisible')": {
                     "<-": "!@owner.shouldShowLast"
                 }
@@ -83,11 +83,11 @@
 </head>
 <body>
     <div data-montage-id="reinforcementAnimation" class="ReinforcementAnimation">
-        <img data-montage-id="firstImage" src="../../../assets/img/blank.png"/> 
+        <img data-montage-id="firstImage" src="/assets/img/blank.png"/> 
         <div data-montage-id="reinforcementItemsList" class="Reinforcement-image-area">
             <span data-montage-id="reinforcementItem"></span>
         </div>
-        <img data-montage-id="lastImage" src="../../../assets/img/blank.png"/> 
+        <img data-montage-id="lastImage" src="/assets/img/blank.png"/> 
     </div>
 </body>
 </html>

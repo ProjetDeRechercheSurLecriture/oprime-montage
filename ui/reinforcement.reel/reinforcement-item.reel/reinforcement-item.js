@@ -17,8 +17,8 @@ exports.ReinforcementItem = Component.specialize( /** @lends ReinforcementItem# 
 
 	json: {
 		value: {
-			"incompleteImageFile": "../../../assets/img/blank.png",
-			"completedImageFile" : "../../../assets/img/blank.png"
+			"incompleteImageFile": "/assets/img/blank.png",
+			"completedImageFile" : "/assets/img/blank.png"
 		}
 	}
 });
