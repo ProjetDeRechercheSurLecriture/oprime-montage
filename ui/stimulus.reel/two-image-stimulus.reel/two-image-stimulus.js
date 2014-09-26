@@ -23,7 +23,9 @@ exports.TwoImageStimulus = AbstractStimulus.specialize( /** @lends TwoImageStimu
             var audioPath = this.audioAssetsPath || "missingpath";
             audioPath += "/";
 
-            stimulus.audioFile = audioPath + stimulus.audioFile;
+            if (stimulus.audioFile.indexOf("://") == -1) {
+                stimulus.audioFile = audioPath + stimulus.audioFile;
+            }
 
             this.super(stimulus);
         }

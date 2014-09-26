@@ -17,8 +17,6 @@ exports.AbstractStimulus = ContextualizableComponent.specialize( /** @lends Stim
 	constructor: {
 		value: function Stimulus() {
 			this.super();
-			this.responses = [];
-
 		}
 	},
 
@@ -53,7 +51,7 @@ exports.AbstractStimulus = ContextualizableComponent.specialize( /** @lends Stim
 			}
 
 			var reactionTimeEnd = Date.now();
-			var audioDuration = this.application.audioPlayer.getDuration(this.audioFile) || 0;
+			var audioDuration = this.application.audioPlayer.getDuration(this.model.audioFile) || 0;
 			if (audioDuration) {
 				audioDuration = audioDuration * 1000;
 			} else {
@@ -92,12 +90,12 @@ exports.AbstractStimulus = ContextualizableComponent.specialize( /** @lends Stim
 			});
 			var choice = "";
 			if (stimulusId) {
-				choice = this[stimulusId].substring(this[stimulusId].lastIndexOf("/") + 1).replace(/\..+$/, "").replace(/\d+_/, "");
-				if (choice === this.target.orthographic) {
-					choice = this.target;
+				choice = this.model[stimulusId].substring(this.model[stimulusId].lastIndexOf("/") + 1).replace(/\..+$/, "").replace(/\d+_/, "");
+				if (choice === this.model.target.orthography) {
+					choice = this.model.target;
 				} else {
-					this.distractors.map(function(distractor) {
-						if (choice === distractor.orthographic) {
+					this.model.distractors.map(function(distractor) {
+						if (choice === distractor.orthography) {
 							choice = distractor;
 						}
 					});
@@ -111,15 +109,15 @@ exports.AbstractStimulus = ContextualizableComponent.specialize( /** @lends Stim
 				"pageX": responseEvent.pageX,
 				"pageY": responseEvent.pageY,
 				// "prime": {
-				// 	phonemic: this.prime.phonemic,
-				// 	orthographic: this.prime.orthographic,
-				// 	imageFile: this.prime.imageFile
+				// 	utterance: this.model.prime.utterance,
+				// 	orthography: this.model.prime.orthography,
+				// 	imageFile: this.model.prime.imageFile
 				// },
 				"choice": choice,
-				// "target": this.target,
-				"score": this.scoreResponse(this.target, choice)
+				// "target": this.model.target,
+				"score": this.scoreResponse(this.model.target, choice)
 			};
-			this.responses.push(response);
+			this.model.responses.push(response);
 			console.log("Recorded response", JSON.stringify(response));
 		}
 	},
@@ -127,7 +125,7 @@ exports.AbstractStimulus = ContextualizableComponent.specialize( /** @lends Stim
 	addOralResponse: {
 		value: function(choice, dontAutoAdvance) {
 			var reactionTimeEnd = Date.now();
-			var audioDuration = this.application.audioPlayer.getDuration(this.audioFile) || 0;
+			var audioDuration = this.application.audioPlayer.getDuration(this.model.audioFile) || 0;
 			if (audioDuration) {
 				audioDuration = audioDuration * 1000;
 			} else {
@@ -177,18 +175,18 @@ exports.AbstractStimulus = ContextualizableComponent.specialize( /** @lends Stim
 				"choice": choice,
 				"score": choice.score
 			};
-			this.responses = this.responses || [];
-			this.responses.push(response);
+			this.model.responses = this.model.responses || [];
+			this.model.responses.push(response);
 			console.log("Recorded response", JSON.stringify(response));
 		}
 	},
 
 	scoreResponse: {
 		value: function(expectedResponse, actualResponse) {
-			if (!actualResponse.orthographic) {
+			if (!actualResponse.orthography) {
 				return "error";
 			}
-			if (actualResponse.orthographic === expectedResponse.orthographic) {
+			if (actualResponse.orthography === expectedResponse.orthography) {
 				return 1;
 			} else {
 				return 0;
@@ -212,8 +210,8 @@ exports.AbstractStimulus = ContextualizableComponent.specialize( /** @lends Stim
 				"chosenVisualStimulus": "none",
 				"responseScore": -1
 			};
-			this.responses = this.responses || [];
-			this.nonResponses.push(response);
+			this.model.responses = this.model.responses || [];
+			this.model.nonResponses.push(response);
 			console.log("Recorded non-response, the user is confused or not playing the game.", JSON.stringify(response));
 		}
 	},
@@ -311,37 +309,34 @@ exports.AbstractStimulus = ContextualizableComponent.specialize( /** @lends Stim
 	 */
 	playAudio: {
 		value: function(delay) {
-			this.application.audioPlayer.play(this.audioFile, delay);
+			this.application.audioPlayer.play(this.model.audioFile, delay);
 		}
 	},
 
 	pauseAudio: {
 		value: function() {
-			this.application.audioPlayer.pause(this.audioFile);
+			this.application.audioPlayer.pause(this.model.audioFile);
 		}
 	},
 
 	stopAudio: {
 		value: function() {
-			this.application.audioPlayer.stop(this.audioFile);
+			this.application.audioPlayer.stop(this.model.audioFile);
 		}
 	},
 
 	load: {
-		value: function(details) {
-			for (var d in details) {
-				if (details.hasOwnProperty(d)) {
-					this[d] = details[d];
-				}
+		value: function(model) {
+			this.model = model || {};
+
+			if (!this.model.responses) {
+				this.model.responses = [];
 			}
-			if (this.responses === null) {
-				this.responses = [];
+			if (!this.model.nonResponses) {
+				this.model.nonResponses = [];
 			}
-			if (this.nonResponses === null) {
-				this.nonResponses = [];
-			}
-			this.nonResponses = [];
-			this.responsesController = new RangeController().initWithContent(this.responses);
+
+			this.responsesController = new RangeController().initWithContent(this.model.responses);
 			this.experimenterId = this.application.experiment.experimenter.id;
 			this.participantId = this.application.experiment.participant.id;
 			// Not playing audio by default, child must call it.

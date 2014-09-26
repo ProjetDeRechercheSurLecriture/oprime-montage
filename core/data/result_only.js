@@ -15,11 +15,21 @@ exports.map = function(doc) {
             var totalStimuli = 0;
             var totalAnswered = 0;
             var results = [];
-            for (var subexperimentIndex = 0; subexperimentIndex < doc.subexperiments._collection.length; subexperimentIndex++) {
-                var subexperiment = doc.subexperiments._collection[subexperimentIndex];
+
+            var subexperiments = [];
+            if (doc && doc.subexperiments && doc.subexperiments._collection) {
+                subexperiments = doc.subexperiments._collection;
+            }
+            for (var subexperimentIndex = 0; subexperimentIndex < subexperiments.length; subexperimentIndex++) {
+                var subexperiment = subexperiments[subexperimentIndex];
                 subexperiment.scoreSubTotal = 0;
-                for (var stimulusIndex = 0; stimulusIndex < subexperiment.trials._collection.length; stimulusIndex++) {
-                    var stimulusToScore = subexperiment.trials._collection[stimulusIndex];
+                
+                var trials = [];
+                if (subexperiment.trials && subexperiment.trials._collection) {
+                    trials = subexperiment.trials._collection;
+                }
+                for (var stimulusIndex = 0; stimulusIndex < trials.length; stimulusIndex++) {
+                    var stimulusToScore = trials[stimulusIndex];
                     if (stimulusToScore.responses && stimulusToScore.responses[stimulusToScore.responses.length - 1] && stimulusToScore.responses[stimulusToScore.responses.length - 1].score !== undefined) {
                         stimulusToScore.response = stimulusToScore.responses[stimulusToScore.responses.length - 1];
                         stimulusToScore.score = stimulusToScore.responses[stimulusToScore.responses.length - 1].score;
@@ -44,7 +54,7 @@ exports.map = function(doc) {
                 }
                 if (true || subexperiment.label.indexOf("practice") === -1) {
                     totalScore += subexperiment.scoreSubTotal;
-                    totalStimuli += subexperiment.trials._collection.length;
+                    totalStimuli += trials.length;
                 }
             }
             emit(totalScore / totalAnswered, results);
