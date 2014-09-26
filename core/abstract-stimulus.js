@@ -45,7 +45,7 @@ exports.AbstractStimulus = ContextualizableComponent.specialize( /** @lends Stim
 		value: null
 	},
 	addResponse: {
-		value: function(responseEvent, stimulusId) {
+		value: function(responseEvent, chosenImage) {
 			if (!responseEvent) {
 				throw "Cannot add response without the x y information found in the touch/click responseEvent";
 			}
@@ -88,14 +88,14 @@ exports.AbstractStimulus = ContextualizableComponent.specialize( /** @lends Stim
 					self.playAudio();
 				}
 			});
-			var choice = "";
-			if (stimulusId) {
-				choice = this.model[stimulusId].substring(this.model[stimulusId].lastIndexOf("/") + 1).replace(/\..+$/, "").replace(/\d+_/, "");
-				if (choice === this.model.target.orthography) {
+			var choice = {};
+			if (chosenImage) {
+				console.info("===== = For " + this.model.target.utterance + " the user clicked on " + chosenImage + " the target image was " + this.model.target.visualChoice);
+				if (this.model.target.visualChoice === chosenImage) {
 					choice = this.model.target;
 				} else {
 					this.model.distractors.map(function(distractor) {
-						if (choice === distractor.orthography) {
+						if (distractor.visualChoice === chosenImage) {
 							choice = distractor;
 						}
 					});
@@ -183,10 +183,10 @@ exports.AbstractStimulus = ContextualizableComponent.specialize( /** @lends Stim
 
 	scoreResponse: {
 		value: function(expectedResponse, actualResponse) {
-			if (!actualResponse.orthography) {
+			if (!actualResponse.utterance) {
 				return "error";
 			}
-			if (actualResponse.orthography === expectedResponse.orthography) {
+			if (actualResponse.utterance === expectedResponse.utterance) {
 				return 1;
 			} else {
 				return 0;
