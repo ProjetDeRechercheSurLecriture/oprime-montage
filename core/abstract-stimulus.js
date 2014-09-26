@@ -2,7 +2,10 @@
  * @module ui/stimulus.reel
  * @requires montage/ui/component
  */
-var ContextualizableComponent = require("core/contextualizable-component").ContextualizableComponent,
+var Component = require("montage/ui/component").Component,
+	Target = require("montage/core/target").Target,
+	Montage = require("montage/montage").Montage,
+	Stimulus = require("fielddb/api/datum/Stimulus").Stimulus,
 	FieldDBResponse = require("fielddb/api/datum/Response").Response,
 	// Confirm = require("ui/confirm.reel").Confirm,
 	Response = require("ui/response.reel").Response,
@@ -15,16 +18,20 @@ var ContextualizableComponent = require("core/contextualizable-component").Conte
  * @extends FieldDBResponse
  */
 
-var AbstractStimulus = function AbstractStimulus(options) {
-	this.debug("Constructing AbstractStimulus ", options);
-	FieldDBResponse.apply(this, arguments);
-	// ContextualizableComponent.prototype.constructor.apply(this, arguments);
-
-};
-
-AbstractStimulus.prototype = Object.create(FieldDBResponse.prototype, /** @lends AbstractStimulus.prototype */ {
+var AbstractStimulusPrototype = {
 	constructor: {
-		value: AbstractStimulus
+		value: function() {
+			// this.debug = function(message) {
+			// 	console.warn("OVERRIDEN Debug " + message);
+			// };
+			// this.verbose = function(message) {
+			// 	console.warn("OVERRIDEN verbose " + message);
+			// };
+			var options =  new FieldDBResponse();
+			console.log("constructing with ",options);
+			FieldDBResponse.apply(this, options);
+			this.super();
+		}
 	},
 
 	contextualizer: {
@@ -61,7 +68,7 @@ AbstractStimulus.prototype = Object.create(FieldDBResponse.prototype, /** @lends
 	enterDocument: {
 		value: function(firstTime) {
 			ContextualizableComponent.prototype.enterDocument.apply(this, arguments);
-			 // this.super();
+			// this.super();
 
 			if (firstTime) {
 				this.setupFirstPlay();
@@ -147,6 +154,18 @@ AbstractStimulus.prototype = Object.create(FieldDBResponse.prototype, /** @lends
 		}
 	}
 
-});
+};
 
-exports.AbstractStimulus = AbstractStimulus;
+MontagifiedFieldDBResponse = Montage.specialize(AbstractStimulusPrototype, FieldDBResponse.prototype)
+// var AbstractStimulus = function AbstractStimulus(options) {
+// 	this.debug("Constructing AbstractStimulus ", options);
+// 	// Target.prototype.constructor.apply(this, arguments);
+// 	// Component.prototype.constructor.apply(this, arguments);
+
+// 	FieldDBResponse.apply(this, arguments);
+
+// };
+
+// AbstractStimulus.prototype = Object.create(FieldDBResponse.prototype, /** @lends AbstractStimulus.prototype */ );
+
+exports.AbstractStimulus = MontagifiedFieldDBResponse;
