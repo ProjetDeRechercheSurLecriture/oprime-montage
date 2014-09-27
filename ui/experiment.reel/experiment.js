@@ -167,6 +167,11 @@ exports.Experiment = ContextualizableComponent.specialize( /** @lends Experiment
                     console.log(" downloaded sub experiments ", results);
                     self.experimentalDesign.populate(results);
                 });
+                if (this.experimentalDesign.stimuliDialect) {
+                    this.contextualizer.currentLocale = this.experimentalDesign.stimuliDialect;
+                } else {
+                    console.warn("Experimental design is missing the locale of the data. this means that the user interface will not match the data.");
+                }
                 // this.iconSrc = "blank.png";
                 this.iconSrc = this.experimentalDesign.iconSrc;
                 this.needsDraw = true;
@@ -219,7 +224,7 @@ exports.Experiment = ContextualizableComponent.specialize( /** @lends Experiment
             var self = this;
             window.setTimeout(function() {
                 /* hack to make the tutorial mode seem like its working */
-                if (!self.currentlyPlaying) {
+                if (!self.currentlyPlaying && !self.experimentIsComplete) {
                     self.confirm(self.application.contextualizer.localize("locale_prompt_show_tutorial")).then(function() {
                         console.log("Showing tutorial mode");
                         self.toggleTutorialArea();
@@ -420,8 +425,11 @@ exports.Experiment = ContextualizableComponent.specialize( /** @lends Experiment
                 return;
             }
             this.templateObjects.reinforcement.next();
-
-            this._currentStimulus.load(this._currentTestBlock.trials._collection[this._currentStimulusIndex]);
+            try {
+                this._currentStimulus.load(this._currentTestBlock.trials._collection[this._currentStimulusIndex]);
+            } catch (ERROR) {
+                console.log("ERROR LOADING THE STIMULUS! ", ERROR);
+            }
 
             if (this.autoPlaySlideshowOfStimuli) {
                 window.setTimeout(function() {
@@ -539,10 +547,10 @@ exports.Experiment = ContextualizableComponent.specialize( /** @lends Experiment
                         incompleteImageFile: this._currentTestBlock.reinforcementCounter.before,
                         completedImageFile: this._currentTestBlock.reinforcementCounter.after
                     };
-                    if (this._currentTestBlock.reinforcementCounter.before.indexOf("://") > -1) {
+                    if (this._currentTestBlock.reinforcementCounter.before.indexOf("://") === -1) {
                         reinforcementItem.incompleteImageFile = this.experimentalDesign.imageAssetsPath + "/" + this._currentTestBlock.reinforcementCounter.before;
                     }
-                    if (this._currentTestBlock.reinforcementCounter.after.indexOf("://") > -1) {
+                    if (this._currentTestBlock.reinforcementCounter.after.indexOf("://") === -1) {
                         reinforcementItem.completedImageFile = this.experimentalDesign.imageAssetsPath + "/" + this._currentTestBlock.reinforcementCounter.after;
                     }
                     this.reinforcementCounter.push(reinforcementItem);
@@ -550,21 +558,21 @@ exports.Experiment = ContextualizableComponent.specialize( /** @lends Experiment
             } else if (this._currentTestBlock.reinforcementAnimation) {
                 for (var frame = 0; frame < this._currentTestBlock.reinforcementAnimation.animationImages.length; frame++) {
                     if (this._currentTestBlock.reinforcementAnimation.animationImages[frame].incompleteImageFile) {
-                        if (this._currentTestBlock.reinforcementAnimation.animationImages[frame].incompleteImageFile.indexOf("://") > -1) {
+                        if (this._currentTestBlock.reinforcementAnimation.animationImages[frame].incompleteImageFile.indexOf("://") === -1) {
                             this._currentTestBlock.reinforcementAnimation.animationImages[frame].incompleteImageFile = this.experimentalDesign.imageAssetsPath + "/" + this._currentTestBlock.reinforcementAnimation.animationImages[frame].incompleteImageFile;
                         } else {
                             this._currentTestBlock.reinforcementAnimation.animationImages[frame].incompleteImageFile = this._currentTestBlock.reinforcementAnimation.animationImages[frame].incompleteImageFile;
                         }
                     }
                     if (this._currentTestBlock.reinforcementAnimation.animationImages[frame].currentImageFile) {
-                        if (this._currentTestBlock.reinforcementAnimation.animationImages[frame].currentImageFile.indexOf("://") > -1) {
+                        if (this._currentTestBlock.reinforcementAnimation.animationImages[frame].currentImageFile.indexOf("://") === -1) {
                             this._currentTestBlock.reinforcementAnimation.animationImages[frame].currentImageFile = this.experimentalDesign.imageAssetsPath + "/" + this._currentTestBlock.reinforcementAnimation.animationImages[frame].currentImageFile;
                         } else {
                             this._currentTestBlock.reinforcementAnimation.animationImages[frame].currentImageFile = this._currentTestBlock.reinforcementAnimation.animationImages[frame].currentImageFile;
                         }
                     }
                     if (this._currentTestBlock.reinforcementAnimation.animationImages[frame].completedImageFile) {
-                        if (this._currentTestBlock.reinforcementAnimation.animationImages[frame].completedImageFile.indexOf("://") > -1) {
+                        if (this._currentTestBlock.reinforcementAnimation.animationImages[frame].completedImageFile.indexOf("://") === -1) {
                             this._currentTestBlock.reinforcementAnimation.animationImages[frame].completedImageFile = this.experimentalDesign.imageAssetsPath + "/" + this._currentTestBlock.reinforcementAnimation.animationImages[frame].completedImageFile;
                         } else {
                             this._currentTestBlock.reinforcementAnimation.animationImages[frame].completedImageFile = this._currentTestBlock.reinforcementAnimation.animationImages[frame].completedImageFile;
@@ -572,6 +580,7 @@ exports.Experiment = ContextualizableComponent.specialize( /** @lends Experiment
                     }
                 }
             }
+            console.log("Using animation reinforcement", this._currentTestBlock.reinforcementAnimation);
             this.templateObjects.reinforcement.showFirst();
 
             if (this._currentTestBlock.promptUserBeforeContinuing) {
@@ -619,6 +628,7 @@ exports.Experiment = ContextualizableComponent.specialize( /** @lends Experiment
             this.confirm(this.contextualizer.localize(this.experimentalDesign.end_instructions.for_child)).then(function() {
                 console.log("Experiment is complete.");
                 self.currentlyPlaying = false;
+                self.experimentIsComplete = true;
                 self.canBeResumed = false;
                 self.showResultReport();
             }, function(reason) {
