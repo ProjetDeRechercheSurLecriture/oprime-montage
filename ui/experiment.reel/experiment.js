@@ -172,6 +172,14 @@ exports.Experiment = ContextualizableComponent.specialize( /** @lends Experiment
                 } else {
                     console.warn("Experimental design is missing the locale of the data. this means that the user interface will not match the data.");
                 }
+                if (this.experimentalDesign.interfaceDialect) {
+                    this.application.interfaceLocale = this.experimentalDesign.interfaceDialect;
+                    this.contextualizer.currentLocale = this.experimentalDesign.interfaceDialect;
+                } else {
+                    console.warn("Experimental design is missing the locale of the data. this means that the user interface will not match the data.");
+                }
+                this.stimuliCorpus.getCorpusSpecificLocalizations();
+                
                 // this.iconSrc = "blank.png";
                 this.iconSrc = this.experimentalDesign.iconSrc;
                 this.needsDraw = true;
@@ -584,7 +592,7 @@ exports.Experiment = ContextualizableComponent.specialize( /** @lends Experiment
             this.templateObjects.reinforcement.showFirst();
 
             if (this._currentTestBlock.promptUserBeforeContinuing) {
-                this.confirm(this.contextualizer.localize(this._currentTestBlock.promptUserBeforeContinuing.text)).then(function() {
+                this.confirm(this.contextualizer.localize(this._currentTestBlock.promptUserBeforeContinuing.text, this.experimentalDesign.stimuliDialect)).then(function() {
                     self.nextStimulus();
                 }).fail(function(reason) {
                     console.log("TODO add a button for resume?");
@@ -625,7 +633,7 @@ exports.Experiment = ContextualizableComponent.specialize( /** @lends Experiment
                 });
             });
 
-            this.confirm(this.contextualizer.localize(this.experimentalDesign.end_instructions.for_child)).then(function() {
+            this.confirm(this.contextualizer.localize(this.experimentalDesign.end_instructions.for_child, this.experimentalDesign.stimuliDialect)).then(function() {
                 console.log("Experiment is complete.");
                 self.currentlyPlaying = false;
                 self.experimentIsComplete = true;
@@ -666,7 +674,7 @@ exports.Experiment = ContextualizableComponent.specialize( /** @lends Experiment
         value: function() {
             if (this.application && this.application.interfaceLocale) {
                 console.log("handleChangeinterfaceLocale", this.application.interfaceLocale);
-                this.contextualizer.currentLocale = this.application.interfaceLocale.iso;
+                this.contextualizer.currentLocale = this.application.interfaceLocale;
                 this.needsDraw = true;
                 this.setContextualizedText("description");
                 this.setContextualizedText("instructions");
@@ -718,7 +726,7 @@ exports.Experiment = ContextualizableComponent.specialize( /** @lends Experiment
                 contextualizedKey = this.experimentalDesign[key]["default"] || "";
             }
 
-            var localized = this.contextualizer.localize(contextualizedKey);
+            var localized = this.contextualizer.localize(contextualizedKey, this.experimentalDesign.stimuliDialect);
             if (key === "instructions") {
                 this.instructionsAudioDetails = this.contextualizer.audio(contextualizedKey);
                 this.instructionsAudioDetails.path = this.experimentalDesign.audioAssetsPath;

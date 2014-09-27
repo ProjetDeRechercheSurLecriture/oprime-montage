@@ -65,7 +65,7 @@ exports.AbstractStimulus = ContextualizableComponent.specialize( /** @lends Stim
 			var continueToNextStimulus = Promise.defer();
 			if (this.confirmResponseChoiceMessage) {
 				this.contextualizer.currentLocale = this.application.interfaceLocale;
-				var confirmChoicePrompt = this.contextualizer.localize(this.confirmResponseChoiceMessage);
+				var confirmChoicePrompt = this.contextualizer.localize(this.confirmResponseChoiceMessage, this.application.experiment.experimentalDesign.stimuliDialect);
 				var options = {
 					iconSrc: self.ownerComponent.iconSrc,
 					message: confirmChoicePrompt
