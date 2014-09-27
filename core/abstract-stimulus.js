@@ -2,7 +2,7 @@
  * @module ui/stimulus.reel
  * @requires montage/ui/component
  */
-var Component = require("montage/ui/component").Component,
+var ContextualizableComponent = require("core/contextualizable-component").ContextualizableComponent,
 	Confirm = require("ui/confirm.reel").Confirm,
 	Response = require("ui/response.reel").Response,
 	PressComposer = require("montage/composer/press-composer").PressComposer,
@@ -11,14 +11,12 @@ var Component = require("montage/ui/component").Component,
 
 /**
  * @class Stimulus
- * @extends Component
+ * @extends ContextualizableComponent
  */
-exports.AbstractStimulus = Component.specialize( /** @lends Stimulus# */ {
+exports.AbstractStimulus = ContextualizableComponent.specialize( /** @lends Stimulus# */ {
 	constructor: {
 		value: function Stimulus() {
 			this.super();
-			this.responses = [];
-
 		}
 	},
 
@@ -47,13 +45,13 @@ exports.AbstractStimulus = Component.specialize( /** @lends Stimulus# */ {
 		value: null
 	},
 	addResponse: {
-		value: function(responseEvent, stimulusId) {
+		value: function(responseEvent, chosenImage) {
 			if (!responseEvent) {
 				throw "Cannot add response without the x y information found in the touch/click responseEvent";
 			}
 
 			var reactionTimeEnd = Date.now();
-			var audioDuration = this.application.audioPlayer.getDuration(this.audioFile) || 0;
+			var audioDuration = this.application.audioPlayer.getDuration(this.model.audioFile) || 0;
 			if (audioDuration) {
 				audioDuration = audioDuration * 1000;
 			} else {
@@ -66,8 +64,8 @@ exports.AbstractStimulus = Component.specialize( /** @lends Stimulus# */ {
 			var self = this;
 			var continueToNextStimulus = Promise.defer();
 			if (this.confirmResponseChoiceMessage) {
-				this.application.contextualizer.currentLocale = this.application.interfaceLocale.iso;
-				var confirmChoicePrompt = this.application.contextualizer.localize(this.confirmResponseChoiceMessage); 
+				this.contextualizer.currentLocale = this.application.interfaceLocale;
+				var confirmChoicePrompt = this.contextualizer.localize(this.confirmResponseChoiceMessage, this.application.experiment.experimentalDesign.stimuliDialect);
 				var options = {
 					iconSrc: self.ownerComponent.iconSrc,
 					message: confirmChoicePrompt
@@ -90,14 +88,14 @@ exports.AbstractStimulus = Component.specialize( /** @lends Stimulus# */ {
 					self.playAudio();
 				}
 			});
-			var choice = "";
-			if (stimulusId) {
-				choice = this[stimulusId].substring(this[stimulusId].lastIndexOf("/") + 1).replace(/\..+$/, "").replace(/\d+_/, "");
-				if (choice === this.target.orthographic) {
-					choice = this.target;
+			var choice = {};
+			if (chosenImage) {
+				console.info("===== = For " + this.model.target.utterance + " the user clicked on " + chosenImage + " the target image was " + this.model.target.visualChoice);
+				if (this.model.target.visualChoice === chosenImage) {
+					choice = this.model.target;
 				} else {
-					this.distractors.map(function(distractor) {
-						if (choice === distractor.orthographic) {
+					this.model.distractors.map(function(distractor) {
+						if (distractor.visualChoice === chosenImage) {
 							choice = distractor;
 						}
 					});
@@ -111,15 +109,15 @@ exports.AbstractStimulus = Component.specialize( /** @lends Stimulus# */ {
 				"pageX": responseEvent.pageX,
 				"pageY": responseEvent.pageY,
 				// "prime": {
-				// 	phonemic: this.prime.phonemic,
-				// 	orthographic: this.prime.orthographic,
-				// 	imageFile: this.prime.imageFile
+				// 	utterance: this.model.prime.utterance,
+				// 	orthography: this.model.prime.orthography,
+				// 	imageFile: this.model.prime.imageFile
 				// },
 				"choice": choice,
-				// "target": this.target,
-				"score": this.scoreResponse(this.target, choice)
+				// "target": this.model.target,
+				"score": this.scoreResponse(this.model.target, choice)
 			};
-			this.responses.push(response);
+			this.model.responses.push(response);
 			console.log("Recorded response", JSON.stringify(response));
 		}
 	},
@@ -127,7 +125,7 @@ exports.AbstractStimulus = Component.specialize( /** @lends Stimulus# */ {
 	addOralResponse: {
 		value: function(choice, dontAutoAdvance) {
 			var reactionTimeEnd = Date.now();
-			var audioDuration = this.application.audioPlayer.getDuration(this.audioFile) || 0;
+			var audioDuration = this.application.audioPlayer.getDuration(this.model.audioFile) || 0;
 			if (audioDuration) {
 				audioDuration = audioDuration * 1000;
 			} else {
@@ -140,8 +138,8 @@ exports.AbstractStimulus = Component.specialize( /** @lends Stimulus# */ {
 			var self = this;
 			var continueToNextStimulus = Promise.defer();
 			if (this.confirmResponseChoiceMessage) {
-				this.application.contextualizer.currentLocale = this.application.interfaceLocale.iso;
-				var confirmChoicePrompt = this.application.contextualizer.localize(this.confirmResponseChoiceMessage); 
+				this.contextualizer.currentLocale = this.application.interfaceLocale;
+				var confirmChoicePrompt = this.contextualizer.localize(this.confirmResponseChoiceMessage);
 				var options = {
 					iconSrc: self.ownerComponent.iconSrc,
 					message: confirmChoicePrompt
@@ -152,7 +150,7 @@ exports.AbstractStimulus = Component.specialize( /** @lends Stimulus# */ {
 					continueToNextStimulus.reject(new Error("The x prevented the cancel?"));
 				});
 			} else {
-				if(!dontAutoAdvance){
+				if (!dontAutoAdvance) {
 					continueToNextStimulus.resolve();
 				}
 			}
@@ -166,7 +164,7 @@ exports.AbstractStimulus = Component.specialize( /** @lends Stimulus# */ {
 					self.playAudio();
 				}
 			});
-			
+
 			var response = {
 				"reactionTimeAudioOffset": reactionTimeEnd - this.reactionTimeStart - audioDuration,
 				"reactionTimeAudioOnset": reactionTimeEnd - this.reactionTimeStart,
@@ -177,18 +175,18 @@ exports.AbstractStimulus = Component.specialize( /** @lends Stimulus# */ {
 				"choice": choice,
 				"score": choice.score
 			};
-			this.responses = this.responses || [];
-			this.responses.push(response);
+			this.model.responses = this.model.responses || [];
+			this.model.responses.push(response);
 			console.log("Recorded response", JSON.stringify(response));
 		}
 	},
 
 	scoreResponse: {
 		value: function(expectedResponse, actualResponse) {
-			if (!actualResponse.orthographic) {
+			if (!actualResponse.utterance) {
 				return "error";
 			}
-			if (actualResponse.orthographic === expectedResponse.orthographic) {
+			if (actualResponse.utterance === expectedResponse.utterance) {
 				return 1;
 			} else {
 				return 0;
@@ -212,8 +210,8 @@ exports.AbstractStimulus = Component.specialize( /** @lends Stimulus# */ {
 				"chosenVisualStimulus": "none",
 				"responseScore": -1
 			};
-			this.responses = this.responses || [];
-			this.nonResponses.push(response);
+			this.model.responses = this.model.responses || [];
+			this.model.nonResponses.push(response);
 			console.log("Recorded non-response, the user is confused or not playing the game.", JSON.stringify(response));
 		}
 	},
@@ -311,38 +309,36 @@ exports.AbstractStimulus = Component.specialize( /** @lends Stimulus# */ {
 	 */
 	playAudio: {
 		value: function(delay) {
-			this.application.audioPlayer.play(this.audioFile, delay);
+			this.application.audioPlayer.play(this.model.audioFile, delay);
 		}
 	},
 
 	pauseAudio: {
 		value: function() {
-			this.application.audioPlayer.pause(this.audioFile);
+			this.application.audioPlayer.pause(this.model.audioFile);
 		}
 	},
 
 	stopAudio: {
 		value: function() {
-			this.application.audioPlayer.stop(this.audioFile);
+			this.application.audioPlayer.stop(this.model.audioFile);
 		}
 	},
 
 	load: {
-		value: function(details) {
-			for (var d in details) {
-				if (details.hasOwnProperty(d)) {
-					this[d] = details[d];
-				}
-			}
-			if (this.responses === null) {
-				this.responses = [];
-			}
-			if (this.nonResponses === null) {
-				this.nonResponses = [];
-			}
-			this.nonResponses = [];
-			this.responsesController = new RangeController().initWithContent(this.responses);
+		value: function(model) {
+			this.model = model || {};
 
+			if (!this.model.responses) {
+				this.model.responses = [];
+			}
+			if (!this.model.nonResponses) {
+				this.model.nonResponses = [];
+			}
+
+			this.responsesController = new RangeController().initWithContent(this.model.responses);
+			this.experimenterId = this.application.experiment.experimenter.id;
+			this.participantId = this.application.experiment.participant.id;
 			// Not playing audio by default, child must call it.
 			// this.playAudio(2000);
 		}

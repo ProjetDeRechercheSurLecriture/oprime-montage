@@ -1,5 +1,3 @@
-var SimpleLocalizer = require("core/open-minded-localizer").SimpleLocalizer;
+var FieldDBContextualizer = require("fielddb/api/locales/Contextualizer").Contextualizer;
 
-exports.Contextualizer = SimpleLocalizer.specialize( /** @lends Experiment# */ {
-
-});
+exports.Contextualizer = FieldDBContextualizer;

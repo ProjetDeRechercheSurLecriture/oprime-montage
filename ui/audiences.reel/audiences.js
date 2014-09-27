@@ -16,13 +16,13 @@ exports.Audiences = Component.specialize( /** @lends Audiences# */ {
 				"text": "Child",
 				"experimentLabel": "Participant",
 				"key": "participant",
-				"gamifiedKey": "child",
-				"selected": true
+				"gamifiedKey": "child"
 			}, {
 				"gameLabel": "Teacher",
 				"text": "Teacher",
 				"experimentLabel": "Administrator",
-				"key": "experimentAdministrator"
+				"key": "experimentAdministrator",
+				"selected": true
 			}, {
 				"gameLabel": "Parent",
 				"text": "Parent",

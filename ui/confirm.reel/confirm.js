@@ -181,10 +181,10 @@ var Confirm = exports.Confirm = Component.specialize( /** @lends module:"matte/u
 
             confirm = popup.content;
 
-            if (this.application.contextualizer) {
-                this.application.contextualizer.currentLocale = this.application.interfaceLocale.iso;
-                this.okLabel = this.application.contextualizer.localize("okay");
-                this.cancelLabel = this.application.contextualizer.localize("cancel");
+            if (this.contextualizer) {
+                this.contextualizer.currentLocale = this.application.interfaceLocale.iso;
+                this.okLabel = this.contextualizer.localize("locale_okay");
+                this.cancelLabel = this.contextualizer.localize("locale_cancel");
             } else {
                 console.log("Not localizing the confirm buttons");
             }

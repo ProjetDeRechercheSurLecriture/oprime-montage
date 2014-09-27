@@ -1,6 +1,6 @@
 .ExperimentReport {
 	min-width: 20em;
-	color: #fff !important;
+	color: white !important;
 }
 
 .ExperimentReport-json{
@@ -9,11 +9,17 @@
 }
 
 .ExperimentReport .experiment_description {
-	color: hsl(0,0%,0%) !important;
+	color: white !important;
 	text-shadow: 0 0px 0 hsla(0,0%,100%,0) !important;
 }
 
 .ExperimentReport .experiment_title {
-	color: hsl(0,0%,0%) !important;
+	color: white !important;
 	text-shadow: 0 0px 0 hsla(0,0%,100%,0) !important;
+}
+
+.scrollable {
+	overflow: auto !important;
+	height: 30em !important;
+	width: 100%;
 }

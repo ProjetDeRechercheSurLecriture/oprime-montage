@@ -62,11 +62,11 @@ exports.ExperimentReport = Component.specialize( /** @lends ExperimentReport# */
             };
             ResultOnlyView.map(this.experimentalDesign);
 
-            // for (var subexperimentIndex = 0; subexperimentIndex < this.experimentalDesign.subexperiments.length; subexperimentIndex++) {
-            //  var subexperiment = this.experimentalDesign.subexperiments[subexperimentIndex];
+            // for (var subexperimentIndex = 0; subexperimentIndex < this.experimentalDesign.subexperiments._collection.length; subexperimentIndex++) {
+            //  var subexperiment = this.experimentalDesign.subexperiments._collection[subexperimentIndex];
             //  subexperiment.scoreSubTotal = 0;
-            //  for (var stimulusIndex = 0; stimulusIndex < subexperiment.trials.length; stimulusIndex++) {
-            //      var stimulusToScore = subexperiment.trials[stimulusIndex];
+            //  for (var stimulusIndex = 0; stimulusIndex < subexperiment.trials._collection.length; stimulusIndex++) {
+            //      var stimulusToScore = subexperiment.trials._collection[stimulusIndex];
             //      if (stimulusToScore.responses && stimulusToScore.responses[stimulusToScore.responses.length - 1] && stimulusToScore.responses[stimulusToScore.responses.length - 1].score !== undefined) {
             //          stimulusToScore.response = stimulusToScore.responses[stimulusToScore.responses.length - 1];
             //          stimulusToScore.score = stimulusToScore.responses[stimulusToScore.responses.length - 1].score;
@@ -80,7 +80,7 @@ exports.ExperimentReport = Component.specialize( /** @lends ExperimentReport# */
             //      } else {
             //          stimulusToScore.response = {
             //              choice: {
-            //                  orthographic: "NA"
+            //                  orthography: "NA"
             //              }
             //          };
             //          stimulusToScore.score = null;
@@ -89,7 +89,7 @@ exports.ExperimentReport = Component.specialize( /** @lends ExperimentReport# */
             //  }
             //  if (true || subexperiment.label.indexOf("practice") === -1) {
             //      totalScore += subexperiment.scoreSubTotal;
-            //      totalStimuli += subexperiment.trials.length;
+            //      totalStimuli += subexperiment.trials._collection.length;
             //  }
             // }
             // this.experimentalDesign.scoreTotal = totalScore;

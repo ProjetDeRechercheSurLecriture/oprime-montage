@@ -2,8 +2,7 @@
  * @module ui/main.reel
  * @requires montage/ui/component
  */
-var Component = require("montage/ui/component").Component,
-	Contextualizer = require("core/contextualizer").Contextualizer;
+var Component = require("montage/ui/component").Component;
 
 /**
  * @class ContextualizableComponent
@@ -13,11 +12,13 @@ exports.ContextualizableComponent = Component.specialize( /** @lends Contextuali
 	constructor: {
 		value: function ContextualizableComponent() {
 			this.super();
-			this.contextualizer = new Contextualizer();
+
 		}
 	},
 
 	contextualizer: {
-		value: null
+		get: function() {
+			return this.application.contextualizer;
+		}
 	}
 });

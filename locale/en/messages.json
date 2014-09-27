@@ -1,26 +1,32 @@
 {
-	"change_language": {
+	"locale_change_language": {
 		"message": "Change Language"
 	},
-	"okay": {
+	"locale_okay": {
 		"message": "OK"
 	},
-	"cancel": {
+	"locale_cancel": {
 		"message": "Cancel"
 	},
-	"yes": {
+	"locale_yes": {
 		"message": "Yes"
 	},
-	"no": {
+	"locale_no": {
 		"message": "No"
 	},
-	"plug_in_headphones": {
+	"locale_sound_check_warning": {
+		"message": "This game needs you to use your microphone and speakers."
+	},
+	"locale_sound_check_button_text": {
+		"message": "Click here to check your sound"
+	},
+	"locale_plug_in_headphones": {
 		"message": "Please plug in headphones to continue."
 	},
-	"confirm_choice": {
+	"locale_confirm_choice": {
 		"message": "Are you sure?"
 	},
-	"prompt_show_tutorial":{
+	"locale_prompt_show_tutorial":{
 		"message": "Do you want to have a tutorial?"
 	}
 }

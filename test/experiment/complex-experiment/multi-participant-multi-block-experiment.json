@@ -1,7 +1,7 @@
 {
 	"title": {
-		"default": "localized_title",
-		"gamified_title": "localized_gamified_title"
+		"default": "locale_title",
+		"gamified_title": "locale_gamified_title"
 	},
 	"participants": [{
 		"participant_code": "AA",
@@ -24,32 +24,32 @@
 		"userid": 12347823930
 	}],
 	"description": {
-		"default": "localized_description_for_teacher",
-		"for_child": "localized_description_for_child",
-		"for_parent": "localized_description_for_parent",
-		"for_teacher": "localized_description_for_teacher",
-		"for_school_records": "localized_description_for_school_record",
-		"for_slps": "localized_description_for_slp"
+		"default": "locale_description_for_teacher",
+		"for_child": "locale_description_for_child",
+		"for_parent": "locale_description_for_parent",
+		"for_teacher": "locale_description_for_teacher",
+		"for_school_records": "locale_description_for_school_record",
+		"for_slps": "locale_description_for_slp"
 	},
 	"instructions": {
-		"default": "localized_instructions_for_teacher",
-		"for_child": "localized_instructions_for_child",
-		"for_parent": "localized_instructions_for_parent",
-		"for_teacher": "localized_instructions_for_teacher",
-		"for_school_records": "localized_instructions_for_school_record",
-		"for_slps": "localized_instructions_for_slp"
+		"default": "locale_instructions_for_teacher",
+		"for_child": "locale_instructions_for_child",
+		"for_parent": "locale_instructions_for_parent",
+		"for_teacher": "locale_instructions_for_teacher",
+		"for_school_records": "locale_instructions_for_school_record",
+		"for_slps": "locale_instructions_for_slp"
 	},
 	"end_instructions": {
-		"default": "localized_end_instructions_for_teacher",
-		"for_child": "localized_end_instructions_for_child",
-		"for_teacher": "localized_end_instructions_for_teacher"
+		"default": "locale_end_instructions_for_teacher",
+		"for_child": "locale_end_instructions_for_child",
+		"for_teacher": "locale_end_instructions_for_teacher"
 	},
 	"scoreTotal": 0,
 	"subexperiments": [{
 		"label": "practice",
 		"title": {
-			"default": "localized_practice",
-			"gamified_title": "localized_gamified_practice"
+			"default": "locale_practice",
+			"gamified_title": "locale_gamified_practice"
 		},
 		"participants": [{
 			"participant_code": "AA",
@@ -75,7 +75,7 @@
 			"default": ""
 		},
 		"instructions": {
-			"default": "localized_practice_instructions_for_child"
+			"default": "locale_practice_instructions_for_child"
 		},
 		"trials": [{
 			"auditoryStimulus": "practice_1_auditory_stimuli",
@@ -103,8 +103,8 @@
 	}, {
 		"label": "testBlock1",
 		"title": {
-			"default": "localized_title",
-			"gamified_title": "localized_gamified_title"
+			"default": "locale_title",
+			"gamified_title": "locale_gamified_title"
 		},
 		"participants": [{
 			"participant_code": "AA",
@@ -130,7 +130,7 @@
 			"default": ""
 		},
 		"instructions": {
-			"default": "localized_test_instructions_for_child"
+			"default": "locale_test_instructions_for_child"
 		},
 		"trials": [{
 			"auditoryStimulus": "test_1_auditory_stimuli",
@@ -152,7 +152,7 @@
 		"label": "testBlock2",
 
 		"title": {
-			"default": "localized_story_break"
+			"default": "locale_story_break"
 		},
 		"participants": [{
 			"participant_code": "AA",
@@ -178,7 +178,7 @@
 			"default": ""
 		},
 		"instructions": {
-			"default": "localized_story_break_instructions_for_child"
+			"default": "locale_story_break_instructions_for_child"
 		},
 		"trials": [{
 			"auditoryStimulus": "story_break",
