@@ -14,7 +14,7 @@
             "prototype": "ui/image.reel",
             "properties": {
                 "element": {"#": "image"},
-                "crossOrigin": null
+                "crossOrigin": "*"
             },
             "bindings": {
                 "src": {"<-": "(@owner.json.status == 'completed') ? @owner.json.completedImageFile : @owner.json.incompleteImageFile"}
