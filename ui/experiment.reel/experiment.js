@@ -12,7 +12,6 @@ var ContextualizableComponent = require("core/contextualizable-component").Conte
 
     Corpus = require("fielddb/api/corpus/Corpus").Corpus,
     SubExperiment = require("fielddb/api/data_list/SubExperimentDataList").SubExperimentDataList,
-    Participant = require("fielddb/api/user/Participant").Participant,
     UserMask = require("fielddb/api/user/UserMask").UserMask,
     FieldDB = require("fielddb/api/fielddb").FieldDB;
 
@@ -43,11 +42,11 @@ exports.Experiment = ContextualizableComponent.specialize( /** @lends Experiment
             this.super();
             this.application.experiment = this;
 
-            if (!this.application.participants) {
-                this.application.participants = [new Participant({
-                    anonymousCode: Date.now()
-                })];
-            }
+            // if (!this.application.participants) {
+            //     this.application.participants = [new Participant({
+            //         anonymousCode: Date.now()
+            //     })];
+            // }
             this.application.audioPlayer = new AudioPlayer();
 
             // this.application.videoRecordingVerified = true;
@@ -69,6 +68,7 @@ exports.Experiment = ContextualizableComponent.specialize( /** @lends Experiment
     },
 
     experimenter: {
+        configurable: true,
         get: function() {
             if (this.application.experimenters && this.application.experimenters.length > 0) {
                 return this.application.experimenters[0];
