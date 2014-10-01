@@ -599,7 +599,11 @@ exports.Experiment = ContextualizableComponent.specialize( /** @lends Experiment
             this.templateObjects.reinforcement.showFirst();
 
             if (this._currentTestBlock.promptUserBeforeContinuing) {
-                this.confirm(this.contextualizer.localize(this._currentTestBlock.promptUserBeforeContinuing.text, this.experimentalDesign.stimuliDialect)).then(function() {
+                var promptText = "    ";
+                if (this.application.currentAudience.text !== "Child") {
+                    promptText = this.contextualizer.localize(this._currentTestBlock.promptUserBeforeContinuing.text, this.experimentalDesign.stimuliDialect);
+                }
+                this.confirm(promptText).then(function() {
                     self.nextStimulus();
                 }).fail(function(reason) {
                     console.log("TODO add a button for resume?");
