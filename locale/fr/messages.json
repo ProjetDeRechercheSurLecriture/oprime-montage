@@ -14,6 +14,12 @@
 	"locale_no": {
 		"message": "Non"
 	},
+	"locale_new": {
+		"message": "Nouveau"
+	},
+	"locale_completed": {
+		"message": "Complété"
+	},
 	"locale_sound_check_warning": {
 		"message": "Ce jeu demande l’utilisation d’écouteurs, pour la présentation du son, et l’enregistrement de la parole."
 	},

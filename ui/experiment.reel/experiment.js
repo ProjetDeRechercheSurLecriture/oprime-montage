@@ -48,9 +48,6 @@ exports.Experiment = ContextualizableComponent.specialize( /** @lends Experiment
                     anonymousCode: Date.now()
                 })];
             }
-            var experimenter = this.experimenter;
-            console.log("priming existance of an experimenter from session tokens");
-
             this.application.audioPlayer = new AudioPlayer();
 
             // this.application.videoRecordingVerified = true;
@@ -104,16 +101,6 @@ exports.Experiment = ContextualizableComponent.specialize( /** @lends Experiment
         get: function() {
             if (this.application.participants && this.application.participants.length > 0) {
                 return this.application.participants[0];
-            } else {
-                if (this.application.corpus && this.application.corpus.resumeAuthenticationSession) {
-                    var self = this;
-                    this.application.corpus.resumeAuthenticationSession().then(function(sessionInfo) {
-                        console.log("guessing user from authentication session", sessionInfo);
-                        self.application.participants = [new UserMask({
-                            id: Date.now()
-                        })];
-                    });
-                }
             }
             return {};
         },
@@ -186,6 +173,9 @@ exports.Experiment = ContextualizableComponent.specialize( /** @lends Experiment
                     console.warn("Experimental design is missing the locale of the data. this means that the user interface will not match the data.");
                 }
                 this.stimuliCorpus.getCorpusSpecificLocalizations();
+
+                var experimenter = this.experimenter;
+                console.log("priming existance of an experimenter from session tokens");
 
                 // this.iconSrc = "blank.png";
                 this.iconSrc = this.experimentalDesign.iconSrc;
@@ -623,6 +613,28 @@ exports.Experiment = ContextualizableComponent.specialize( /** @lends Experiment
         }
     },
 
+    saveParticipant: {
+        value: function(onlyIfNotSaved) {
+            if (onlyIfNotSaved && this.participant.rev) {
+                console.warn("Not saving this participant, they already have a revision", this.participant);
+                return;
+            }
+            if (!this.participant || !this.participant.save) {
+                console.warn("Not saving this participant, they are not a fielddb object", this.participant);
+                return;
+            }
+            if (this.participant.anonymousCode.indexOf(this.participant.lastname) > -1) {
+                this.participant.firstname = this.contextualizer.localize("locale_completed");
+            }
+            this.participant.url = FieldDB.Database.prototype.BASE_DB_URL + "/" + FieldDB.FieldDBObject.application.corpus.dbname;
+            this.participant.save().then(function(result) {
+                console.log("participant was saved", result);
+            }, function(error) {
+                console.warn("participant was not saved", error);
+            });
+        }
+    },
+
     experimentCompleted: {
         value: function() {
             var self = this;
@@ -631,6 +643,7 @@ exports.Experiment = ContextualizableComponent.specialize( /** @lends Experiment
             // delete this.experimentalDesign.rev;
             this.application.corpus.set(this.experimentalDesign.experimentType + this.experimentalDesign.timestamp, this.experimentalDesign).then(function(saveresult) {
                 console.log("saved results", saveresult);
+                self.saveParticipant("onlynewparticipants");
             }, function(saveerror) {
                 console.warn("unable to save results, logging in as an anonymous user", saveerror);
                 self.application.corpus.login({
@@ -638,9 +651,21 @@ exports.Experiment = ContextualizableComponent.specialize( /** @lends Experiment
                     password: "none"
                 }).then(function(loginresults) {
                     console.log("Logged in", loginresults);
-                    self.application.corpus.set(self.experimentalDesign.experimentType + self.experimentalDesign.timestamp, self.experimentalDesign);
+                    self.application.corpus.set(self.experimentalDesign.experimentType + self.experimentalDesign.timestamp, self.experimentalDesign).then(function(result) {
+                        console.log("experiment saved ", result);
+                        self.saveParticipant("onlynewparticipants");
+                    }, function(error) {
+                        console.warn("Trying to save the experiment again in 2 seconds", error);
+                        setTimout(function() {
+                            self.experimentCompleted();
+                        }, 2000);
+                    });
                 }, function(error2) {
-                    console.warn("gave up on saving experiment.", error2);
+                    // console.warn("gave up on logging in to save the experiment.", error2);
+                    console.warn("Trying to save the experiment again in 2 seconds", error2);
+                    setTimout(function() {
+                        self.experimentCompleted();
+                    }, 2000);
                 });
             });
 
@@ -653,6 +678,7 @@ exports.Experiment = ContextualizableComponent.specialize( /** @lends Experiment
             }, function(reason) {
                 console.log("TODO add a button for resume?");
             });
+
         }
     },
 
