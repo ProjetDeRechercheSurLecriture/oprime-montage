@@ -116,6 +116,13 @@ exports.Experiment = ContextualizableComponent.specialize( /** @lends Experiment
                 }
             }
             return {};
+        },
+        set: function(value) {
+            if (value === this.participant) {
+                return;
+            }
+            // this.participants.unshift(value);
+            this.application.participants = [value];
         }
     },
 

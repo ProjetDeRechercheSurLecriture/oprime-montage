@@ -113,7 +113,19 @@
             "bindings": {
                 "value": {"<-": "@owner.title"}
             }
+        },
+
+        "participantFirstName": {
+            "prototype": "digit/ui/text.reel",
+            "properties": {
+                "element": {"#": "participantFirstName"},
+                "value": "Text"
+            },
+            "bindings": {
+                "value": {"<-": "@owner.application.experiment.participant.firstname"}
+            }
         }
+
     }
     </script>
 </head>
@@ -145,7 +157,7 @@
                 <p class="white">
                     Discussion: 
                     <span data-montage-id="discussion" class="child_specific_results experiment_results_discussion" contenteditable="true">
-                        Susie performed above normal, she
+                        <span data-montage-id="participantFirstName" class="white">Susie</span> performed above normal, she
                         did very well with the /r/ sound.
                     </span> 
                 </p>

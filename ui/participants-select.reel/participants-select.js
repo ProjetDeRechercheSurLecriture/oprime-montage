@@ -41,9 +41,9 @@ exports.ParticipantsSelect = Component.specialize( /** @lends ParticipantsSelect
 
 				// rangeController.content = this.content;
 				if (this.content) {
-					this.content.map(function(audience) {
-						if (audience.selected) {
-							self.templateObjects.select.value = audience;
+					this.content.map(function(participant) {
+						if (participant.selected) {
+							self.templateObjects.select.value = participant;
 							self.handleChange();
 						}
 					});
@@ -56,18 +56,18 @@ exports.ParticipantsSelect = Component.specialize( /** @lends ParticipantsSelect
 	handleChange: {
 		value: function() {
 			// console.log("handleChange", this.templateObjects.select.value);
-			if (this._currentAudience !== this.templateObjects.select.value) {
-				this._currentAudience = this.templateObjects.select.value;
-				this.application.currentAudience = this._currentAudience;
-				var changeAudienceEvent = document.createEvent("CustomEvent");
-				changeAudienceEvent.initCustomEvent("changeCurrentAudience", true, true, null);
-				this.dispatchEvent(changeAudienceEvent);
+			if (this._currentParticipant !== this.templateObjects.select.value) {
+				this._currentParticipant = this.templateObjects.select.value;
+				this.application.experiment.participant = this._currentParticipant;
+				var changeParticipantEvent = document.createEvent("CustomEvent");
+				changeParticipantEvent.initCustomEvent("changeCurrentParticipant", true, true, null);
+				this.dispatchEvent(changeParticipantEvent);
 			}
-			console.log("ParticipantsSelect handleChange", this._currentAudience);
+			console.log("ParticipantsSelect handleChange", this._currentParticipant);
 		}
 	},
 
-	_currentAudience: {
+	_currentParticipant: {
 		value: null
 	}
 });
