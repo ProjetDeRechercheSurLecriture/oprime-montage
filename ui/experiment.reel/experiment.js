@@ -12,6 +12,7 @@ var ContextualizableComponent = require("core/contextualizable-component").Conte
 
     Corpus = require("fielddb/api/corpus/Corpus").Corpus,
     SubExperiment = require("fielddb/api/data_list/SubExperimentDataList").SubExperimentDataList,
+    Participant = require("fielddb/api/user/Participant").Participant,
     UserMask = require("fielddb/api/user/UserMask").UserMask,
     FieldDB = require("fielddb/api/fielddb").FieldDB;
 
@@ -134,6 +135,54 @@ exports.Experiment = ContextualizableComponent.specialize( /** @lends Experiment
                 }
                 this.application.corpus.loadOrCreateCorpusByPouchName(resultDBname).then(function(result) {
                     console.log("Corpus is loaded, data can be decrypted.", result);
+                    if (!self.application.corpus.participantFields) {
+                        self.application.corpus.participantFields = Participant.prototype.defaults.fields;
+                    }
+                    if (!self.application.corpus.participantFields.school) {
+                        self.application.corpus.participantFields.add({
+                            "id": "school",
+                            "labelFieldLinguists": "School",
+                            "labelNonLinguists": "",
+                            "labelTranslators": "",
+                            "labelExperimenters": "École",
+                            "shouldBeEncrypted": true,
+                            "encrypted": true,
+                            "showToUserTypes": "all",
+                            "defaultfield": true,
+                            "help": "The school/institution where the student is affiliated (optional, encrypted if speaker is anonymous)",
+                            "helpLinguists": "The school/institution where the student is affiliated (optional, encrypted if speaker is anonymous)"
+                        });
+                    }
+                    if (!self.application.corpus.participantFields.schoolboard) {
+                        self.application.corpus.participantFields.add({
+                            "id": "schoolBoard",
+                            "labelFieldLinguists": "School Board",
+                            "labelNonLinguists": "",
+                            "labelTranslators": "",
+                            "labelExperimenters": "Commission scolaire",
+                            "shouldBeEncrypted": true,
+                            "encrypted": true,
+                            "showToUserTypes": "all",
+                            "defaultfield": true,
+                            "help": "The school board/commission scolaire where the student goes to school (optional, encrypted if speaker is anonymous.)",
+                            "helpLinguists": "The school board/commission scolaire where the student goes to school. Can be used to group student results/dialects. (optional, encrypted if speaker is anonymous.)"
+                        });
+                    }
+                    if (!self.application.corpus.participantFields.notes) {
+                        self.application.corpus.participantFields.add({
+                            "id": "notes",
+                            "labelFieldLinguists": "Notes",
+                            "labelNonLinguists": "",
+                            "labelTranslators": "",
+                            "labelExperimenters": "Notes",
+                            "shouldBeEncrypted": true,
+                            "encrypted": true,
+                            "showToUserTypes": "all",
+                            "defaultfield": true,
+                            "help": "Optional notes for the participant's file, encrypted if speaker is anonymous.",
+                            "helpLinguists": "Optional notes for the participant's file, encrypted if speaker is anonymous."
+                        });
+                    }
                 }, function(result) {
                     console.log("Corpus cannot be loaded, data cannot be decrypted, removing this db from the url.", result);
                     window.location.replace(window.location.href.replace(/#.*$/, ""));
