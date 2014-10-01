@@ -114,6 +114,17 @@
                 "value": {"<-": "@owner.title"}
             }
         },
+        
+        "participantDetails": {
+            "prototype": "ui/participant.reel/participant-details.reel",
+            "properties": {
+                "element": {"#": "participantDetails"},
+                "enabled": true
+            },
+            "bindings": {
+                "src": {"<-": "@owner.application.experiment.participant"}
+            }
+        },
 
         "participantFirstName": {
             "prototype": "digit/ui/text.reel",
@@ -147,6 +158,7 @@
                 </strong>
                 <span data-montage-id="scoreComparedToNorms"></span>
                 <p class="white">
+                    <div data-montage-id="participantDetails"></div>
                     <label> Description: </label>
                     <span data-montage-id="description" class="experiment_description" contenteditable="true">
                         SAILS is designed to measure perception of speech errors produced by

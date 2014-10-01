@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="participant-details.css">
+    <script type="text/montage-serialization">
+    {
+        "owner": {
+            "properties": {
+                "element": {"#": "owner"}
+            }
+        },
+
+        "firstname": {
+            "prototype": "digit/ui/text-field.reel",
+            "properties": {
+                "element": {"#": "firstname"},
+                "value": "Text"
+            },
+            "bindings": {
+                "value": {"<-": "@owner.application.experiment.participant.firstname"}
+            }
+        },
+
+        "lastname": {
+            "prototype": "digit/ui/text-field.reel",
+            "properties": {
+                "element": {"#": "lastname"},
+                "value": "Text"
+            },
+            "bindings": {
+                "value": {"<-": "@owner.application.experiment.participant.lastname"}
+            }
+        },
+
+        "dateOfBirth": {
+            "prototype": "digit/ui/text-field.reel",
+            "properties": {
+                "element": {"#": "dateOfBirth"},
+                "value": "Text"
+            },
+            "bindings": {
+                "value": {"<-": "@owner.application.experiment.participant.dateOfBirth"}
+            }
+        },
+
+        "coursenumber": {
+            "prototype": "digit/ui/text-field.reel",
+            "properties": {
+                "element": {"#": "coursenumber"},
+                "value": "Text"
+            },
+            "bindings": {
+                "value": {"<-": "@owner.application.experiment.participant.coursenumber"}
+            }
+        },
+
+        "experimenter": {
+            "prototype": "digit/ui/text.reel",
+            "properties": {
+                "element": {"#": "experimenter"},
+                "value": "Text"
+            },
+            "bindings": {
+                "value": {"<-": "@owner.application.experiment.experimenter.name"}
+            }
+        }
+    }
+    </script>
+</head>
+<body>
+    <ul data-montage-id="owner" class="ParticipantDetails">
+        <li>École: <input /></li>
+        <li>Classe: <input data-montage-id="coursenumber"/></li>
+        <li>Nom de l’enfant: <input data-montage-id="firstname"/> <input data-montage-id="lastname"/></li>
+        <li>Date de naissance de l’enfant: <input data-montage-id="dateOfBirth"/></li>
+        <li>Notes: <textarea></textarea></li>
+
+        <li>Évaluateur/Évaluatrice: <span data-montage-id="experimenter"></span></li>
+        <li>Date d’évaluation: <span></span></li>
+        <li>Sexe biologique de l’enfant <select></li>
+        <li>Langue maternelle de l’enfant<select></li>
+        <li>Langue seconde<select> </li>
+        <li>Troisième langue <select></li>
+
+        <li>Commission scolaire<input /></li>
+
+    </ul>
+</body>
+</html>
