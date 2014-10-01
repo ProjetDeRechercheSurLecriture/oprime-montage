@@ -179,7 +179,7 @@ exports.Experiment = ContextualizableComponent.specialize( /** @lends Experiment
                     console.warn("Experimental design is missing the locale of the data. this means that the user interface will not match the data.");
                 }
                 this.stimuliCorpus.getCorpusSpecificLocalizations();
-                
+
                 // this.iconSrc = "blank.png";
                 this.iconSrc = this.experimentalDesign.iconSrc;
                 this.needsDraw = true;
@@ -232,7 +232,7 @@ exports.Experiment = ContextualizableComponent.specialize( /** @lends Experiment
             var self = this;
             window.setTimeout(function() {
                 /* hack to make the tutorial mode seem like its working */
-                if (!self.currentlyPlaying && !self.experimentIsComplete) {
+                if (!self.currentlyPlaying && !self.experimentIsComplete && !self.soundCheckHasBeenOpened) {
                     self.confirm(self.application.contextualizer.localize("locale_prompt_show_tutorial")).then(function() {
                         console.log("Showing tutorial mode");
                         self.toggleTutorialArea();
@@ -321,7 +321,8 @@ exports.Experiment = ContextualizableComponent.specialize( /** @lends Experiment
 
     handleShowSoundCheckAction: {
         value: function() {
-
+            this.soundCheckHasBeenOpened = true;
+            var self = this;
             SoundCheck.show({
                 iconSrc: this.iconSrc,
                 message: this.contextualizer.localize("locale_plug_in_headphones"),
@@ -330,7 +331,6 @@ exports.Experiment = ContextualizableComponent.specialize( /** @lends Experiment
                 // cancelLabel: "Pause"
             }, function() {
                 console.log("User completed the sound check");
-
             }, function() {
                 console.log("Waiting for user to plug in head phones");
             });
