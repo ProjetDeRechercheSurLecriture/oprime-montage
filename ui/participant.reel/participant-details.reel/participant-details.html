@@ -68,7 +68,7 @@
                 "element": {"#": "languageOne"}
             },
             "bindings": {
-                "value": {"<->": "@owner.participant.languageOne"}
+                "value": {"<-": "@owner.application.participantLanguageOne.nativeName"}
             }
         },
 
@@ -78,7 +78,7 @@
                 "element": {"#": "languageTwo"}
             },
             "bindings": {
-                "value": {"<->": "@owner.participant.languageTwo"}
+                "value": {"<-": "@owner.application.participantLanguageTwo.nativeName"}
             }
         },
 
@@ -88,29 +88,62 @@
                 "element": {"#": "languageThree"}
             },
             "bindings": {
-                "value": {"<->": "@owner.participant.languageThree"}
+                "value": {"<-": "@owner.application.participantLanguageThree.nativeName"}
             }
         },
         
         "languagesOne": {
-            "prototype": "digit/ui/select.reel",
+            "prototype": "ui/dialects.reel",
             "properties": {
-                "element": {"#": "languagesOne"}
-            }
+                "element": {"#": "languagesOne"},
+                "globalKey": "participantLanguageOne",
+                "labelPropertyName": "name",
+                "selectedIso": "Non applicable"       
+            },
+            "bindings": {
+                "selectedIso": {"<-": "@owner.application.participantLanguageOne.iso"}
+            },
+            "listeners": [{
+                "type": "action",
+                "useCapture": false,
+                "listener": {"@": "owner"}
+            }]
         },
 
         "languagesTwo": {
-            "prototype": "digit/ui/select.reel",
+            "prototype": "ui/dialects.reel",
             "properties": {
-                "element": {"#": "languagesTwo"}
-            }
+                "element": {"#": "languagesTwo"},
+                "globalKey": "participantLanguageTwo",
+                "labelPropertyName": "name",
+                "selectedIso": "Non applicable"
+            },
+            "bindings": {
+                "selectedIso": {"<-": "@owner.application.participantLanguageTwo.iso"}
+            },
+            "listeners": [{
+                "type": "action",
+                "useCapture": false,
+                "listener": {"@": "owner"}
+            }]
         },
 
         "languagesThree": {
-            "prototype": "digit/ui/select.reel",
+            "prototype": "ui/dialects.reel",
             "properties": {
-                "element": {"#": "languagesThree"}
-            }
+                "element": {"#": "languagesThree"},
+                "globalKey": "participantLanguageThree",
+                "labelPropertyName": "name",
+                "selectedIso": "Non applicable"
+            },
+            "bindings": {
+                "selectedIso": {"<-": "@owner.application.participantLanguageThree.iso"}
+            },
+            "listeners": [{
+                "type": "action",
+                "useCapture": false,
+                "listener": {"@": "owner"}
+            }]
         },
 
         "coursenumber": {
@@ -210,23 +243,23 @@
         
         <dt>Sexe biologique de l’enfant:</dt>
         <dd> 
-            <select class="fullwidth" placeholder="Optional" data-montage-id="genders"> </select>
-            <input class="fullwidth" placeholder="Optional" data-montage-id="gender"/>
+            <select placeholder="Optional" data-montage-id="genders"> </select>
+            <input class="halfwidth" placeholder="Optional" data-montage-id="gender"/>
         </dd>
         <dt>Langue maternelle de l’enfant:</dt>
         <dd>
-            <select class="fullwidth" placeholder="Optional" data-montage-id="languagesOne"> </select>
-            <input class="fullwidth" placeholder="Optional" data-montage-id="languageOne"/>
+            <span placeholder="Optional" data-montage-id="languagesOne"> </span>
+            <input class="halfwidth" placeholder="Optional" data-montage-id="languageOne"/>
         </dd>
         <dt>Langue seconde:</dt>
         <dd>
-            <select class="fullwidth" placeholder="Optional" data-montage-id="languagesTwo"> </select>
-            <input class="fullwidth" placeholder="Optional" data-montage-id="languageTwo"/>
+            <span placeholder="Optional" data-montage-id="languagesTwo"> </span>
+            <input class="halfwidth" placeholder="Optional" data-montage-id="languageTwo"/>
         </dd>
         <dt>Troisième langue:</dt>
         <dd>
-            <select class="fullwidth" placeholder="Optional" data-montage-id="languagesThree"> </select>
-            <input class="fullwidth" placeholder="Optional" data-montage-id="languageThree"/>
+            <span placeholder="Optional" data-montage-id="languagesThree"> </span>
+            <input class="halfwidth" placeholder="Optional" data-montage-id="languageThree"/>
         </dd>
         <dt>Notes:</dt>
         <dd> 

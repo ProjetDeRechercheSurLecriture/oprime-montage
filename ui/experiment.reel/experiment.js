@@ -112,6 +112,33 @@ exports.Experiment = ContextualizableComponent.specialize( /** @lends Experiment
             // this.participants.unshift(value);
             value.url = FieldDB.Database.prototype.BASE_DB_URL + "/" + FieldDB.FieldDBObject.application.corpus.dbname;
             this.application.participants = [value];
+
+            this.application.participantLanguageOne.iso = this.participant.languageOne.language.iso;
+            this.application.participantLanguageOne.name = this.participant.languageOne.language.name;
+            this.application.participantLanguageOne.nativeName = this.participant.languageOne.language.nativeName;
+            
+            this.application.participantLanguageTwo.iso = this.participant.languageTwo.language.iso;
+            this.application.participantLanguageTwo.name = this.participant.languageTwo.language.name;
+            this.application.participantLanguageTwo.nativeName = this.participant.languageTwo.language.nativeName;
+            
+            this.application.participantLanguageThree.iso = this.participant.languageThree.language.iso;
+            this.application.participantLanguageThree.name = this.participant.languageThree.language.name;
+            this.application.participantLanguageThree.nativeName = this.participant.languageThree.language.nativeName;
+            
+            // var changeDialectEvent = document.createEvent("CustomEvent");
+            // changeDialectEvent.initCustomEvent("changeparticipantLanguageOne", true, true, null);
+            // this.dispatchEvent(changeDialectEvent);
+
+            // var changeDialectEvent = document.createEvent("CustomEvent");
+            // changeDialectEvent.initCustomEvent("changeparticipantLanguageTwo", true, true, null);
+            // this.dispatchEvent(changeDialectEvent);
+
+            // var changeDialectEvent = document.createEvent("CustomEvent");
+            // changeDialectEvent.initCustomEvent("changeparticipantLanguageThree", true, true, null);
+            // this.dispatchEvent(changeDialectEvent);
+
+            // this.application.participantLanguageTwo = {};
+            // this.application.participantLanguageThree = {};
         }
     },
 

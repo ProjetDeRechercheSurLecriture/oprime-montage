@@ -15,21 +15,61 @@ exports.ParticipantDetails = Component.specialize( /** @lends ParticipantDetails
         }
     },
 
-    draw: {
-        value: function() {
-            this.super();
+    enterDocument: {
+        value: function(firstTime) {
+            if (firstTime) {
+                this.currentlyPlaying = false;
+                this.experimentDisplayTimeStart = Date.now();
 
-            console.log(this.participant);
-            if (this.participant.fields) {
-                console.log("dob help " + this.participant.fields.dateOfBirth.help)
-            } else {
-                console.warn("this participant has no fields!", this.participant);
+                this.application.participantLanguageOne = {
+                    "iso": "Non applicable"
+                };
+                this.application.participantLanguageTwo = {
+                    "iso": "Non applicable"
+                };
+                this.application.participantLanguageThree = {
+                    "iso": "Non applicable"
+                };
+
+                this.application.addEventListener("changeparticipantLanguageOne", this);
+                this.application.addEventListener("changeparticipantLanguageTwo", this);
+                this.application.addEventListener("changeparticipantLanguageThree", this);
             }
-            if (this.application.experiment.participant.fields) {
-                console.log("dob help " + this.application.experiment.participant.fields.dateOfBirth.help)
-            } else {
-                console.warn("this participant has no fields!", this.application.experiment.participant);
+
+            this.super(firstTime);
+        }
+    },
+
+    handleChangeparticipantLanguageOne: {
+        value: function(event) {
+            console.log("handleChangeparticipantLanguageOne", event);
+            if (!this.participant || !this.participant.fields || !this.participant.fields.languages) {
+                console.warn(" the participant and/or its fields and/or its language are not defined. so changes to the language werent saved.");
+                return;
             }
+            this.participant.languageOne = this.application.participantLanguageOne;
+        }
+    },
+
+    handleChangeparticipantLanguageTwo: {
+        value: function(event) {
+            console.log("handleChangeparticipantLanguageTwo", event);
+            if (!this.participant || !this.participant.fields || !this.participant.fields.languages) {
+                console.warn(" the participant and/or its fields and/or its language are not defined. so changes to the language werent saved.");
+                return;
+            }
+            this.participant.languageTwo = this.application.participantLanguageTwo;
+        }
+    },
+
+    handleChangeparticipantLanguageThree: {
+        value: function(event) {
+            console.log("handleChangeparticipantLanguageThree", event);
+            if (!this.participant || !this.participant.fields || !this.participant.fields.languages) {
+                console.warn(" the participant and/or its fields and/or its language are not defined. so changes to the language werent saved.");
+                return;
+            }
+            this.participant.languageThree = this.application.participantLanguageThree;
         }
     },
 
@@ -46,4 +86,5 @@ exports.ParticipantDetails = Component.specialize( /** @lends ParticipantDetails
             });
         }
     }
+
 });

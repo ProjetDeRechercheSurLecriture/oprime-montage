@@ -71,6 +71,10 @@ exports.Dialects = Component.specialize( /** @lends Dialects# */ {
 
 	defaultList: {
 		value: [{
+			"iso": "Non applicable",
+			"name": "NA",
+			"nativeName": "Non applicable"
+		},{
 			"iso": "ab",
 			"name": "Abkhaz",
 			"nativeName": "аҧсуа"
