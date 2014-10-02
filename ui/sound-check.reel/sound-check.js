@@ -1,3 +1,4 @@
+/* globals FieldDB */
 /**
  * @module ui/sound-check.reel
  * @requires ui/Confirm
@@ -70,7 +71,8 @@ var SoundCheck = Confirm.specialize( /** @lends SoundCheck# */ {
                                     maxHeight: canvas.height
                                 }
                             },
-                            audio: true
+                            audio: true,
+                            geolocation: true
                         },
                         function(localMediaStream) {
                             if (withVideo) {
@@ -96,6 +98,14 @@ var SoundCheck = Confirm.specialize( /** @lends SoundCheck# */ {
                                 // Ready to go. Do some stuff.
                                 console.log("Video preview is working, take note of this in application so user can continue to the game.");
                                 application.videoRecordingVerified = true;
+
+                                navigator.geolocation.getCurrentPosition(function(position) {
+                                    console.warn("recieved position information");
+                                    if (FieldDB && FieldDB.FieldDBObject) {
+                                        FieldDB.FieldDBObject.software = FieldDB.FieldDBObject.software || {};
+                                        FieldDB.FieldDBObject.software.location = position.coords;
+                                    }
+                                });
                             };
                         },
                         errorCallback
