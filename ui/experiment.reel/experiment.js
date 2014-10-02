@@ -113,18 +113,34 @@ exports.Experiment = ContextualizableComponent.specialize( /** @lends Experiment
             value.url = FieldDB.Database.prototype.BASE_DB_URL + "/" + FieldDB.FieldDBObject.application.corpus.dbname;
             this.application.participants = [value];
 
-            this.application.participantLanguageOne.iso = this.participant.languageOne.language.iso;
-            this.application.participantLanguageOne.name = this.participant.languageOne.language.name;
-            this.application.participantLanguageOne.nativeName = this.participant.languageOne.language.nativeName;
-            
-            this.application.participantLanguageTwo.iso = this.participant.languageTwo.language.iso;
-            this.application.participantLanguageTwo.name = this.participant.languageTwo.language.name;
-            this.application.participantLanguageTwo.nativeName = this.participant.languageTwo.language.nativeName;
-            
-            this.application.participantLanguageThree.iso = this.participant.languageThree.language.iso;
-            this.application.participantLanguageThree.name = this.participant.languageThree.language.name;
-            this.application.participantLanguageThree.nativeName = this.participant.languageThree.language.nativeName;
-            
+            if (this.participant.languageOne) {
+
+                this.application.participantLanguageOne.iso = this.participant.languageOne.language.iso;
+                this.application.participantLanguageOne.name = this.participant.languageOne.language.name;
+                this.application.participantLanguageOne.nativeName = this.participant.languageOne.language.nativeName;
+            } else {
+                this.application.participantLanguageOne.iso = "Non applicable";
+                this.application.participantLanguageOne.name = "NA";
+                this.application.participantLanguageOne.nativeName = "Non applicable";
+            }
+            if (this.participant.languageTwo) {
+                this.application.participantLanguageTwo.iso = this.participant.languageTwo.language.iso;
+                this.application.participantLanguageTwo.name = this.participant.languageTwo.language.name;
+                this.application.participantLanguageTwo.nativeName = this.participant.languageTwo.language.nativeName;
+            } else {
+                this.application.participantLanguageTwo.iso = "Non applicable";
+                this.application.participantLanguageTwo.name = "NA";
+                this.application.participantLanguageTwo.nativeName = "Non applicable";
+            }
+            if (this.participant.languageThree) {
+                this.application.participantLanguageThree.iso = this.participant.languageThree.language.iso;
+                this.application.participantLanguageThree.name = this.participant.languageThree.language.name;
+                this.application.participantLanguageThree.nativeName = this.participant.languageThree.language.nativeName;
+            } else {
+                this.application.participantLanguageThree.iso = "Non applicable";
+                this.application.participantLanguageThree.name = "NA";
+                this.application.participantLanguageThree.nativeName = "Non applicable";
+            }
             // var changeDialectEvent = document.createEvent("CustomEvent");
             // changeDialectEvent.initCustomEvent("changeparticipantLanguageOne", true, true, null);
             // this.dispatchEvent(changeDialectEvent);
