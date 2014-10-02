@@ -128,11 +128,15 @@ exports.Experiment = ContextualizableComponent.specialize( /** @lends Experiment
                 var resultDBname = this.dbname || window.location.hash.replace("#/", "").replace(/\//g, "-");
                 if (!resultDBname || resultDBname === this.stimuliDBname) {
                     resultDBname = "phophlo-demo_data";
+                    window.location.replace(window.location.href.replace(/index\.html.*$/, "index.html#/phophlo/demo_data"));
+                    setTimeout(window.location.reload, 1000);
+                    return;
                 }
                 this.application.corpus = new Corpus({});
                 if (this.dbUrl) {
                     this.application.corpus.url = this.dbUrl;
                 }
+                this.application.corpus.debugMode = true;
                 this.application.corpus.loadOrCreateCorpusByPouchName(resultDBname).then(function(result) {
                     console.log("Corpus is loaded, data can be decrypted.", result);
                     if (!self.application.corpus.participantFields) {
@@ -185,8 +189,8 @@ exports.Experiment = ContextualizableComponent.specialize( /** @lends Experiment
                     }
                 }, function(result) {
                     console.log("Corpus cannot be loaded, data cannot be decrypted, removing this db from the url.", result);
-                    window.location.replace(window.location.href.replace(/#.*$/, ""));
-                    window.location.reload();
+                    window.location.replace(window.location.href.replace(/#.*$/, "#/phophlo/demo_data"));
+                    setTimeout(window.location.reload, 1000);
                     return;
                 });
             }
@@ -258,7 +262,7 @@ exports.Experiment = ContextualizableComponent.specialize( /** @lends Experiment
                     }).then(function(loginresult) {
                         console.warn("logged in as anonymoussailsuser", loginresult);
                         window.location.replace(window.location.href.replace(/#.*$/, "#/phophlo/demo_data"));
-                        window.location.reload();
+                        setTimeout(window.location.reload, 1000);
                         return;
                     }, function(err) {
                         console.log("Could not login either.", err);
