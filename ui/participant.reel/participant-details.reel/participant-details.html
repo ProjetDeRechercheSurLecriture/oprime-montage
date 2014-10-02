@@ -14,8 +14,7 @@
         "firstname": {
             "prototype": "digit/ui/text-field.reel",
             "properties": {
-                "element": {"#": "firstname"},
-                "value": "Text"
+                "element": {"#": "firstname"}
             },
             "bindings": {
                 "value": {"<->": "@owner.participant.firstname"},
@@ -26,8 +25,7 @@
         "lastname": {
             "prototype": "digit/ui/text-field.reel",
             "properties": {
-                "element": {"#": "lastname"},
-                "value": "Text"
+                "element": {"#": "lastname"}
             },
             "bindings": {
                 "value": {"<->": "@owner.participant.lastname"},
@@ -38,8 +36,7 @@
         "dateOfBirth": {
             "prototype": "matte/ui/input-date.reel",
             "properties": {
-                "element": {"#": "dateOfBirth"},
-                "value": "Text"
+                "element": {"#": "dateOfBirth"}
             },
             "bindings": {
                 "value": {"<->": "@owner.participant.dateOfBirth"},
@@ -50,8 +47,7 @@
         "gender": {
             "prototype": "digit/ui/text-field.reel",
             "properties": {
-                "element": {"#": "gender"},
-                "value": "Text"
+                "element": {"#": "gender"}
             },
             "bindings": {
                 "value": {"<->": "@owner.participant.fields.gender.value"},
@@ -69,8 +65,7 @@
         "languageOne": {
             "prototype": "digit/ui/text-field.reel",
             "properties": {
-                "element": {"#": "languageOne"},
-                "value": "Text"
+                "element": {"#": "languageOne"}
             },
             "bindings": {
                 "value": {"<->": "@owner.participant.languageOne"}
@@ -80,8 +75,7 @@
         "languageTwo": {
             "prototype": "digit/ui/text-field.reel",
             "properties": {
-                "element": {"#": "languageTwo"},
-                "value": "Text"
+                "element": {"#": "languageTwo"}
             },
             "bindings": {
                 "value": {"<->": "@owner.participant.languageTwo"}
@@ -91,8 +85,7 @@
         "languageThree": {
             "prototype": "digit/ui/text-field.reel",
             "properties": {
-                "element": {"#": "languageThree"},
-                "value": "Text"
+                "element": {"#": "languageThree"}
             },
             "bindings": {
                 "value": {"<->": "@owner.participant.languageThree"}
@@ -123,8 +116,7 @@
         "coursenumber": {
             "prototype": "digit/ui/text-field.reel",
             "properties": {
-                "element": {"#": "coursenumber"},
-                "value": "Text"
+                "element": {"#": "coursenumber"}
             },
             "bindings": {
                 "value": {"<->": "@owner.participant.fields.coursenumber.value"},
@@ -135,8 +127,7 @@
         "school": {
             "prototype": "digit/ui/text-field.reel",
             "properties": {
-                "element": {"#": "school"},
-                "value": "Text"
+                "element": {"#": "school"}
             },
             "bindings": {
                 "value": {"<->": "@owner.participant.fields.school.value"},
@@ -147,8 +138,7 @@
         "schoolBoard": {
             "prototype": "digit/ui/text-field.reel",
             "properties": {
-                "element": {"#": "schoolBoard"},
-                "value": "Text"
+                "element": {"#": "schoolBoard"}
             },
             "bindings": {
                 "value": {"<->": "@owner.participant.fields.schoolboard.value"},
@@ -159,8 +149,7 @@
         "notes": {
             "prototype": "digit/ui/text-area.reel",
             "properties": {
-                "element": {"#": "notes"},
-                "value": "Text"
+                "element": {"#": "notes"}
             },
             "bindings": {
                 "value": {"<->": "@owner.participant.fields.notes.value"},
@@ -171,8 +160,7 @@
         "experimenter": {
             "prototype": "digit/ui/text-field.reel",
             "properties": {
-                "element": {"#": "experimenter"},
-                "value": "Text"
+                "element": {"#": "experimenter"}
             },
             "bindings": {
                 "value": {"<->": "@owner.application.experiment.experimenter.name"}
@@ -182,56 +170,75 @@
         "experimentDate": {
             "prototype": "digit/ui/text.reel",
             "properties": {
-                "element": {"#": "experimentDate"},
-                "value": "Text"
+                "element": {"#": "experimentDate"}
             },
             "bindings": {
-                "value": {"<-": "@owner.application.experiment.experimentalDesign.timestamp"}
-            }
+                "value": {"<-": "@owner.application.experiment.startTime"}
+            }   
         }
     }
     </script>
 </head>
 <body>
     <dl data-montage-id="owner" class="ParticipantDetails">
-        <dt>École:</dt>
-        <dd> <input class="fullwidth" data-montage-id="school"/></dd>
-        <dt>Classe:</dt>
-        <dd> <input class="fullwidth" data-montage-id="coursenumber"/></dd>
-        <dt>Nom de l’enfant:</dt>
-        <dd> <input class="fullwidth" data-montage-id="firstname"/> <input class="fullwidth" data-montage-id="lastname"/></dd>
-        <dt>Date de naissance de l’enfant:</dt>
-        <dd> <input class="digit-TextField  fullwidth" type="date" data-montage-id="dateOfBirth"/></dd>
-        <dt>Notes:</dt>
-        <dd> <textarea class="fullwidth" data-montage-id="notes"></textarea></dd>
 
-        <dt>Évaluateur/Évaluatrice:</dt>
-        <dd> <span class="fullwidth" data-montage-id="experimenter"></span></dd>
-        <dt>Date d’évaluation: </dt>
-        <dd><span data-montage-id="experimentDate"></span> </dd>
+        <dt>Nom de l’enfant:</dt>
+        <dd> 
+            <input class="halfwidth" data-montage-id="firstname"/> <input class="halfwidth" data-montage-id="lastname"/>
+        </dd>
+        <dt>Date de naissance de l’enfant:</dt>
+        <dd> 
+            <input class="digit-TextField  fullwidth" type="date" data-montage-id="dateOfBirth"/>
+        </dd>
+
+        <dt></dt><dd><hr/><dd>
+        
+        <dt>Classe:</dt>
+        <dd> 
+            <input class="fullwidth" placeholder="Optional" data-montage-id="coursenumber"/>
+        </dd>
+        <dt>École:</dt>
+        <dd> 
+            <input class="fullwidth" placeholder="Optional" data-montage-id="school"/>
+        </dd>
+        <dt>Commission scolaire: </dt>
+        <dd>
+            <input class="fullwidth" placeholder="Optional" data-montage-id="schoolBoard"/>
+        </dd>
+
+        <dt></dt><dd><hr/><dd>
+        
         <dt>Sexe biologique de l’enfant:</dt>
-        <dd> <input class="fullwidth" data-montage-id="gender"/>
-            <select class="fullwidth" data-montage-id="genders">
-            </select>
+        <dd> 
+            <select class="fullwidth" placeholder="Optional" data-montage-id="genders"> </select>
+            <input class="fullwidth" placeholder="Optional" data-montage-id="gender"/>
         </dd>
         <dt>Langue maternelle de l’enfant:</dt>
-        <dd><input class="fullwidth" data-montage-id="languageOne"/>
-            <select class="fullwidth" data-montage-id="languagesOne">
-            </select>
+        <dd>
+            <select class="fullwidth" placeholder="Optional" data-montage-id="languagesOne"> </select>
+            <input class="fullwidth" placeholder="Optional" data-montage-id="languageOne"/>
         </dd>
         <dt>Langue seconde:</dt>
-        <dd><input class="fullwidth" data-montage-id="languageTwo"/>
-            <select class="fullwidth" data-montage-id="languagesTwo">
-            </select>
+        <dd>
+            <select class="fullwidth" placeholder="Optional" data-montage-id="languagesTwo"> </select>
+            <input class="fullwidth" placeholder="Optional" data-montage-id="languageTwo"/>
         </dd>
         <dt>Troisième langue:</dt>
-        <dd><input class="fullwidth" data-montage-id="languageThree"/>
-            <select class="fullwidth" data-montage-id="languagesThree">
-            </select>
+        <dd>
+            <select class="fullwidth" placeholder="Optional" data-montage-id="languagesThree"> </select>
+            <input class="fullwidth" placeholder="Optional" data-montage-id="languageThree"/>
+        </dd>
+        <dt>Notes:</dt>
+        <dd> 
+            <textarea class="fullwidth" placeholder="Optional" data-montage-id="notes"></textarea>
         </dd>
 
-        <dt>Commission scolaire: </dt>
-        <dd><input class="fullwidth" data-montage-id="schoolBoard"/></dd>
+        <dt></dt><dd><hr/><dd>
+        
+        <dt>Évaluateur/Évaluatrice:</dt>
+        <dd> <span class="fullwidth" placeholder="Optional" data-montage-id="experimenter"></span></dd>
+        <dt>Date d’évaluation: </dt>
+        <dd><span class="white" data-montage-id="experimentDate"></span> </dd>
 
     </dl>
 </body>

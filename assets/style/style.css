@@ -1,7 +1,11 @@
 .fullwidth {
-	width: 100%;
+	width: 98%;
+}
+
+.halfwidth {
+	width: 49%;
 }
 
 .white {
-	color: white;
+	color: white !important;
 }
