@@ -437,7 +437,7 @@ exports.Experiment = ContextualizableComponent.specialize( /** @lends Experiment
             var self = this;
             if (this.application.videoRecordingVerified) {
                 self.currentlyPlaying = true;
-                self.experimentalDesign.timestamp = Date.now();
+                self.startTime = Date.now();
 
                 self._currentStimulus = self.templateObjects.currentStimulus;
                 self._currentStimulus.imageAssetsPath = self.experimentalDesign.imageAssetsPath;
@@ -455,7 +455,7 @@ exports.Experiment = ContextualizableComponent.specialize( /** @lends Experiment
                     // cancelLabel: "Pause"
                 }, function() {
                     self.currentlyPlaying = true;
-                    self.experimentalDesign.timestamp = Date.now();
+                    self.startTime = Date.now();
 
                     self._currentStimulus = self.templateObjects.currentStimulus;
                     self._currentStimulus.imageAssetsPath = self.experimentalDesign.imageAssetsPath;
@@ -729,15 +729,40 @@ exports.Experiment = ContextualizableComponent.specialize( /** @lends Experiment
         }
     },
 
+    startTime: {
+        get: function() {
+            if (!this.experimentalDesign.startTimestamp) {
+                return;
+            }
+            return new Date(this.experimentalDesign.startTimestamp);
+        },
+        set: function(value) {
+            this.experimentalDesign.startTimestamp = value;
+        }
+    },
+
+    endTime: {
+        get: function() {
+            if (!this.experimentalDesign.endTimestamp) {
+                return;
+            }
+            return new Date(this.experimentalDesign.endTimestamp);
+        },
+        set: function(value) {
+            this.experimentalDesign.endTimestamp = value;
+            this.experimentalDesign.runDuration = value - this.experimentalDesign.startTimestamp;
+        }
+    },
+
     experimentCompleted: {
         value: function() {
             var self = this;
 
-            this.experimentalDesign.timestamp = Date.now();
+            this.endTime = Date.now();
             // delete this.experimentalDesign.rev;
-            this.application.corpus.set(this.experimentalDesign.experimentType + this.experimentalDesign.timestamp, this.experimentalDesign).then(function(saveresult) {
+            this.application.corpus.set(this.experimentalDesign.experimentType + this.experimentalDesign.endTimestamp, this.experimentalDesign).then(function(saveresult) {
                 console.log("saved results", saveresult);
-                console.warn("TODO test rev on experimentaldesign", self.experimentalDesign.rev);
+                console.warn("TODO test rev on experimentalDesign", self.experimentalDesign.rev);
                 // self.experimentalDesign._rev = saveresult._rev;
                 self.saveParticipant("onlynewparticipants");
             }, function(saveerror) {
@@ -747,7 +772,7 @@ exports.Experiment = ContextualizableComponent.specialize( /** @lends Experiment
                     password: "none"
                 }).then(function(loginresults) {
                     console.log("Logged in", loginresults);
-                    self.application.corpus.set(self.experimentalDesign.experimentType + self.experimentalDesign.timestamp, self.experimentalDesign).then(function(result) {
+                    self.application.corpus.set(self.experimentalDesign.experimentType + self.experimentalDesign.endTimestamp, self.experimentalDesign).then(function(result) {
                         console.log("experiment saved ", result);
                         // self.experimentalDesign._rev = result._rev;
                         self.saveParticipant("onlynewparticipants");
