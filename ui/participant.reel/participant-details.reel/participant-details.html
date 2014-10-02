@@ -18,7 +18,8 @@
                 "value": "Text"
             },
             "bindings": {
-                "value": {"<-": "@owner.application.experiment.participant.firstname"}
+                "value": {"<->": "@owner.participant.firstname"},
+                "title": {"<-": "@owner.participant.fields.firstname.help"}
             }
         },
 
@@ -29,18 +30,20 @@
                 "value": "Text"
             },
             "bindings": {
-                "value": {"<-": "@owner.application.experiment.participant.lastname"}
+                "value": {"<->": "@owner.participant.lastname"},
+                "title": {"<-": "@owner.participant.fields.lastname.help"}
             }
         },
 
         "dateOfBirth": {
-            "prototype": "digit/ui/text-field.reel",
+            "prototype": "matte/ui/input-date.reel",
             "properties": {
                 "element": {"#": "dateOfBirth"},
                 "value": "Text"
             },
             "bindings": {
-                "value": {"<-": "@owner.application.experiment.participant.dateOfBirth"}
+                "value": {"<->": "@owner.participant.dateOfBirth"},
+                "title": {"<-": "@owner.participant.fields.dateOfBirth.help"}
             }
         },
 
@@ -51,7 +54,8 @@
                 "value": "Text"
             },
             "bindings": {
-                "value": {"<-": "@owner.application.experiment.participant.fields.gender.value"}
+                "value": {"<->": "@owner.participant.fields.gender.value"},
+                "title": {"<-": "@owner.participant.fields.gender.help"}
             }
         },
 
@@ -69,7 +73,7 @@
                 "value": "Text"
             },
             "bindings": {
-                "value": {"<-": "@owner.application.experiment.participant.languageOne"}
+                "value": {"<->": "@owner.participant.languageOne"}
             }
         },
 
@@ -80,7 +84,7 @@
                 "value": "Text"
             },
             "bindings": {
-                "value": {"<-": "@owner.application.experiment.participant.languageTwo"}
+                "value": {"<->": "@owner.participant.languageTwo"}
             }
         },
 
@@ -91,7 +95,7 @@
                 "value": "Text"
             },
             "bindings": {
-                "value": {"<-": "@owner.application.experiment.participant.languageThree"}
+                "value": {"<->": "@owner.participant.languageThree"}
             }
         },
         
@@ -123,7 +127,8 @@
                 "value": "Text"
             },
             "bindings": {
-                "value": {"<-": "@owner.application.experiment.participant.fields.coursenumber.value"}
+                "value": {"<->": "@owner.participant.fields.coursenumber.value"},
+                "title": {"<-": "@owner.participant.fields.coursenumber.help"}
             }
         },
 
@@ -134,7 +139,8 @@
                 "value": "Text"
             },
             "bindings": {
-                "value": {"<-": "@owner.application.experiment.participant.fields.school.value"}
+                "value": {"<->": "@owner.participant.fields.school.value"},
+                "title": {"<-": "@owner.participant.fields.school.help"}
             }
         },
 
@@ -145,7 +151,8 @@
                 "value": "Text"
             },
             "bindings": {
-                "value": {"<-": "@owner.application.experiment.participant.fields.schoolboard.value"}
+                "value": {"<->": "@owner.participant.fields.schoolboard.value"},
+                "title": {"<-": "@owner.participant.fields.schoolboard.help"}
             }
         },
 
@@ -156,19 +163,19 @@
                 "value": "Text"
             },
             "bindings": {
-                "value": {"<-": "@owner.application.experiment.participant.fields.notes.value"},
-                "title": {"<-": "@owner.application.experiment.participant.fields.notes.help"}
+                "value": {"<->": "@owner.participant.fields.notes.value"},
+                "title": {"<-": "@owner.participant.fields.notes.help"}
             }
         },
 
         "experimenter": {
-            "prototype": "digit/ui/text.reel",
+            "prototype": "digit/ui/text-field.reel",
             "properties": {
                 "element": {"#": "experimenter"},
                 "value": "Text"
             },
             "bindings": {
-                "value": {"<-": "@owner.application.experiment.experimenter.name"}
+                "value": {"<->": "@owner.application.experiment.experimenter.name"}
             }
         },
 
@@ -194,14 +201,14 @@
         <dt>Nom de l’enfant:</dt>
         <dd> <input class="fullwidth" data-montage-id="firstname"/> <input class="fullwidth" data-montage-id="lastname"/></dd>
         <dt>Date de naissance de l’enfant:</dt>
-        <dd> <input class="fullwidth" data-montage-id="dateOfBirth"/></dd>
+        <dd> <input class="digit-TextField  fullwidth" type="date" data-montage-id="dateOfBirth"/></dd>
         <dt>Notes:</dt>
         <dd> <textarea class="fullwidth" data-montage-id="notes"></textarea></dd>
 
         <dt>Évaluateur/Évaluatrice:</dt>
         <dd> <span class="fullwidth" data-montage-id="experimenter"></span></dd>
-        <dt>Date d’évaluation: <span class="fullwidth" data-montage-id="experimentDate"></span></dt>
-        <dd> <span></span></dd>
+        <dt>Date d’évaluation: </dt>
+        <dd><span data-montage-id="experimentDate"></span> </dd>
         <dt>Sexe biologique de l’enfant:</dt>
         <dd> <input class="fullwidth" data-montage-id="gender"/>
             <select class="fullwidth" data-montage-id="genders">

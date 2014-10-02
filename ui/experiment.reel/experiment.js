@@ -110,6 +110,7 @@ exports.Experiment = ContextualizableComponent.specialize( /** @lends Experiment
                 return;
             }
             // this.participants.unshift(value);
+            value.url = FieldDB.Database.prototype.BASE_DB_URL + "/" + FieldDB.FieldDBObject.application.corpus.dbname;
             this.application.participants = [value];
         }
     },
@@ -185,6 +186,46 @@ exports.Experiment = ContextualizableComponent.specialize( /** @lends Experiment
                             "defaultfield": true,
                             "help": "Optional notes for the participant's file, encrypted if speaker is anonymous.",
                             "helpLinguists": "Optional notes for the participant's file, encrypted if speaker is anonymous."
+                        });
+                    }
+                    if (!self.application.corpus.participantFields.enteredbyuser) {
+                        self.application.corpus.participantFields.add({
+                            "id": "enteredByUser",
+                            "labelFieldLinguists": "Imported/Entered By",
+                            "labelNonLinguists": "Entered By",
+                            "labelTranslators": "Imported/Entered By",
+                            "labelExperimenters": "Rempli par",
+                            "type": "users",
+                            "shouldBeEncrypted": "",
+                            "showToUserTypes": "all",
+                            "readonly": true,
+                            "defaultfield": true,
+                            "json": {
+                                "user": {},
+                                "hardware": {},
+                                "software": {}
+                            },
+                            "help": "The user who originally entered the participant",
+                            "helpLinguists": "The user who originally entered the participant"
+                        });
+                    }
+                    if (!self.application.corpus.participantFields.modifiedbyuser) {
+                        self.application.corpus.participantFields.add({
+                            "id": "modifiedByUser",
+                            "labelFieldLinguists": "Modified By",
+                            "labelNonLinguists": "Modified By",
+                            "labelTranslators": "Modified By",
+                            "labelExperimenters": "Modifié par",
+                            "type": "users",
+                            "shouldBeEncrypted": "",
+                            "showToUserTypes": "all",
+                            "readonly": true,
+                            "defaultfield": true,
+                            "json": {
+                                "users": []
+                            },
+                            "help": "An array of users who modified the participant",
+                            "helpLinguists": "An array of users who modified the participant, this can optionally introduce a 'CheckedByUsername' into the participant's validation status if your team chooses."
                         });
                     }
                 }, function(result) {
@@ -696,6 +737,8 @@ exports.Experiment = ContextualizableComponent.specialize( /** @lends Experiment
             // delete this.experimentalDesign.rev;
             this.application.corpus.set(this.experimentalDesign.experimentType + this.experimentalDesign.timestamp, this.experimentalDesign).then(function(saveresult) {
                 console.log("saved results", saveresult);
+                console.warn("TODO test rev on experimentaldesign", self.experimentalDesign.rev);
+                // self.experimentalDesign._rev = saveresult._rev;
                 self.saveParticipant("onlynewparticipants");
             }, function(saveerror) {
                 console.warn("unable to save results, logging in as an anonymous user", saveerror);
@@ -706,6 +749,7 @@ exports.Experiment = ContextualizableComponent.specialize( /** @lends Experiment
                     console.log("Logged in", loginresults);
                     self.application.corpus.set(self.experimentalDesign.experimentType + self.experimentalDesign.timestamp, self.experimentalDesign).then(function(result) {
                         console.log("experiment saved ", result);
+                        // self.experimentalDesign._rev = result._rev;
                         self.saveParticipant("onlynewparticipants");
                     }, function(error) {
                         console.warn("Trying to save the experiment again in 2 seconds", error);

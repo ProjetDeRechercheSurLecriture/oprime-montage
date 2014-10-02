@@ -98,5 +98,11 @@ exports.ExperimentReport = Component.specialize( /** @lends ExperimentReport# */
             this.resultjson = JSON.stringify(this.results, null, 2);
             return this.scoreAsText;
         }
+    },
+
+    handleSaveAction: {
+        value: function(){
+            this.templateObjects.participantDetails.save();
+        }
     }
 });
