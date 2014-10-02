@@ -26,8 +26,7 @@ exports.ParticipantsSelect = Component.specialize( /** @lends ParticipantsSelect
 
 			if (firstTime) {
 				var self = this;
-
-				this.application.corpus.fetchCollection("participants").then(function(rawParticipants) {
+				var prepareParticipants = function(rawParticipants) {
 					console.log("fetched participants", rawParticipants);
 
 					if (rawParticipants && rawParticipants.unshift && self.addAnonymousParticipantAtTopOfList) {
@@ -37,7 +36,7 @@ exports.ParticipantsSelect = Component.specialize( /** @lends ParticipantsSelect
 							firstname: self.application.contextualizer.localize("locale_new"),
 							lastname: FieldDBObject.getHumanReadableTimestamp()
 						};
-						anonymousParticipant.anonymousCode = anonymousParticipant.lastname +"_" + Date.now();
+						anonymousParticipant.anonymousCode = anonymousParticipant.lastname + "_" + Date.now();
 
 						if (!self.application.corpus.confidential || !self.application.corpus.confidential.secretkey) {
 							console.log("self.application.corpus.confidential is not ready");
@@ -48,20 +47,31 @@ exports.ParticipantsSelect = Component.specialize( /** @lends ParticipantsSelect
 						rawParticipants.unshift(anonymousParticipant);
 					}
 
-					self.content = rawParticipants.map(function(rawParticipant) {
-						rawParticipant = new Participant(rawParticipant);
+					self.content = rawParticipants.map(function(participant) {
+						participant = new Participant(participant);
 						if (!self.application.corpus.confidential || !self.application.corpus.confidential.secretkey) {
 							console.log("self.application.corpus.confidential is not ready");
 						} else {
-							rawParticipant.confidential = self.application.corpus.confidential;
-							rawParticipant.decryptedMode = true;
+							participant.confidential = self.application.corpus.confidential;
+							participant.decryptedMode = true;
 						}
-						return rawParticipant;
+						try {
+							self.application.corpus.updateParticipantToCorpusFields(participant);
+						} catch (e) {
+							console.log(e);
+						}
+						return participant;
 					});
 
 					console.log("Participants ", self.content);
 					self.application.experiment.participant = self.content[0];
-				});
+				};
+				if (this.application && this.application.corpus && this.application.corpus.dbname === "phophlo-demo_data") {
+					console.warn("This is the demo database, not showing previous participants.");
+					prepareParticipants([]);
+				} else {
+					this.application.corpus.fetchCollection("participants").then(prepareParticipants);
+				}
 				var rangeController = this.templateObjects.rangeController;
 				//Observe the selection for changes
 
