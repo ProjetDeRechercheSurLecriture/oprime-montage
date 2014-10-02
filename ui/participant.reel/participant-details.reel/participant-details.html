@@ -44,6 +44,78 @@
             }
         },
 
+        "gender": {
+            "prototype": "digit/ui/text-field.reel",
+            "properties": {
+                "element": {"#": "gender"},
+                "value": "Text"
+            },
+            "bindings": {
+                "value": {"<-": "@owner.application.experiment.participant.fields.gender.value"}
+            }
+        },
+
+        "genders": {
+            "prototype": "digit/ui/select.reel",
+            "properties": {
+                "element": {"#": "genders"}
+            }
+        },
+
+        "languageOne": {
+            "prototype": "digit/ui/text-field.reel",
+            "properties": {
+                "element": {"#": "languageOne"},
+                "value": "Text"
+            },
+            "bindings": {
+                "value": {"<-": "@owner.application.experiment.participant.languageOne"}
+            }
+        },
+
+        "languageTwo": {
+            "prototype": "digit/ui/text-field.reel",
+            "properties": {
+                "element": {"#": "languageTwo"},
+                "value": "Text"
+            },
+            "bindings": {
+                "value": {"<-": "@owner.application.experiment.participant.languageTwo"}
+            }
+        },
+
+        "languageThree": {
+            "prototype": "digit/ui/text-field.reel",
+            "properties": {
+                "element": {"#": "languageThree"},
+                "value": "Text"
+            },
+            "bindings": {
+                "value": {"<-": "@owner.application.experiment.participant.languageThree"}
+            }
+        },
+        
+        "languagesOne": {
+            "prototype": "digit/ui/select.reel",
+            "properties": {
+                "element": {"#": "languagesOne"}
+            }
+        },
+
+        "languagesTwo": {
+            "prototype": "digit/ui/select.reel",
+            "properties": {
+                "element": {"#": "languagesTwo"}
+            }
+        },
+
+        "languagesThree": {
+            "prototype": "digit/ui/select.reel",
+            "properties": {
+                "element": {"#": "languagesThree"}
+            }
+        },
+
         "coursenumber": {
             "prototype": "digit/ui/text-field.reel",
             "properties": {
@@ -51,7 +123,41 @@
                 "value": "Text"
             },
             "bindings": {
-                "value": {"<-": "@owner.application.experiment.participant.coursenumber"}
+                "value": {"<-": "@owner.application.experiment.participant.fields.coursenumber.value"}
+            }
+        },
+
+        "school": {
+            "prototype": "digit/ui/text-field.reel",
+            "properties": {
+                "element": {"#": "school"},
+                "value": "Text"
+            },
+            "bindings": {
+                "value": {"<-": "@owner.application.experiment.participant.fields.school.value"}
+            }
+        },
+
+        "schoolBoard": {
+            "prototype": "digit/ui/text-field.reel",
+            "properties": {
+                "element": {"#": "schoolBoard"},
+                "value": "Text"
+            },
+            "bindings": {
+                "value": {"<-": "@owner.application.experiment.participant.fields.schoolboard.value"}
+            }
+        },
+
+        "notes": {
+            "prototype": "digit/ui/text-area.reel",
+            "properties": {
+                "element": {"#": "notes"},
+                "value": "Text"
+            },
+            "bindings": {
+                "value": {"<-": "@owner.application.experiment.participant.fields.notes.value"},
+                "title": {"<-": "@owner.application.experiment.participant.fields.notes.help"}
             }
         },
 
@@ -64,27 +170,62 @@
             "bindings": {
                 "value": {"<-": "@owner.application.experiment.experimenter.name"}
             }
+        },
+
+        "experimentDate": {
+            "prototype": "digit/ui/text.reel",
+            "properties": {
+                "element": {"#": "experimentDate"},
+                "value": "Text"
+            },
+            "bindings": {
+                "value": {"<-": "@owner.application.experiment.experimentalDesign.timestamp"}
+            }
         }
     }
     </script>
 </head>
 <body>
-    <ul data-montage-id="owner" class="ParticipantDetails">
-        <li>École: <input /></li>
-        <li>Classe: <input data-montage-id="coursenumber"/></li>
-        <li>Nom de l’enfant: <input data-montage-id="firstname"/> <input data-montage-id="lastname"/></li>
-        <li>Date de naissance de l’enfant: <input data-montage-id="dateOfBirth"/></li>
-        <li>Notes: <textarea></textarea></li>
+    <dl data-montage-id="owner" class="ParticipantDetails">
+        <dt>École:</dt>
+        <dd> <input data-montage-id="school"/></dd>
+        <dt>Classe:</dt>
+        <dd> <input data-montage-id="coursenumber"/></dd>
+        <dt>Nom de l’enfant:</dt>
+        <dd> <input data-montage-id="firstname"/> <input data-montage-id="lastname"/></dd>
+        <dt>Date de naissance de l’enfant:</dt>
+        <dd> <input data-montage-id="dateOfBirth"/></dd>
+        <dt>Notes:</dt>
+        <dd> <textarea data-montage-id="notes"></textarea></dd>
 
-        <li>Évaluateur/Évaluatrice: <span data-montage-id="experimenter"></span></li>
-        <li>Date d’évaluation: <span></span></li>
-        <li>Sexe biologique de l’enfant <select></li>
-        <li>Langue maternelle de l’enfant<select></li>
-        <li>Langue seconde<select> </li>
-        <li>Troisième langue <select></li>
+        <dt>Évaluateur/Évaluatrice:</dt>
+        <dd> <span data-montage-id="experimenter"></span></dd>
+        <dt>Date d’évaluation: <span data-montage-id="experimentDate"></span></dt>
+        <dd> <span></span></dd>
+        <dt>Sexe biologique de l’enfant:</dt>
+        <dd> <input data-montage-id="gender"/>
+            <select data-montage-id="genders">
+            </select>
+        </dd>
+        <dt>Langue maternelle de l’enfant:</dt>
+        <dd><input data-montage-id="languageOne"/>
+            <select data-montage-id="languagesOne">
+            </select>
+        </dd>
+        <dt>Langue seconde:</dt>
+        <dd><input data-montage-id="languageTwo"/>
+            <select data-montage-id="languagesTwo">
+            </select>
+        </dd>
+        <dt>Troisième langue:</dt>
+        <dd><input data-montage-id="languageThree"/>
+            <select data-montage-id="languagesThree">
+            </select>
+        </dd>
 
-        <li>Commission scolaire<input /></li>
+        <dt>Commission scolaire: </dt>
+        <dd><input data-montage-id="schoolBoard"/></dd>
 
-    </ul>
+    </dl>
 </body>
 </html>
