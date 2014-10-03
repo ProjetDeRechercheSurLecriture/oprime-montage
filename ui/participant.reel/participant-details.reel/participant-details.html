@@ -214,7 +214,7 @@
 </head>
 <body>
     <dl data-montage-id="owner" class="ParticipantDetails">
-
+        <strong>Veuillez inscrire l’information sur l’enfant à évaluer.</strong>
         <dt>Nom de l’enfant:</dt>
         <dd> 
             <input class="halfwidth" data-montage-id="firstname"/> <input class="halfwidth" data-montage-id="lastname"/>
@@ -243,7 +243,17 @@
         
         <dt>Sexe biologique de l’enfant:</dt>
         <dd> 
-            <select placeholder="Optional" data-montage-id="genders"> </select>
+            <select hidden placeholder="Optional" data-montage-id="genders">
+                <option>Male</option>
+                <option>Female</option>
+                <option>Autre</option>
+             </select>
+            <select class="matte-Select digit-Select montage--active" placeholder="Optional">
+                 <option></option>
+                 <option>Male</option>
+                 <option>Female</option>
+                 <option>Autre</option>
+              </select>
             <input class="halfwidth" placeholder="Optional" data-montage-id="gender"/>
         </dd>
         <dt>Langue maternelle de l’enfant:</dt>
