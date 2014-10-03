@@ -23,3 +23,7 @@
 	height: 30em !important;
 	width: 100%;
 }
+
+.ExperimentReport-save-button {
+	float: right;
+}
