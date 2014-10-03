@@ -1,3 +1,5 @@
+/* globals setTimeout */
+
 /**
  * @module ui/experiment.reel
  * @requires core/contextualizable-component
@@ -560,6 +562,8 @@ exports.Experiment = ContextualizableComponent.specialize( /** @lends Experiment
             }
             if (this._currentStimulusIndex >= this._currentTestBlock.trials.length - 1) {
                 this.templateObjects.reinforcement.showLast();
+                this.reinforcementImageSrcWhileWaitForNextBlock = this.templateObjects.reinforcement.lastImageSrc + "";
+
                 this.loadTestBlock.apply(this, [this._currentTestBlockIndex + 1]);
                 return;
             }
@@ -649,21 +653,33 @@ exports.Experiment = ContextualizableComponent.specialize( /** @lends Experiment
 
             this._currentTestBlockIndex = blockIndexToLoad;
             this._currentTestBlock = this.experimentalDesign.subexperiments._collection[blockIndexToLoad];
+
+            // Show previous last image until the user confirms to go to this test block.
+            if (this.reinforcementImageSrcWhileWaitForNextBlock) {
+                this.lastImageForThisTestBlock = this._currentTestBlock.reinforcementAnimation.lastImageSrc + "";
+                this._currentTestBlock.reinforcementAnimation.lastImageSrc = this.reinforcementImageSrcWhileWaitForNextBlock;
+            }
+
             console.log("Loaded block " + blockIndexToLoad);
             if (this._currentTestBlock.trials && this._currentTestBlock.trials.length > 0 && typeof this._currentTestBlock.trials[0] !== "object") {
                 var self = this;
-                this.application.stimuliCorpus.fetchCollection(this._currentTestBlock.trials).then(function(results) {
-                    console.log(" downloaded trials ", results);
-                    results = results.map(function(stimulus) {
-                        stimulus = new FieldDB.Stimulus(stimulus);
-                        var stimulusResponse = new FieldDB.Response(stimulus.clone());
-                        stimulusResponse.id = FieldDB.FieldDBObject.uuidGenerator();
-                        return stimulusResponse;
-                    });
 
-                    self._currentTestBlock.populate(results);
-                    self.experimentBlockLoaded(finalIndex);
-                });
+                if (Object.prototype.toString.call(this._currentTestBlock.trials) === "[object Array]") {
+                    this.application.stimuliCorpus.fetchCollection(this._currentTestBlock.trials).then(function(results) {
+                        console.log(" downloaded trials ", results);
+                        results = results.map(function(stimulus) {
+                            stimulus = new FieldDB.Stimulus(stimulus);
+                            var stimulusResponse = new FieldDB.Response(stimulus.clone());
+                            stimulusResponse.id = FieldDB.FieldDBObject.uuidGenerator();
+                            return stimulusResponse;
+                        });
+
+                        self._currentTestBlock.populate(results);
+                        self.experimentBlockLoaded(finalIndex);
+                    });
+                } else {
+                    console.warn("trials for this block were already fetched.");
+                }
             }
 
         }
@@ -726,24 +742,34 @@ exports.Experiment = ContextualizableComponent.specialize( /** @lends Experiment
                         }
                     }
                 }
+
             }
             console.log("Using animation reinforcement", this._currentTestBlock.reinforcementAnimation);
-            this.templateObjects.reinforcement.showFirst();
 
             if (this._currentTestBlock.promptUserBeforeContinuing) {
-                var promptText = "    ";
-                if (this.application.currentAudience.text !== "Child") {
-                    promptText = this.contextualizer.localize(this._currentTestBlock.promptUserBeforeContinuing.text, this.experimentalDesign.stimuliDialect);
-                }
-                this.confirm(promptText).then(function() {
-                    self.nextStimulus();
-                }).fail(function(reason) {
-                    console.log("TODO add a button for resume?");
-                    self.currentlyPlaying = false;
-                    self.canBeResumed = true;
-                    self.application.audioPlayer.stop();
-                });
+
+                console.log("Waiting a bit before going to the next test block");
+                setTimeout(function() {
+                    var promptText = "    ";
+                    if (self.application.currentAudience.text !== "Child" || self._currentTestBlock.promptUserBeforeContinuing.text.indexOf("instructions") === -1) {
+                        promptText = self.contextualizer.localize(self._currentTestBlock.promptUserBeforeContinuing.text, self.experimentalDesign.stimuliDialect);
+                    }
+                    self.confirm(promptText).then(function() {
+                        self.templateObjects.reinforcement.showFirst();
+                        if (self.lastImageForThisTestBlock) {
+                            self._currentTestBlock.reinforcementAnimation.lastImageSrc = self.lastImageForThisTestBlock;
+                        }
+                        self.nextStimulus();
+                    }).fail(function(reason) {
+                        console.log("TODO add a button for resume? or is the start button working for resume...");
+                        self.currentlyPlaying = false;
+                        self.canBeResumed = true;
+                        self.application.audioPlayer.stop();
+                    });
+                }, 2000);
+
             } else {
+                this.templateObjects.reinforcement.showFirst();
                 this.nextStimulus();
             }
         }
