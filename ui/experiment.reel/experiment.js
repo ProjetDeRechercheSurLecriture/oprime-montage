@@ -113,8 +113,11 @@ exports.Experiment = ContextualizableComponent.specialize( /** @lends Experiment
             value.url = FieldDB.Database.prototype.BASE_DB_URL + "/" + FieldDB.FieldDBObject.application.corpus.dbname;
             this.application.participants = [value];
 
-            if (this.participant.languageOne) {
+            this.application.participantLanguageOne = this.application.participantLanguageOne || {};
+            this.application.participantLanguageTwo = this.application.participantLanguageTwo || {};
+            this.application.participantLanguageThree = this.application.participantLanguageThree || {};
 
+            if (this.participant.languageOne && this.participant.languageOne.language) {
                 this.application.participantLanguageOne.iso = this.participant.languageOne.language.iso;
                 this.application.participantLanguageOne.name = this.participant.languageOne.language.name;
                 this.application.participantLanguageOne.nativeName = this.participant.languageOne.language.nativeName;
@@ -123,7 +126,8 @@ exports.Experiment = ContextualizableComponent.specialize( /** @lends Experiment
                 this.application.participantLanguageOne.name = "NA";
                 this.application.participantLanguageOne.nativeName = "Non applicable";
             }
-            if (this.participant.languageTwo) {
+
+            if (this.participant.languageTwo && this.participant.languageTwo.language) {
                 this.application.participantLanguageTwo.iso = this.participant.languageTwo.language.iso;
                 this.application.participantLanguageTwo.name = this.participant.languageTwo.language.name;
                 this.application.participantLanguageTwo.nativeName = this.participant.languageTwo.language.nativeName;
@@ -132,7 +136,8 @@ exports.Experiment = ContextualizableComponent.specialize( /** @lends Experiment
                 this.application.participantLanguageTwo.name = "NA";
                 this.application.participantLanguageTwo.nativeName = "Non applicable";
             }
-            if (this.participant.languageThree) {
+
+            if (this.participant.languageThree && this.participant.languageThree.language) {
                 this.application.participantLanguageThree.iso = this.participant.languageThree.language.iso;
                 this.application.participantLanguageThree.name = this.participant.languageThree.language.name;
                 this.application.participantLanguageThree.nativeName = this.participant.languageThree.language.nativeName;
