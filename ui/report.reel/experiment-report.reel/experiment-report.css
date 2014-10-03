@@ -18,12 +18,6 @@
 	text-shadow: 0 0px 0 hsla(0,0%,100%,0) !important;
 }
 
-.scrollable {
-	overflow: auto !important;
-	height: 30em !important;
-	width: 100%;
-}
-
 .ExperimentReport-save-button {
 	float: right;
 }

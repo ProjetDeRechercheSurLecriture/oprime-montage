@@ -1,3 +1,9 @@
+.scrollable {
+	overflow: auto !important;
+	height: 30em !important;
+	width: 100%;
+}
+
 .fullwidth {
 	width: 98%;
 }
