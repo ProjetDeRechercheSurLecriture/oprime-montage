@@ -110,6 +110,15 @@
                 }
             } 
         },
+        "tableReport": {
+            "prototype": "ui/report.reel/table-report.reel",
+            "properties": {
+                "element": {"#": "tableReport"}
+            },
+            "bindings": {
+                "json": {"<-": "@owner.results"}
+            }
+        },
 
         "description": {
             "prototype": "digit/ui/text.reel",
@@ -197,10 +206,11 @@
                 <strong class="white">
                     Details:
                 </strong>
-
                 <ul data-montage-id="results" class="white">
                     <li data-montage-id="result" class=""></li>
                 </ul>
+                <div data-montage-id="tableReport" >
+                </div>
 
                 <div hidden data-montage-id="resultjson" class="ExperimentReport-json">
                 </div>
