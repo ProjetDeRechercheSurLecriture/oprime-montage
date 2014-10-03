@@ -774,7 +774,7 @@ exports.Experiment = ContextualizableComponent.specialize( /** @lends Experiment
 
     startTime: {
         get: function() {
-            if (!this.experimentalDesign.startTimestamp) {
+            if (!this.experimentalDesign || !this.experimentalDesign.startTimestamp) {
                 return;
             }
             return new Date(this.experimentalDesign.startTimestamp);
@@ -786,7 +786,7 @@ exports.Experiment = ContextualizableComponent.specialize( /** @lends Experiment
 
     endTime: {
         get: function() {
-            if (!this.experimentalDesign.endTimestamp) {
+            if (!this.experimentalDesign || !this.experimentalDesign.endTimestamp) {
                 return;
             }
             return new Date(this.experimentalDesign.endTimestamp);
@@ -802,8 +802,10 @@ exports.Experiment = ContextualizableComponent.specialize( /** @lends Experiment
             var self = this;
 
             this.endTime = Date.now();
+            this.experimentalDesign.experimenter = this.experimenter.username;
+            this.experimentalDesign.participant = this.participant.id;
             // delete this.experimentalDesign.rev;
-            this.application.corpus.set(this.experimentalDesign.experimentType + this.experimentalDesign.endTimestamp, this.experimentalDesign).then(function(saveresult) {
+            this.application.corpus.set(this.experimentalDesign.experimentType + this.experimentalDesign.endTimestamp, this.experimentalDesign.toJSON()).then(function(saveresult) {
                 console.log("saved results", saveresult);
                 console.warn("TODO test rev on experimentalDesign", self.experimentalDesign.rev);
                 // self.experimentalDesign._rev = saveresult._rev;
