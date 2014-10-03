@@ -21,6 +21,12 @@
     width: 40%;
 }
 
+.Experiment-game-icon {
+    height: 2em;
+    vertical-align: bottom;
+    margin-top: 0.3em;
+}
+
 .Experiment-replay-button {
     float: left;
     text-align: center;
