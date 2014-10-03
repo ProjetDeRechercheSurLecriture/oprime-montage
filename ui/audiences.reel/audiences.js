@@ -12,43 +12,44 @@ exports.Audiences = Component.specialize( /** @lends Audiences# */ {
 	constructor: {
 		value: function Audiences() {
 			this.content = [{
-				"gameLabel": "Child",
+				"gameLabel": "Enfant",
 				"text": "Child",
 				"experimentLabel": "Participant",
 				"key": "participant",
-				"gamifiedKey": "child"
-			}, {
-				"gameLabel": "Teacher",
-				"text": "Teacher",
-				"experimentLabel": "Administrator",
-				"key": "experimentAdministrator",
+				"gamifiedKey": "child",
 				"selected": true
 			}, {
-				"gameLabel": "Parent",
-				"text": "Parent",
-				"experimentLabel": "Parent",
-				"key": "parent"
-			}, {
-				"gameLabel": "SLP",
-				"text": "SLP",
+				"gameLabel": "Adulte",
+				"text": "Teacher",
 				"experimentLabel": "Administrator",
-				"key": "experimentAdministratorSpecialist"
-			}, {
-				"gameLabel": "School Records",
-				"text": "School Records",
-				"experimentLabel": "Report",
-				"key": "resultReport",
-				"gamifiedKey": "school_records"
-			}, {
-				"gameLabel": "Debug",
-				"text": "Debug",
-				"experimentLabel": "Debug",
-				"key": "debug"
-			}, {
-				"gameLabel": "Default",
-				"text": "Default",
-				"experimentLabel": "Default",
-				"key": "default"
+				"key": "experimentAdministrator"
+			// }, {
+			// 	"gameLabel": "Parent",
+			// 	"text": "Parent",
+			// 	"experimentLabel": "Parent",
+			// 	"key": "parent"
+			// }, {
+			// 	"gameLabel": "SLP",
+			// 	"text": "SLP",
+			// 	"experimentLabel": "Administrator",
+			// 	"key": "experimentAdministratorSpecialist"
+			// }, {
+			// 	"gameLabel": "School Records",
+			// 	"text": "School Records",
+			// 	"experimentLabel": "Report",
+			// 	"key": "resultReport",
+			// 	"gamifiedKey": "school_records"
+			// }, {
+			// 	"gameLabel": "Debug",
+			// 	"text": "Debug",
+			// 	"experimentLabel": "Debug",
+			// 	"key": "debug",
+			// 	"selected": true
+			// }, {
+			// 	"gameLabel": "Default",
+			// 	"text": "Default",
+			// 	"experimentLabel": "Default",
+			// 	"key": "default"
 			}];
 		}
 	},
