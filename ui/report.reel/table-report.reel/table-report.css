@@ -1,3 +1,22 @@
 .TableReport {
 
 }
+
+table.TableReport-bordered-table {
+	/*border-collapse: collapse;*/
+	border: 3px solid #003366;
+}
+
+.TableReport-bordered-table th {
+	border: 3px solid #003366;
+	padding: 0.3em;
+	text-align: center;
+	vertical-align: center;
+}
+
+.TableReport-bordered-table td {
+	border: 3px solid #003366;
+	padding: 0.2em;
+	text-align: center;
+	vertical-align: center;
+}
