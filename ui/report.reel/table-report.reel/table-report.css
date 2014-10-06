@@ -2,21 +2,60 @@
 
 }
 
-table.TableReport-bordered-table {
-	/*border-collapse: collapse;*/
+.TableReport table{
+	width: 100%;
+}
+
+.TableReport tr{
+	width: 50%;
+	vertical-align: top;
+}
+
+.TableReport td{
+	width: 50%;
+}
+
+.TableReport-bordered-table {
+	border-collapse: collapse;
 	border: 3px solid #003366;
+	width: 100%;
+	display: table; 
 }
 
 .TableReport-bordered-table th {
 	border: 3px solid #003366;
 	padding: 0.3em;
 	text-align: center;
-	vertical-align: center;
+	vertical-align: top;
 }
 
-.TableReport-bordered-table td {
+.TableReport-bordered-table-row {
 	border: 3px solid #003366;
-	padding: 0.2em;
+	vertical-align: top;
+	display: table-row; 
+}
+
+.TableReport-bordered-table-cell {
+	border: 3px solid #003366;
 	text-align: center;
 	vertical-align: center;
+	width: 30%;
+	display: table-cell; 
 }
+/*
+div.table {
+	border: 1px solid black; 
+	display: table; 
+}
+ul.table {
+	border: 1px solid black; 
+	display: table; 
+}
+div.tr {
+	border: 1px solid black; 
+	display: table-row; 
+}
+div.td {
+	border: 1px solid black; 
+	display: table-cell; 
+}*/

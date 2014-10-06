@@ -57,10 +57,10 @@ exports.ExperimentReport = Component.specialize( /** @lends ExperimentReport# */
             this.results = [];
             var self = this;
             ResultOnlyView.emit = function(key, value) {
-                self.scoreAsText = Math.round(key * 10000) / 10000;
+                self.scoreAsText = value.totalScore;
                 self.results = value;
             };
-            ResultOnlyView.map(this.experimentalDesign);
+            ResultOnlyView.map(this.experimentalDesign.toJSON());
 
             // for (var subexperimentIndex = 0; subexperimentIndex < this.experimentalDesign.subexperiments._collection.length; subexperimentIndex++) {
             //  var subexperiment = this.experimentalDesign.subexperiments._collection[subexperimentIndex];

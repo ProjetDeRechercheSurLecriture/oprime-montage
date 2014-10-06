@@ -158,6 +158,15 @@ h4 {
 	clear: both;
 }
 
+.Report-correct {
+	color: #009900;
+}
+
+.Report-incorrect {
+	color: #990000;
+}
+
+
 @media print {
 	.exec_summary {
 		display: none !important;
