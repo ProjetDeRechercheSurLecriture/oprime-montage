@@ -11,8 +11,8 @@ exports.map = function(doc) {
   try {
     if (doc.type === "SubExperimentDataList" && doc.results) {
 
-      var totalScore = 0;
-      var totalStimuli = 0;
+      var totalTestScore = 0;
+      var totalTestStimuli = 0;
       var totalAnswered = 0;
       var calculatedResults = [];
 
@@ -28,6 +28,8 @@ exports.map = function(doc) {
       for (var subexperimentIndex = 0; subexperimentIndex < subexperiments.length; subexperimentIndex++) {
         var subexperiment = subexperiments[subexperimentIndex];
         subexperiment.scoreSubTotal = 0;
+        subexperiment.stimuliSubTotal = 0;
+        subexperiment.answeredSubTotal = 0;
 
         var trials = [];
         if (subexperiment.results && subexperiment.results) {
@@ -36,73 +38,79 @@ exports.map = function(doc) {
         for (var stimulusIndex = 0; stimulusIndex < trials.length; stimulusIndex++) {
           var stimulusToScore = trials[stimulusIndex];
 
-          if (stimulusToScore && stimulusToScore.responses && stimulusToScore.responses[stimulusToScore.responses.length - 1] && stimulusToScore.responses[stimulusToScore.responses.length - 1].score !== undefined) {
-            stimulusToScore.response = stimulusToScore.responses[stimulusToScore.responses.length - 1];
+          var calculatedResult = {};
+          if (stimulusToScore.prime) {
+            calculatedResult.prime = stimulusToScore.prime ? stimulusToScore.prime.utterance : null;
+          }
 
-            // emit("stimulusToScoreresponses", stimulusToScore.responses);
-            stimulusToScore.response = stimulusToScore.response || {};
-            stimulusToScore.response.choice = stimulusToScore.response.choice || {
-              utterance: null
-            };
-
-            // stimulusToScore.stimulus = stimulusToScore.stimulus || {};
-            // stimulusToScore.stimulus.utterance = stimulusToScore.stimulus.utterance || stimulusToScore.datumFields[1].label;
-
-            stimulusToScore.score = parseFloat(stimulusToScore.responses[stimulusToScore.responses.length - 1].score, 10);
-            var chosenImage = stimulusToScore.response.choice ? stimulusToScore.response.choice.utterance : null;
-            if (chosenImage === "gʁi") {
-              chosenImage = "gris";
-            } else {
-              chosenImage = "X";
-            }
-
+          if (stimulusToScore.target) {
+            calculatedResult.target = stimulusToScore.target ? stimulusToScore.target.utterance : null;
+            calculatedResult.targetOrthography = stimulusToScore.target ? stimulusToScore.target.orthography : null;
             var appropriateImage = stimulusToScore.target ? stimulusToScore.target.utterance : null;
             if (appropriateImage === "gʁi") {
               appropriateImage = "gris";
             } else {
               appropriateImage = "X";
             }
-            calculatedResults.push({
-              prime: stimulusToScore.prime ? stimulusToScore.prime.utterance : null,
-              orthography: stimulusToScore.target ? stimulusToScore.target.orthography : null,
-              // stimulus: stimulusToScore.stimulus ? stimulusToScore.stimulus.utterance : null,
-              target: stimulusToScore.target ? stimulusToScore.target.utterance : null,
-              response: stimulusToScore.response.choice ? stimulusToScore.response.choice.utterance : null,
-              chosenImage: chosenImage,
-              appropriateImage: appropriateImage,
-              score: stimulusToScore.score
-            });
-            subexperiment.scoreSubTotal = subexperiment.scoreSubTotal + stimulusToScore.score;
-            totalAnswered = totalAnswered + 1;
-          } else {
-            // stimulusToScore.response = {
-            //  response: {
-            //      orthography: "NA"
-            //  }
-            // };
-            // stimulusToScore.score = null;
-            // results.push(stimulusToScore);
+            calculatedResult.appropriateImage = appropriateImage;
           }
+
+          if (stimulusToScore && stimulusToScore.responses && stimulusToScore.responses[stimulusToScore.responses.length - 1] && stimulusToScore.responses[stimulusToScore.responses.length - 1].score !== undefined) {
+            stimulusToScore.response = stimulusToScore.responses[stimulusToScore.responses.length - 1];
+            stimulusToScore.response = stimulusToScore.response || {};
+            stimulusToScore.response.choice = stimulusToScore.response.choice || {
+              utterance: null
+            };
+
+            calculatedResult.response = stimulusToScore.response.choice ? stimulusToScore.response.choice.utterance : null;
+            var chosenImage = stimulusToScore.response.choice ? stimulusToScore.response.choice.utterance : null;
+            if (chosenImage === "gʁi") {
+              chosenImage = "gris";
+            } else {
+              chosenImage = "X";
+            }
+            calculatedResult.chosenImage = chosenImage;
+
+            stimulusToScore.score = parseFloat(stimulusToScore.response.score, 10);
+            calculatedResult.score = stimulusToScore.score;
+
+            totalAnswered = totalAnswered + 1;
+            subexperiment.answeredSubTotal = subexperiment.answeredSubTotal + 1;
+          } else {
+            stimulusToScore.score = 0;
+            calculatedResult.score = stimulusToScore.score;
+            calculatedResult.chosenImage = "NA";
+            calculatedResult.response = "NA";
+          }
+          subexperiment.stimuliSubTotal  = subexperiment.stimuliSubTotal + 1;
+          subexperiment.scoreSubTotal = subexperiment.scoreSubTotal + stimulusToScore.score;
+          calculatedResults.push(calculatedResult);
+          // emit("stimulusToScoreresponses", stimulusToScore.responses);
+
         }
-        if (subexperiment.label.indexOf("practice") === -1) {
-          totalScore = totalScore + subexperiment.scoreSubTotal;
-          subexperiment.stimuliSubTotal = trials.length || 0.001;
-          totalStimuli = totalStimuli + trials.length;
+        
+        if (subexperiment.label.indexOf("ractice") === -1 && subexperiment.label.indexOf("ractique") === -1) {
+          totalTestScore = totalTestScore + subexperiment.scoreSubTotal;
+          totalTestStimuli = totalTestStimuli + trials.length;
         }
         // emit("subexperiment", subexperiment.scoreSubTotal);
+        subexperiment.stimuliSubTotal = trials.length || 0.001;
         subexperiment.calculatedResults = calculatedResults;
         calculatedResults = [];
       }
-      totalStimuli = totalStimuli || 0.001;
-      if (totalScore / totalStimuli * 100 >= doc.passingScore) {
+      totalTestStimuli = totalTestStimuli || 0.001;
+      var experimentConclusion;
+      if (totalTestScore / totalTestStimuli * 100 >= doc.passingScore) {
         experimentConclusion = "Ce résultat est acceptable.";
-      } else {
+      }
+      if (totalTestScore / totalTestStimuli * 100 < doc.passingScore) {
         experimentConclusion = "Ce résultat est sous la norme de passage.";
       }
       emit("sails", {
-        totalScore: (totalScore / totalStimuli * 100) + "%",
+        score: (totalTestScore / totalTestStimuli * 100),
+        rawTestScore: totalTestScore,
         totalAnswered: totalAnswered,
-        totalStimuli: totalStimuli,
+        totalTestStimuli: totalTestStimuli,
         participant: doc.participant,
         experimenter: doc.experimenter,
         experimentId: experimentId,
@@ -110,7 +118,7 @@ exports.map = function(doc) {
         runDuration: doc.runDuration,
         startTime: doc.startTimestamp,
         endTime: doc.endTimestamp,
-        experimentConclusion: experimentConclusion
+        experimentConclusion: experimentConclusion,
         subexperiments: subexperiments.map(function(subexperiment) {
           return {
             score: (subexperiment.scoreSubTotal / subexperiment.stimuliSubTotal * 100) + "%",
@@ -137,8 +145,8 @@ exports.map = function(doc) {
 //     try {
 //         if (doc.jsonType === "experiment") {
 
-//             var totalScore = 0;
-//             var totalStimuli = 0;
+//             var totalTestScore = 0;
+//             var totalTestStimuli = 0;
 //             var totalAnswered = 0;
 //             var results = [];
 
@@ -179,11 +187,11 @@ exports.map = function(doc) {
 //                     }
 //                 }
 //                 if (true || subexperiment.label.indexOf("practice") === -1) {
-//                     totalScore += subexperiment.scoreSubTotal;
-//                     totalStimuli += trials.length;
+//                     totalTestScore += subexperiment.scoreSubTotal;
+//                     totalTestStimuli += trials.length;
 //                 }
 //             }
-//             emit(totalScore / totalAnswered, results);
+//             emit(totalTestScore / totalAnswered, results);
 //         }
 //     } catch (e) {
 //         emit(e, 1);

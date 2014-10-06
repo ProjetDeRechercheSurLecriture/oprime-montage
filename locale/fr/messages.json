@@ -20,6 +20,9 @@
 	"locale_completed": {
 		"message": "Complété"
 	},
+	"locale_incomplete": {
+		"message": "Non Complété"
+	},
 	"locale_sound_check_warning": {
 		"message": "Ce jeu demande l’utilisation d’écouteurs, pour la présentation du son, et l’enregistrement de la parole."
 	},

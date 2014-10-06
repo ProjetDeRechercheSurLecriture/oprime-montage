@@ -29,6 +29,22 @@
             }]
         },
 
+        "print": {
+            "prototype": "digit/ui/button.reel",
+            "properties": {
+                "element": {"#": "print"},
+                "enabled": true
+            },
+            "bindings": {
+                "disabled": {"<-": "@owner.application.experiment.participant.printing"}
+            },
+            "listeners": [{
+                "type": "action",
+                "useCapture": false,
+                "listener": {"@": "owner"}
+            }]
+        },
+
         "icon": {
             "prototype": "ui/image.reel",
             "properties": {
@@ -45,7 +61,7 @@
                 "element": {"#": "simpleScoreAsText"}
             },
             "bindings": {
-                "value": {"<-": "@owner.scoreAsText * 100"}
+                "value": {"<-": "@owner.experimentalDesign.score"}
             }
         },
         "certificate": {
@@ -116,7 +132,7 @@
                 "element": {"#": "tableReport"}
             },
             "bindings": {
-                "json": {"<-": "@owner.results"}
+                "calculatedResults": {"<-": "@owner.experimentalDesign.calculatedResults"}
             }
         },
 
@@ -162,6 +178,32 @@
             "bindings": {
                 "value": {"<-": "@owner.application.experiment.participant.firstname"}
             }
+        },
+
+        "experimentConclusion": {
+            "prototype": "montage/ui/text.reel",
+            "properties": {
+                "element": {"#": "experimentConclusion"}
+            },
+            "bindings": {
+                "value": {"<-": "@owner.experimentalDesign.experimentConclusion"},
+                "classList.has('Report-correct')": {
+                    "<-": "@owner.experimentalDesign.calculatedResults.score"
+                },
+                "classList.has('Report-incorrect')": {
+                    "<-": "@owner.experimentalDesign.calculatedResults.score==@owner.experimentalDesign.passingScore"
+                }
+            }
+        },
+
+        "experimentRemarks": {
+            "prototype": "digit/ui/text-area.reel",
+            "properties": {
+                "element": {"#": "experimentRemarks"}
+            },
+            "bindings": {
+                "value": {"<->": "@owner.experimentalDesign.postExperimentExperimenterRemarks"}
+            }
         }
 
     }
@@ -170,30 +212,44 @@
 <body>
     <div data-montage-id="experimentReport" class="ExperimentReport white">
         <div class="well">
+            <button class="ExperimentReport-save-button" data-montage-id="print"><i class="fa fa-white fa-print"></i></button>
+            <button class="ExperimentReport-save-button" data-montage-id="save"><i class="fa fa-white fa-save"></i><i class="fa fa-white fa-file-pdf-o"></i></button>
             <h2>
                 <img data-montage-id="icon" src="/assets/img/blank.png"/>
-                <span data-montage-id="title" class="experiment_title"></span>
+                <span hidden data-montage-id="title" class="experiment_title"></span>
                 <small></small>
             </h2>
             <div data-montage-id="certificate"></div>
             <div data-montage-id="showAdministratorReport" class="scrollable white">
-                <strong class="white">
-                    Result:
-                    <small>
-                        <span data-montage-id="simpleScoreAsText"></span>%
-                    </small>
-                </strong>
-                <span data-montage-id="scoreComparedToNorms"></span>
-                <button class="ExperimentReport-save-button" data-montage-id="save"><i class="fa fa-white fa-ok"></i>&nbsp;Sauvegarde</button>
+
+                <hr class="ExperimentReport-seperator" />
+
                 <p class="white">
-                    <div data-montage-id="participantDetails"></div>
                     <label hidden> Description: </label>
-                    <span hidden data-montage-id="description" class="experiment_description" contenteditable="true">
+                    <span data-montage-id="description" class="experiment_description" contenteditable="true">
                         SAILS is designed to measure perception of speech errors produced by
                         other children. Performance on the SAILs has been shown to be an
                         indicator of potential reading problems.
                     </span> 
                 </p>
+                
+                <hr class="ExperimentReport-seperator" />
+                <div data-montage-id="tableReport" > </div>
+                <p>
+                    <span data-montage-id="experimentConclusion" class="white"></span>
+                    <textarea data-montage-id="experimentRemarks" class="fullwidth" placeholder="Note"></textarea>
+                </p>
+                <hr class="ExperimentReport-seperator" />
+
+                <div data-montage-id="participantDetails"></div>
+
+
+                <!-- alternative result views -->
+                <div hidden data-montage-id="resultjson" class="ExperimentReport-json"></div>
+                <strong hidden class="white"> Result: <small> <span data-montage-id="simpleScoreAsText"></span>% </small>
+                </strong>
+                <span hidden data-montage-id="scoreComparedToNorms"></span>
+                <strong hidden class="white"> Details: </strong>
                 <p hidden class="white">
                     Discussion: 
                     <span data-montage-id="discussion" class="child_specific_results experiment_results_discussion" contenteditable="true">
@@ -201,21 +257,13 @@
                         did very well with the /r/ sound.
                     </span> 
                 </p>
-                
-                <hr/>
-                <strong class="white">
-                    Details:
-                </strong>
-                <ul data-montage-id="results" class="white">
+                <ul hidden data-montage-id="results" class="white">
                     <li data-montage-id="result" class=""></li>
                 </ul>
-                <div data-montage-id="tableReport" >
-                </div>
 
-                <div hidden data-montage-id="resultjson" class="ExperimentReport-json">
-                </div>
+
             </div> 
-            
+
         </div>
     </div>
 </body>

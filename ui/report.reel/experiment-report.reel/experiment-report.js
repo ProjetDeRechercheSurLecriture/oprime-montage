@@ -1,3 +1,5 @@
+/* globals print */
+
 /**
  * @module ui/experiment-report.reel
  * @requires montage/ui/component
@@ -29,7 +31,7 @@ exports.ExperimentReport = Component.specialize( /** @lends ExperimentReport# */
         value: function(firsttime) {
             if (firsttime) {
                 if (!this.experimentalDesign && this.experimentId) {
-                    var self  = this;
+                    var self = this;
 
                     this.corpus.get(this.experimentId).then(function(doc) {
                         if (doc) {
@@ -58,7 +60,10 @@ exports.ExperimentReport = Component.specialize( /** @lends ExperimentReport# */
             var self = this;
             ResultOnlyView.emit = function(key, value) {
                 self.scoreAsText = value.totalScore;
-                self.results = value;
+                self.experimentalDesign.calculatedResults = value;
+                if (value.score !== 0) {
+                    self.experimentalDesign.experimentConclusion = value.experimentConclusion;
+                }
             };
             ResultOnlyView.map(this.experimentalDesign.toJSON());
 
@@ -94,15 +99,22 @@ exports.ExperimentReport = Component.specialize( /** @lends ExperimentReport# */
             // }
             // this.experimentalDesign.scoreTotal = totalScore;
             // this.scoreAsText = totalScore + "/" + totalStimuli;
-            this.stimuliResponsesController = new RangeController().initWithContent(this.results);
-            this.resultjson = JSON.stringify(this.results, null, 2);
+            this.stimuliResponsesController = new RangeController().initWithContent(this.experimentalDesign.calculatedResults);
+            this.resultjson = JSON.stringify(this.experimentalDesign.calculatedResults, null, 2);
             return this.scoreAsText;
         }
     },
 
     handleSaveAction: {
-        value: function(){
+        value: function() {
             this.templateObjects.participantDetails.save();
+        }
+    },
+
+    handlePrintAction: {
+        value: function() {
+            this.templateObjects.participantDetails.save();
+            print();
         }
     }
 });

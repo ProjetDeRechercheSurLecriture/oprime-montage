@@ -332,6 +332,7 @@ exports.Experiment = ContextualizableComponent.specialize( /** @lends Experiment
                 this.tutorialMode = false;
                 this.currentlyPlaying = false;
                 this.resultsReportMode = false;
+                this.experimentalDesign.experimentConclusion = this.experimentalDesign.experimentConclusion || this.contextualizer.localize("locale_incomplete");
 
                 /* This makes essentially a slideshow of images, useful for debugging and reviewing */
                 this.autoPlaySlideshowOfStimuli = false;
@@ -484,6 +485,7 @@ exports.Experiment = ContextualizableComponent.specialize( /** @lends Experiment
 
             this.experimentalDesign.jsonType = "experiment";
             this.experimentalDesign.experimentType = this.experimentType;
+            this.experimentalDesign.experimentConclusion = this.experimentalDesign.experimentConclusion || this.contextualizer.localize("locale_incomplete");
             var self = this;
             if (this.application.videoRecordingVerified) {
                 self.currentlyPlaying = true;

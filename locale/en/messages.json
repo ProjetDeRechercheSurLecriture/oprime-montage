@@ -20,6 +20,9 @@
 	"locale_completed": {
 		"message": "Completed"
 	},
+	"locale_incomplete": {
+		"message": "Incomplete"
+	},
 	"locale_sound_check_warning": {
 		"message": "This game needs you to use your microphone and speakers."
 	},
