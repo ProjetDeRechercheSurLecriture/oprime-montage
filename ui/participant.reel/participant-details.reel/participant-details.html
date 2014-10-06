@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="participant-details.css">
+    <script type="text/montage-serialization">
+    {
+        "owner": {
+            "properties": {
+                "element": {"#": "owner"}
+            }
+        },
+
+        "firstname": {
+            "prototype": "digit/ui/text-field.reel",
+            "properties": {
+                "element": {"#": "firstname"}
+            },
+            "bindings": {
+                "value": {"<->": "@owner.participant.firstname"},
+                "title": {"<-": "@owner.participant.fields.firstname.help"}
+            }
+        },
+
+        "lastname": {
+            "prototype": "digit/ui/text-field.reel",
+            "properties": {
+                "element": {"#": "lastname"}
+            },
+            "bindings": {
+                "value": {"<->": "@owner.participant.lastname"},
+                "title": {"<-": "@owner.participant.fields.lastname.help"}
+            }
+        },
+
+        "dateOfBirth": {
+            "prototype": "matte/ui/input-date.reel",
+            "properties": {
+                "element": {"#": "dateOfBirth"}
+            },
+            "bindings": {
+                "value": {"<->": "@owner.participant.dateOfBirth"},
+                "title": {"<-": "@owner.participant.fields.dateOfBirth.help"}
+            }
+        },
+
+        "gender": {
+            "prototype": "digit/ui/text-field.reel",
+            "properties": {
+                "element": {"#": "gender"}
+            },
+            "bindings": {
+                "value": {"<->": "@owner.participant.fields.gender.value"},
+                "title": {"<-": "@owner.participant.fields.gender.help"}
+            }
+        },
+
+        "genders": {
+            "prototype": "digit/ui/select.reel",
+            "properties": {
+                "element": {"#": "genders"}
+            }
+        },
+
+        "languageOne": {
+            "prototype": "digit/ui/text-field.reel",
+            "properties": {
+                "element": {"#": "languageOne"}
+            },
+            "bindings": {
+                "value": {"<-": "@owner.application.participantLanguageOne.nativeName"}
+            }
+        },
+
+        "languageTwo": {
+            "prototype": "digit/ui/text-field.reel",
+            "properties": {
+                "element": {"#": "languageTwo"}
+            },
+            "bindings": {
+                "value": {"<-": "@owner.application.participantLanguageTwo.nativeName"}
+            }
+        },
+
+        "languageThree": {
+            "prototype": "digit/ui/text-field.reel",
+            "properties": {
+                "element": {"#": "languageThree"}
+            },
+            "bindings": {
+                "value": {"<-": "@owner.application.participantLanguageThree.nativeName"}
+            }
+        },
+        
+        "languagesOne": {
+            "prototype": "ui/dialects.reel",
+            "properties": {
+                "element": {"#": "languagesOne"},
+                "globalKey": "participantLanguageOne",
+                "labelPropertyName": "name",
+                "selectedIso": "Non applicable"       
+            },
+            "bindings": {
+                "selectedIso": {"<-": "@owner.application.participantLanguageOne.iso"}
+            },
+            "listeners": [{
+                "type": "action",
+                "useCapture": false,
+                "listener": {"@": "owner"}
+            }]
+        },
+
+        "languagesTwo": {
+            "prototype": "ui/dialects.reel",
+            "properties": {
+                "element": {"#": "languagesTwo"},
+                "globalKey": "participantLanguageTwo",
+                "labelPropertyName": "name",
+                "selectedIso": "Non applicable"
+            },
+            "bindings": {
+                "selectedIso": {"<-": "@owner.application.participantLanguageTwo.iso"}
+            },
+            "listeners": [{
+                "type": "action",
+                "useCapture": false,
+                "listener": {"@": "owner"}
+            }]
+        },
+
+        "languagesThree": {
+            "prototype": "ui/dialects.reel",
+            "properties": {
+                "element": {"#": "languagesThree"},
+                "globalKey": "participantLanguageThree",
+                "labelPropertyName": "name",
+                "selectedIso": "Non applicable"
+            },
+            "bindings": {
+                "selectedIso": {"<-": "@owner.application.participantLanguageThree.iso"}
+            },
+            "listeners": [{
+                "type": "action",
+                "useCapture": false,
+                "listener": {"@": "owner"}
+            }]
+        },
+
+        "coursenumber": {
+            "prototype": "digit/ui/text-field.reel",
+            "properties": {
+                "element": {"#": "coursenumber"}
+            },
+            "bindings": {
+                "value": {"<->": "@owner.participant.fields.coursenumber.value"},
+                "title": {"<-": "@owner.participant.fields.coursenumber.help"}
+            }
+        },
+
+        "school": {
+            "prototype": "digit/ui/text-field.reel",
+            "properties": {
+                "element": {"#": "school"}
+            },
+            "bindings": {
+                "value": {"<->": "@owner.participant.fields.school.value"},
+                "title": {"<-": "@owner.participant.fields.school.help"}
+            }
+        },
+
+        "schoolBoard": {
+            "prototype": "digit/ui/text-field.reel",
+            "properties": {
+                "element": {"#": "schoolBoard"}
+            },
+            "bindings": {
+                "value": {"<->": "@owner.participant.fields.schoolboard.value"},
+                "title": {"<-": "@owner.participant.fields.schoolboard.help"}
+            }
+        },
+
+        "notes": {
+            "prototype": "digit/ui/text-area.reel",
+            "properties": {
+                "element": {"#": "notes"}
+            },
+            "bindings": {
+                "value": {"<->": "@owner.participant.fields.notes.value"},
+                "title": {"<-": "@owner.participant.fields.notes.help"}
+            }
+        },
+
+        "experimenter": {
+            "prototype": "digit/ui/text-field.reel",
+            "properties": {
+                "element": {"#": "experimenter"}
+            },
+            "bindings": {
+                "value": {"<->": "@owner.application.experiment.experimenter.name"}
+            }
+        },
+
+        "experimentDate": {
+            "prototype": "digit/ui/text.reel",
+            "properties": {
+                "element": {"#": "experimentDate"}
+            },
+            "bindings": {
+                "value": {"<-": "@owner.application.experiment.startTime"}
+            }   
+        }
+    }
+    </script>
+</head>
+<body>
+    <dl data-montage-id="owner" class="ParticipantDetails scrollable">
+        <strong hidden>Veuillez inscrire l’information sur l’enfant.</strong>
+        <dt>Nom de l’enfant:</dt>
+        <dd> 
+            <input class="halfwidth" data-montage-id="firstname"/> <input class="halfwidth" data-montage-id="lastname"/>
+        </dd>
+        <dt>Date de naissance de l’enfant:</dt>
+        <dd> 
+            <input class="digit-TextField  fullwidth" type="date" data-montage-id="dateOfBirth"/>
+        </dd>
+
+        <dt></dt><dd><hr/><dd>
+        
+        <dt>Classe:</dt>
+        <dd> 
+            <input class="fullwidth" placeholder="Optional" data-montage-id="coursenumber"/>
+        </dd>
+        <dt>École:</dt>
+        <dd> 
+            <input class="fullwidth" placeholder="Optional" data-montage-id="school"/>
+        </dd>
+        <dt>Commission scolaire: </dt>
+        <dd>
+            <input class="fullwidth" placeholder="Optional" data-montage-id="schoolBoard"/>
+        </dd>
+
+        <dt></dt><dd><hr/><dd>
+        
+        <dt>Sexe biologique de l’enfant:</dt>
+        <dd> 
+            <select hidden placeholder="Optional" data-montage-id="genders">
+                <option>Male</option>
+                <option>Female</option>
+                <option>Autre</option>
+             </select>
+            <select class="matte-Select digit-Select montage--active" placeholder="Optional">
+                 <option></option>
+                 <option>Male</option>
+                 <option>Female</option>
+                 <option>Autre</option>
+              </select>
+            <input class="halfwidth" placeholder="Optional" data-montage-id="gender"/>
+        </dd>
+        <dt>Langue maternelle de l’enfant:</dt>
+        <dd>
+            <span placeholder="Optional" data-montage-id="languagesOne"> </span>
+            <input class="halfwidth" placeholder="Optional" data-montage-id="languageOne"/>
+        </dd>
+        <dt>Langue seconde:</dt>
+        <dd>
+            <span placeholder="Optional" data-montage-id="languagesTwo"> </span>
+            <input class="halfwidth" placeholder="Optional" data-montage-id="languageTwo"/>
+        </dd>
+        <dt>Troisième langue:</dt>
+        <dd>
+            <span placeholder="Optional" data-montage-id="languagesThree"> </span>
+            <input class="halfwidth" placeholder="Optional" data-montage-id="languageThree"/>
+        </dd>
+        <dt>Notes:</dt>
+        <dd> 
+            <textarea class="fullwidth" placeholder="Optional" data-montage-id="notes"></textarea>
+        </dd>
+
+        <dt></dt><dd><hr/><dd>
+        
+        <dt>Évaluateur/Évaluatrice:</dt>
+        <dd> <span class="fullwidth" placeholder="Optional" data-montage-id="experimenter"></span></dd>
+        <dt>Date d’évaluation: </dt>
+        <dd><span class="white" data-montage-id="experimentDate"></span> </dd>
+
+    </dl>
+</body>
+</html>

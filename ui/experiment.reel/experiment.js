@@ -1,3 +1,5 @@
+/* globals setTimeout */
+
 /**
  * @module ui/experiment.reel
  * @requires core/contextualizable-component
@@ -43,14 +45,11 @@ exports.Experiment = ContextualizableComponent.specialize( /** @lends Experiment
             this.super();
             this.application.experiment = this;
 
-            if (!this.application.participants) {
-                this.application.participants = [new Participant({
-                    anonymousCode: Date.now()
-                })];
-            }
-            var experimenter = this.experimenter;
-            console.log("priming existance of an experimenter from session tokens");
-
+            // if (!this.application.participants) {
+            //     this.application.participants = [new Participant({
+            //         anonymousCode: Date.now()
+            //     })];
+            // }
             this.application.audioPlayer = new AudioPlayer();
 
             // this.application.videoRecordingVerified = true;
@@ -72,6 +71,7 @@ exports.Experiment = ContextualizableComponent.specialize( /** @lends Experiment
     },
 
     experimenter: {
+        configurable: true,
         get: function() {
             if (this.application.experimenters && this.application.experimenters.length > 0) {
                 return this.application.experimenters[0];
@@ -104,18 +104,64 @@ exports.Experiment = ContextualizableComponent.specialize( /** @lends Experiment
         get: function() {
             if (this.application.participants && this.application.participants.length > 0) {
                 return this.application.participants[0];
-            } else {
-                if (this.application.corpus && this.application.corpus.resumeAuthenticationSession) {
-                    var self = this;
-                    this.application.corpus.resumeAuthenticationSession().then(function(sessionInfo) {
-                        console.log("guessing user from authentication session", sessionInfo);
-                        self.application.participants = [new UserMask({
-                            id: Date.now()
-                        })];
-                    });
-                }
             }
             return {};
+        },
+        set: function(value) {
+            if (value === this.participant) {
+                return;
+            }
+            // this.participants.unshift(value);
+            value.url = FieldDB.Database.prototype.BASE_DB_URL + "/" + FieldDB.FieldDBObject.application.corpus.dbname;
+            this.application.participants = [value];
+
+            this.application.participantLanguageOne = this.application.participantLanguageOne || {};
+            this.application.participantLanguageTwo = this.application.participantLanguageTwo || {};
+            this.application.participantLanguageThree = this.application.participantLanguageThree || {};
+
+            if (this.participant.languageOne && this.participant.languageOne.language) {
+                this.application.participantLanguageOne.iso = this.participant.languageOne.language.iso;
+                this.application.participantLanguageOne.name = this.participant.languageOne.language.name;
+                this.application.participantLanguageOne.nativeName = this.participant.languageOne.language.nativeName;
+            } else {
+                this.application.participantLanguageOne.iso = "Non applicable";
+                this.application.participantLanguageOne.name = "NA";
+                this.application.participantLanguageOne.nativeName = "Non applicable";
+            }
+
+            if (this.participant.languageTwo && this.participant.languageTwo.language) {
+                this.application.participantLanguageTwo.iso = this.participant.languageTwo.language.iso;
+                this.application.participantLanguageTwo.name = this.participant.languageTwo.language.name;
+                this.application.participantLanguageTwo.nativeName = this.participant.languageTwo.language.nativeName;
+            } else {
+                this.application.participantLanguageTwo.iso = "Non applicable";
+                this.application.participantLanguageTwo.name = "NA";
+                this.application.participantLanguageTwo.nativeName = "Non applicable";
+            }
+
+            if (this.participant.languageThree && this.participant.languageThree.language) {
+                this.application.participantLanguageThree.iso = this.participant.languageThree.language.iso;
+                this.application.participantLanguageThree.name = this.participant.languageThree.language.name;
+                this.application.participantLanguageThree.nativeName = this.participant.languageThree.language.nativeName;
+            } else {
+                this.application.participantLanguageThree.iso = "Non applicable";
+                this.application.participantLanguageThree.name = "NA";
+                this.application.participantLanguageThree.nativeName = "Non applicable";
+            }
+            // var changeDialectEvent = document.createEvent("CustomEvent");
+            // changeDialectEvent.initCustomEvent("changeparticipantLanguageOne", true, true, null);
+            // this.dispatchEvent(changeDialectEvent);
+
+            // var changeDialectEvent = document.createEvent("CustomEvent");
+            // changeDialectEvent.initCustomEvent("changeparticipantLanguageTwo", true, true, null);
+            // this.dispatchEvent(changeDialectEvent);
+
+            // var changeDialectEvent = document.createEvent("CustomEvent");
+            // changeDialectEvent.initCustomEvent("changeparticipantLanguageThree", true, true, null);
+            // this.dispatchEvent(changeDialectEvent);
+
+            // this.application.participantLanguageTwo = {};
+            // this.application.participantLanguageThree = {};
         }
     },
 
@@ -133,17 +179,109 @@ exports.Experiment = ContextualizableComponent.specialize( /** @lends Experiment
                 var resultDBname = this.dbname || window.location.hash.replace("#/", "").replace(/\//g, "-");
                 if (!resultDBname || resultDBname === this.stimuliDBname) {
                     resultDBname = "phophlo-demo_data";
+                    window.location.replace(window.location.href.replace(/index\.html.*$/, "index.html#/phophlo/demo_data"));
+                    setTimeout(window.location.reload, 1000);
+                    return;
                 }
                 this.application.corpus = new Corpus({});
                 if (this.dbUrl) {
                     this.application.corpus.url = this.dbUrl;
                 }
+                this.application.corpus.debugMode = true;
                 this.application.corpus.loadOrCreateCorpusByPouchName(resultDBname).then(function(result) {
                     console.log("Corpus is loaded, data can be decrypted.", result);
+                    if (!self.application.corpus.participantFields) {
+                        self.application.corpus.participantFields = Participant.prototype.defaults.fields;
+                    }
+                    if (!self.application.corpus.participantFields.school) {
+                        self.application.corpus.participantFields.add({
+                            "id": "school",
+                            "labelFieldLinguists": "School",
+                            "labelNonLinguists": "",
+                            "labelTranslators": "",
+                            "labelExperimenters": "École",
+                            "shouldBeEncrypted": true,
+                            "encrypted": true,
+                            "showToUserTypes": "all",
+                            "defaultfield": true,
+                            "help": "The school/institution where the student is affiliated (optional, encrypted if speaker is anonymous)",
+                            "helpLinguists": "The school/institution where the student is affiliated (optional, encrypted if speaker is anonymous)"
+                        });
+                    }
+                    if (!self.application.corpus.participantFields.schoolboard) {
+                        self.application.corpus.participantFields.add({
+                            "id": "schoolBoard",
+                            "labelFieldLinguists": "School Board",
+                            "labelNonLinguists": "",
+                            "labelTranslators": "",
+                            "labelExperimenters": "Commission scolaire",
+                            "shouldBeEncrypted": true,
+                            "encrypted": true,
+                            "showToUserTypes": "all",
+                            "defaultfield": true,
+                            "help": "The school board/commission scolaire where the student goes to school (optional, encrypted if speaker is anonymous.)",
+                            "helpLinguists": "The school board/commission scolaire where the student goes to school. Can be used to group student results/dialects. (optional, encrypted if speaker is anonymous.)"
+                        });
+                    }
+                    if (!self.application.corpus.participantFields.notes) {
+                        self.application.corpus.participantFields.add({
+                            "id": "notes",
+                            "labelFieldLinguists": "Notes",
+                            "labelNonLinguists": "",
+                            "labelTranslators": "",
+                            "labelExperimenters": "Notes",
+                            "shouldBeEncrypted": true,
+                            "encrypted": true,
+                            "showToUserTypes": "all",
+                            "defaultfield": true,
+                            "help": "Optional notes for the participant's file, encrypted if speaker is anonymous.",
+                            "helpLinguists": "Optional notes for the participant's file, encrypted if speaker is anonymous."
+                        });
+                    }
+                    if (!self.application.corpus.participantFields.enteredbyuser) {
+                        self.application.corpus.participantFields.add({
+                            "id": "enteredByUser",
+                            "labelFieldLinguists": "Imported/Entered By",
+                            "labelNonLinguists": "Entered By",
+                            "labelTranslators": "Imported/Entered By",
+                            "labelExperimenters": "Rempli par",
+                            "type": "users",
+                            "shouldBeEncrypted": "",
+                            "showToUserTypes": "all",
+                            "readonly": true,
+                            "defaultfield": true,
+                            "json": {
+                                "user": {},
+                                "hardware": {},
+                                "software": {}
+                            },
+                            "help": "The user who originally entered the participant",
+                            "helpLinguists": "The user who originally entered the participant"
+                        });
+                    }
+                    if (!self.application.corpus.participantFields.modifiedbyuser) {
+                        self.application.corpus.participantFields.add({
+                            "id": "modifiedByUser",
+                            "labelFieldLinguists": "Modified By",
+                            "labelNonLinguists": "Modified By",
+                            "labelTranslators": "Modified By",
+                            "labelExperimenters": "Modifié par",
+                            "type": "users",
+                            "shouldBeEncrypted": "",
+                            "showToUserTypes": "all",
+                            "readonly": true,
+                            "defaultfield": true,
+                            "json": {
+                                "users": []
+                            },
+                            "help": "An array of users who modified the participant",
+                            "helpLinguists": "An array of users who modified the participant, this can optionally introduce a 'CheckedByUsername' into the participant's validation status if your team chooses."
+                        });
+                    }
                 }, function(result) {
                     console.log("Corpus cannot be loaded, data cannot be decrypted, removing this db from the url.", result);
-                    window.location.replace(window.location.href.replace(/#.*$/, ""));
-                    window.location.reload();
+                    window.location.replace(window.location.href.replace(/#.*$/, "#/phophlo/demo_data"));
+                    setTimeout(window.location.reload, 1000);
                     return;
                 });
             }
@@ -179,7 +317,10 @@ exports.Experiment = ContextualizableComponent.specialize( /** @lends Experiment
                     console.warn("Experimental design is missing the locale of the data. this means that the user interface will not match the data.");
                 }
                 this.stimuliCorpus.getCorpusSpecificLocalizations();
-                
+
+                var experimenter = this.experimenter;
+                console.log("priming existance of an experimenter from session tokens");
+
                 // this.iconSrc = "blank.png";
                 this.iconSrc = this.experimentalDesign.iconSrc;
                 this.needsDraw = true;
@@ -191,6 +332,7 @@ exports.Experiment = ContextualizableComponent.specialize( /** @lends Experiment
                 this.tutorialMode = false;
                 this.currentlyPlaying = false;
                 this.resultsReportMode = false;
+                this.experimentalDesign.experimentConclusion = this.experimentalDesign.experimentConclusion || this.contextualizer.localize("locale_incomplete");
 
                 /* This makes essentially a slideshow of images, useful for debugging and reviewing */
                 this.autoPlaySlideshowOfStimuli = false;
@@ -212,7 +354,7 @@ exports.Experiment = ContextualizableComponent.specialize( /** @lends Experiment
                     }).then(function(loginresult) {
                         console.warn("logged in as anonymoussailsuser", loginresult);
                         window.location.replace(window.location.href.replace(/#.*$/, "#/phophlo/demo_data"));
-                        window.location.reload();
+                        setTimeout(window.location.reload, 1000);
                         return;
                     }, function(err) {
                         console.log("Could not login either.", err);
@@ -232,7 +374,7 @@ exports.Experiment = ContextualizableComponent.specialize( /** @lends Experiment
             var self = this;
             window.setTimeout(function() {
                 /* hack to make the tutorial mode seem like its working */
-                if (!self.currentlyPlaying && !self.experimentIsComplete) {
+                if (!self.currentlyPlaying && !self.experimentIsComplete && !self.soundCheckHasBeenOpened) {
                     self.confirm(self.application.contextualizer.localize("locale_prompt_show_tutorial")).then(function() {
                         console.log("Showing tutorial mode");
                         self.toggleTutorialArea();
@@ -321,7 +463,8 @@ exports.Experiment = ContextualizableComponent.specialize( /** @lends Experiment
 
     handleShowSoundCheckAction: {
         value: function() {
-
+            this.soundCheckHasBeenOpened = true;
+            var self = this;
             SoundCheck.show({
                 iconSrc: this.iconSrc,
                 message: this.contextualizer.localize("locale_plug_in_headphones"),
@@ -330,7 +473,6 @@ exports.Experiment = ContextualizableComponent.specialize( /** @lends Experiment
                 // cancelLabel: "Pause"
             }, function() {
                 console.log("User completed the sound check");
-
             }, function() {
                 console.log("Waiting for user to plug in head phones");
             });
@@ -343,10 +485,11 @@ exports.Experiment = ContextualizableComponent.specialize( /** @lends Experiment
 
             this.experimentalDesign.jsonType = "experiment";
             this.experimentalDesign.experimentType = this.experimentType;
+            this.experimentalDesign.experimentConclusion = this.experimentalDesign.experimentConclusion || this.contextualizer.localize("locale_incomplete");
             var self = this;
             if (this.application.videoRecordingVerified) {
                 self.currentlyPlaying = true;
-                self.experimentalDesign.timestamp = Date.now();
+                self.startTime = Date.now();
 
                 self._currentStimulus = self.templateObjects.currentStimulus;
                 self._currentStimulus.imageAssetsPath = self.experimentalDesign.imageAssetsPath;
@@ -364,7 +507,7 @@ exports.Experiment = ContextualizableComponent.specialize( /** @lends Experiment
                     // cancelLabel: "Pause"
                 }, function() {
                     self.currentlyPlaying = true;
-                    self.experimentalDesign.timestamp = Date.now();
+                    self.startTime = Date.now();
 
                     self._currentStimulus = self.templateObjects.currentStimulus;
                     self._currentStimulus.imageAssetsPath = self.experimentalDesign.imageAssetsPath;
@@ -421,6 +564,8 @@ exports.Experiment = ContextualizableComponent.specialize( /** @lends Experiment
             }
             if (this._currentStimulusIndex >= this._currentTestBlock.trials.length - 1) {
                 this.templateObjects.reinforcement.showLast();
+                this.reinforcementImageSrcWhileWaitForNextBlock = this.templateObjects.reinforcement.lastImageSrc + "";
+
                 this.loadTestBlock.apply(this, [this._currentTestBlockIndex + 1]);
                 return;
             }
@@ -510,21 +655,33 @@ exports.Experiment = ContextualizableComponent.specialize( /** @lends Experiment
 
             this._currentTestBlockIndex = blockIndexToLoad;
             this._currentTestBlock = this.experimentalDesign.subexperiments._collection[blockIndexToLoad];
+
+            // Show previous last image until the user confirms to go to this test block.
+            if (this.reinforcementImageSrcWhileWaitForNextBlock) {
+                this.lastImageForThisTestBlock = this._currentTestBlock.reinforcementAnimation.lastImageSrc + "";
+                this._currentTestBlock.reinforcementAnimation.lastImageSrc = this.reinforcementImageSrcWhileWaitForNextBlock;
+            }
+
             console.log("Loaded block " + blockIndexToLoad);
             if (this._currentTestBlock.trials && this._currentTestBlock.trials.length > 0 && typeof this._currentTestBlock.trials[0] !== "object") {
                 var self = this;
-                this.application.stimuliCorpus.fetchCollection(this._currentTestBlock.trials).then(function(results) {
-                    console.log(" downloaded trials ", results);
-                    results = results.map(function(stimulus) {
-                        stimulus = new FieldDB.Stimulus(stimulus);
-                        var stimulusResponse = new FieldDB.Response(stimulus.clone());
-                        stimulusResponse.id = FieldDB.FieldDBObject.uuidGenerator();
-                        return stimulusResponse;
-                    });
 
-                    self._currentTestBlock.populate(results);
-                    self.experimentBlockLoaded(finalIndex);
-                });
+                if (Object.prototype.toString.call(this._currentTestBlock.trials) === "[object Array]") {
+                    this.application.stimuliCorpus.fetchCollection(this._currentTestBlock.trials).then(function(results) {
+                        console.log(" downloaded trials ", results);
+                        results = results.map(function(stimulus) {
+                            stimulus = new FieldDB.Stimulus(stimulus);
+                            var stimulusResponse = new FieldDB.Response(stimulus.clone());
+                            stimulusResponse.id = FieldDB.FieldDBObject.uuidGenerator();
+                            return stimulusResponse;
+                        });
+
+                        self._currentTestBlock.populate(results);
+                        self.experimentBlockLoaded(finalIndex);
+                    });
+                } else {
+                    console.warn("trials for this block were already fetched.");
+                }
             }
 
         }
@@ -587,20 +744,34 @@ exports.Experiment = ContextualizableComponent.specialize( /** @lends Experiment
                         }
                     }
                 }
+
             }
             console.log("Using animation reinforcement", this._currentTestBlock.reinforcementAnimation);
-            this.templateObjects.reinforcement.showFirst();
 
             if (this._currentTestBlock.promptUserBeforeContinuing) {
-                this.confirm(this.contextualizer.localize(this._currentTestBlock.promptUserBeforeContinuing.text, this.experimentalDesign.stimuliDialect)).then(function() {
-                    self.nextStimulus();
-                }).fail(function(reason) {
-                    console.log("TODO add a button for resume?");
-                    self.currentlyPlaying = false;
-                    self.canBeResumed = true;
-                    self.application.audioPlayer.stop();
-                });
+
+                console.log("Waiting a bit before going to the next test block");
+                setTimeout(function() {
+                    var promptText = "    ";
+                    if (self.application.currentAudience.text !== "Child" || self._currentTestBlock.promptUserBeforeContinuing.text.indexOf("instructions") === -1) {
+                        promptText = self.contextualizer.localize(self._currentTestBlock.promptUserBeforeContinuing.text, self.experimentalDesign.stimuliDialect);
+                    }
+                    self.confirm(promptText).then(function() {
+                        self.templateObjects.reinforcement.showFirst();
+                        if (self.lastImageForThisTestBlock) {
+                            self._currentTestBlock.reinforcementAnimation.lastImageSrc = self.lastImageForThisTestBlock;
+                        }
+                        self.nextStimulus();
+                    }).fail(function(reason) {
+                        console.log("TODO add a button for resume? or is the start button working for resume...");
+                        self.currentlyPlaying = false;
+                        self.canBeResumed = true;
+                        self.application.audioPlayer.stop();
+                    });
+                }, 2000);
+
             } else {
+                this.templateObjects.reinforcement.showFirst();
                 this.nextStimulus();
             }
         }
@@ -612,14 +783,66 @@ exports.Experiment = ContextualizableComponent.specialize( /** @lends Experiment
         }
     },
 
+    saveParticipant: {
+        value: function(onlyIfNotSaved) {
+            if (onlyIfNotSaved && this.participant.rev) {
+                console.warn("Not saving this participant, they already have a revision", this.participant);
+                return;
+            }
+            if (!this.participant || !this.participant.save) {
+                console.warn("Not saving this participant, they are not a fielddb object", this.participant);
+                return;
+            }
+            if (this.participant.anonymousCode.indexOf(this.participant.lastname) > -1) {
+                this.participant.firstname = this.contextualizer.localize("locale_completed");
+            }
+            this.participant.url = FieldDB.Database.prototype.BASE_DB_URL + "/" + FieldDB.FieldDBObject.application.corpus.dbname;
+            this.participant.save().then(function(result) {
+                console.log("participant was saved", result);
+            }, function(error) {
+                console.warn("participant was not saved", error);
+            });
+        }
+    },
+
+    startTime: {
+        get: function() {
+            if (!this.experimentalDesign || !this.experimentalDesign.startTimestamp) {
+                return;
+            }
+            return new Date(this.experimentalDesign.startTimestamp);
+        },
+        set: function(value) {
+            this.experimentalDesign.startTimestamp = value;
+        }
+    },
+
+    endTime: {
+        get: function() {
+            if (!this.experimentalDesign || !this.experimentalDesign.endTimestamp) {
+                return;
+            }
+            return new Date(this.experimentalDesign.endTimestamp);
+        },
+        set: function(value) {
+            this.experimentalDesign.endTimestamp = value;
+            this.experimentalDesign.runDuration = value - this.experimentalDesign.startTimestamp;
+        }
+    },
+
     experimentCompleted: {
         value: function() {
             var self = this;
 
-            this.experimentalDesign.timestamp = Date.now();
+            this.endTime = Date.now();
+            this.experimentalDesign.experimenter = this.experimenter.username;
+            this.experimentalDesign.participant = this.participant.id;
             // delete this.experimentalDesign.rev;
-            this.application.corpus.set(this.experimentalDesign.experimentType + this.experimentalDesign.timestamp, this.experimentalDesign).then(function(saveresult) {
+            this.application.corpus.set(this.experimentalDesign.experimentType + this.experimentalDesign.endTimestamp, this.experimentalDesign.toJSON()).then(function(saveresult) {
                 console.log("saved results", saveresult);
+                console.warn("TODO test rev on experimentalDesign", self.experimentalDesign.rev);
+                // self.experimentalDesign._rev = saveresult._rev;
+                self.saveParticipant("onlynewparticipants");
             }, function(saveerror) {
                 console.warn("unable to save results, logging in as an anonymous user", saveerror);
                 self.application.corpus.login({
@@ -627,9 +850,22 @@ exports.Experiment = ContextualizableComponent.specialize( /** @lends Experiment
                     password: "none"
                 }).then(function(loginresults) {
                     console.log("Logged in", loginresults);
-                    self.application.corpus.set(self.experimentalDesign.experimentType + self.experimentalDesign.timestamp, self.experimentalDesign);
+                    self.application.corpus.set(self.experimentalDesign.experimentType + self.experimentalDesign.endTimestamp, self.experimentalDesign).then(function(result) {
+                        console.log("experiment saved ", result);
+                        // self.experimentalDesign._rev = result._rev;
+                        self.saveParticipant("onlynewparticipants");
+                    }, function(error) {
+                        console.warn("Trying to save the experiment again in 2 seconds", error);
+                        setTimout(function() {
+                            self.experimentCompleted();
+                        }, 2000);
+                    });
                 }, function(error2) {
-                    console.warn("gave up on saving experiment.", error2);
+                    // console.warn("gave up on logging in to save the experiment.", error2);
+                    console.warn("Trying to save the experiment again in 2 seconds", error2);
+                    setTimout(function() {
+                        self.experimentCompleted();
+                    }, 2000);
                 });
             });
 
@@ -642,6 +878,7 @@ exports.Experiment = ContextualizableComponent.specialize( /** @lends Experiment
             }, function(reason) {
                 console.log("TODO add a button for resume?");
             });
+
         }
     },
 

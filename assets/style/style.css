@@ -1,0 +1,26 @@
+.scrollable {
+	overflow: auto !important;
+	height: 30em !important;
+	width: 100%;
+}
+
+.fullwidth {
+	width: 98%;
+}
+
+.halfwidth {
+	width: 49%;
+}
+
+.white {
+	color: white !important;
+}
+
+
+@media print {
+	.scrollable {
+		overflow: visible !important;
+		height: 100% !important;
+		width: 100% !important;
+	}
+}

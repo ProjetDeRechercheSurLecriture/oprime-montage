@@ -38,13 +38,13 @@
             }
         },
         
-        "currentAudience": {
+        "currentDialect": {
             "prototype": "montage/ui/text.reel",
             "properties": {
-                "element": {"#": "currentAudience"}
+                "element": {"#": "currentDialect"}
             },
             "bindings": {
-                "value": {"<-": "@owner._currentAudience.iso"}
+                "value": {"<-": "@owner._currentDialect.iso"}
             }
         },
         
@@ -52,8 +52,10 @@
             "prototype": "digit/ui/select.reel",
             "properties": {
                 "element": {"#": "select"},
-                "contentController": {"@": "rangeController"},
-                "labelPropertyName": "nativeName"
+                "contentController": {"@": "rangeController"}
+            },
+            "bindings": {
+                "labelPropertyName": {"<-": "@owner.labelPropertyName"}
             }
         },
         
@@ -71,7 +73,7 @@
 </head>
 <body>
     <div data-montage-id="dialects" class="Dialects">
-        <span hidden data-montage-id="currentAudience">
+        <span hidden data-montage-id="currentDialect">
         </span>
         <select data-montage-id="select">
         </select>

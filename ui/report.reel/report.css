@@ -158,6 +158,15 @@ h4 {
 	clear: both;
 }
 
+.Report-correct {
+	color: #009900;
+}
+
+.Report-incorrect {
+	color: #990000;
+}
+
+
 @media print {
 	.exec_summary {
 		display: none !important;
@@ -170,9 +179,74 @@ h4 {
 	}
 	.well {
 		border: 0px !important;
+		width: 100% !important;
 		box-shadow: inset 0 0 0 0 rgba(0, 0, 0, 0.05) !important;
 	}
 	.pdfSpacer {
 		padding: 11em;
+	}
+	.printingIcon {
+		width: 2em;
+	}
+
+	input {
+		display: none !important;	
+	}
+	button {
+		display: none !important;
+	}
+	select {
+		display: none !important;
+	}
+	textarea {
+		display: none !important;
+	}
+	footer {
+		display: none !important;
+	}
+	header {
+		display: none !important;
+	}
+	.Stimulus-content-left{
+		display: none !important;
+	}
+	.Stimulus-content-right{
+		display: none !important;
+	}
+	.Experiment-start-pause-button-area {
+		display: none !important;
+	}
+
+	p {
+		width: 100% !important;
+	}
+	/*div {
+		width: 100% !important;
+	}*/
+
+	.SAILS .ExperimentReport {
+		position: static !important;
+		top: 0%;
+		left: 0%;
+		width: 80% !important;
+		margin: 0;
+		padding: 0;
+	}
+	.ExperimentReport{
+		width: 80%;
+		top: 0%;
+		left: 0%;
+		position: static !important;
+		margin: 0;
+		padding: 0;
+	}
+	.Experiment-results {
+		position: static !important;
+		top: 0%;
+		left: 0%
+		z-index 4000;
+		opacity: 1;
+		margin: 0;
+		padding: 0;
 	}
 }

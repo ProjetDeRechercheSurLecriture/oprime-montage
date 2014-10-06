@@ -20,6 +20,17 @@
                 "src": {"<-": "@owner.experimentalDesign.congratulationsImageSrc ?? '/assets/img/blank.png'"}
             }
         },
+        "participantDetails": {
+            "prototype": "ui/participant.reel/participant-details.reel",
+            "properties": {
+                "element": {"#": "participantDetails"},
+                "enabled": true
+            },
+            "bindings": {
+                "participant": {"<-": "@owner.application.experiment.participant"},
+                "experimenter": {"<-": "@owner.application.experiment.experimenter"}
+            }
+        },
         "save": {
             "prototype": "digit/ui/button.reel",
             "properties": {
@@ -60,9 +71,7 @@
                 <h4>Congratulations!!!</h4>
                 <div class="form-search">
                     <h3>Do you want to save your score?</h3><br>
-                    <input type="text" placeholder="Nickname"><br>
-                    <input type="text" placeholder="First name"><br>
-                    <input type="text" placeholder="Last name"><br><br>
+                    <div data-montage-id="participantDetails"></div>
                     <button data-montage-id="save"><i class="fa fa-white fa-ok"></i>&nbsp;Save my score</button>
                     <button data-montage-id="noThanks"><i class="fa fa-white fa-remove"></i>&nbsp;No thanks</button>
                 </div> 

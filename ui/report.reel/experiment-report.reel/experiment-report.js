@@ -1,3 +1,5 @@
+/* globals print */
+
 /**
  * @module ui/experiment-report.reel
  * @requires montage/ui/component
@@ -29,7 +31,7 @@ exports.ExperimentReport = Component.specialize( /** @lends ExperimentReport# */
         value: function(firsttime) {
             if (firsttime) {
                 if (!this.experimentalDesign && this.experimentId) {
-                    var self  = this;
+                    var self = this;
 
                     this.corpus.get(this.experimentId).then(function(doc) {
                         if (doc) {
@@ -57,10 +59,13 @@ exports.ExperimentReport = Component.specialize( /** @lends ExperimentReport# */
             this.results = [];
             var self = this;
             ResultOnlyView.emit = function(key, value) {
-                self.scoreAsText = Math.round(key * 10000) / 10000;
-                self.results = value;
+                self.scoreAsText = value.totalScore;
+                self.experimentalDesign.calculatedResults = value;
+                if (value.score !== 0) {
+                    self.experimentalDesign.experimentConclusion = value.experimentConclusion;
+                }
             };
-            ResultOnlyView.map(this.experimentalDesign);
+            ResultOnlyView.map(this.experimentalDesign.toJSON());
 
             // for (var subexperimentIndex = 0; subexperimentIndex < this.experimentalDesign.subexperiments._collection.length; subexperimentIndex++) {
             //  var subexperiment = this.experimentalDesign.subexperiments._collection[subexperimentIndex];
@@ -94,9 +99,25 @@ exports.ExperimentReport = Component.specialize( /** @lends ExperimentReport# */
             // }
             // this.experimentalDesign.scoreTotal = totalScore;
             // this.scoreAsText = totalScore + "/" + totalStimuli;
-            this.stimuliResponsesController = new RangeController().initWithContent(this.results);
-            this.resultjson = JSON.stringify(this.results, null, 2);
+            this.stimuliResponsesController = new RangeController().initWithContent(this.experimentalDesign.calculatedResults);
+            this.resultjson = JSON.stringify(this.experimentalDesign.calculatedResults, null, 2);
             return this.scoreAsText;
+        }
+    },
+
+    handleSaveAction: {
+        value: function() {
+            this.templateObjects.participantDetails.save();
+        }
+    },
+
+    handlePrintAction: {
+        value: function() {
+            this.templateObjects.participantDetails.save();
+            window.document.title = this.application.experiment.participant.name.replace(/ /g,"_");
+            setTimeout(function() {
+                print();
+            }, 1000);
         }
     }
 });

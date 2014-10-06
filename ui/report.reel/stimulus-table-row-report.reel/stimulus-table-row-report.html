@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stimulus-table-row-report.css">
+    <script type="text/montage-serialization">
+    {
+        "owner": {
+            "properties": {
+                "element": {"#": "owner"}
+            }
+        },
+
+        "target": {
+            "prototype": "montage/ui/text.reel",
+            "properties": {
+                "element": {"#": "target"}
+            },
+            "bindings": {
+                "value": {"<-": "@owner.stimulusResponse.target"}
+            }
+        },
+
+        "appropriateImage": {
+            "prototype": "montage/ui/text.reel",
+            "properties": {
+                "element": {"#": "appropriateImage"}
+            },
+            "bindings": {
+                "value": {"<-": "@owner.stimulusResponse.appropriateImage"}
+            }
+        },
+
+        "chosenImage": {
+            "prototype": "montage/ui/text.reel",
+            "properties": {
+                "element": {"#": "chosenImage"}
+            },
+            "bindings": {
+                "value": {"<-": "@owner.stimulusResponse.chosenImage"},
+                "classList.has('Report-correct')": {
+                    "<-": "@owner.stimulusResponse.score"
+                },
+                "classList.has('Report-incorrect')": {
+                    "<-": "@owner.stimulusResponse.score==0"
+                }
+            }
+        }
+    }
+    </script>
+</head>
+<body>
+    <div data-montage-id="owner" class="TableReport-bordered-table-row">
+      <div class="TableReport-bordered-table-cell">/<span data-montage-id="target">
+      </span>/</div>
+      <div class="TableReport-bordered-table-cell"><span data-montage-id="appropriateImage">
+      </span></div>
+      <div class="TableReport-bordered-table-cell"><span data-montage-id="chosenImage">
+      </span></div>
+  </div>
+</body>
+</html>
