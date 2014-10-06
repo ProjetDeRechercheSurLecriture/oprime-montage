@@ -15,3 +15,12 @@
 .white {
 	color: white !important;
 }
+
+
+@media print {
+	.scrollable {
+		overflow: visible !important;
+		height: 100% !important;
+		width: 100% !important;
+	}
+}

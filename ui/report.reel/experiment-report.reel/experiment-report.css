@@ -11,6 +11,9 @@
 .ExperimentReport .experiment_description {
 	color: white !important;
 	text-shadow: 0 0px 0 hsla(0,0%,100%,0) !important;
+	text-align: justify;
+    text-justify: inter-word;
+	width: 100%;
 }
 
 .ExperimentReport .experiment_title {

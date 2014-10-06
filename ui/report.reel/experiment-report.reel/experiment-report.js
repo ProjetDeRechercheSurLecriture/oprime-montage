@@ -114,7 +114,10 @@ exports.ExperimentReport = Component.specialize( /** @lends ExperimentReport# */
     handlePrintAction: {
         value: function() {
             this.templateObjects.participantDetails.save();
-            print();
+            window.document.title = this.application.experiment.participant.name.replace(/ /g,"_");
+            setTimeout(function() {
+                print();
+            }, 1000);
         }
     }
 });
