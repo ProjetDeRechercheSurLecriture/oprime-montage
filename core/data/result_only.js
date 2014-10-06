@@ -9,7 +9,7 @@ exports.map = function(doc) {
   }
 
   try {
-    if (doc.type === "SubExperimentDataList" && doc.results) {
+    if (doc.fieldDBtype === "SubExperimentDataList" && doc.results) {
 
       var totalTestScore = 0;
       var totalTestStimuli = 0;
