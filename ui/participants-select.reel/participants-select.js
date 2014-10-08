@@ -32,7 +32,7 @@ exports.ParticipantsSelect = Component.specialize( /** @lends ParticipantsSelect
 					if (rawParticipants && rawParticipants.unshift && self.addAnonymousParticipantAtTopOfList) {
 						console.log("Adding an anonymous participant for if the user doesnt choose any children");
 						var anonymousParticipant = {
-							debugMode: true,
+							// debugMode: true,
 							firstname: self.application.contextualizer.localize("locale_new"),
 							lastname: FieldDBObject.getHumanReadableTimestamp()
 						};
@@ -70,7 +70,14 @@ exports.ParticipantsSelect = Component.specialize( /** @lends ParticipantsSelect
 					console.warn("This is the demo database, not showing previous participants.");
 					prepareParticipants([]);
 				} else {
-					this.application.corpus.fetchCollection("participants").then(prepareParticipants);
+					if (this.application.corpus && this.application.corpus.fetchCollection) {
+						this.application.corpus.fetchCollection("participants").then(prepareParticipants);
+					} else {
+						setTimeout(function() {
+							window.location.reload()
+						}, 1000);
+						return;
+					}
 				}
 				var rangeController = this.templateObjects.rangeController;
 				//Observe the selection for changes
