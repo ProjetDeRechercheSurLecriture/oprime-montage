@@ -230,7 +230,6 @@ exports.AbstractStimulus = ContextualizableComponent.specialize( /** @lends Stim
 				this.setupFirstPlay();
 				this.addOwnPropertyChangeListener("src", this);
 			}
-			this.reactionTimeStart = Date.now();
 		}
 	},
 
@@ -336,11 +335,16 @@ exports.AbstractStimulus = ContextualizableComponent.specialize( /** @lends Stim
 				this.model.nonResponses = [];
 			}
 
+			this.itemNumberInExperiment = model.itemNumberInExperiment;
+			this.subexperimentLabel = model.subexperimentLabel;
+
 			this.responsesController = new RangeController().initWithContent(this.model.responses);
 			this.experimenterId = this.application.experiment.experimenter.id;
 			this.participantId = this.application.experiment.participant.id;
 			// Not playing audio by default, child must call it.
 			// this.playAudio(2000);
+			this.reactionTimeStart = Date.now();
+
 		}
 	}
 });
