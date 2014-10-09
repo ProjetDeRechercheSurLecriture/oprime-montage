@@ -32,6 +32,16 @@ exports.AudioPlayer = Component.specialize( /** @lends AudioPlayer# */ {
 		}
 	},
 
+	audioPlayStartTime: {
+		get: function() {
+			if (this.mediaController.audioPlayStarted) {
+				return this.mediaController.audioPlayStarted;
+			} else {
+				return 0;
+			}
+		}
+	},
+
 	isCordova: {
 		get: function() {
 			// return false;

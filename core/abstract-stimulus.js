@@ -49,7 +49,12 @@ exports.AbstractStimulus = ContextualizableComponent.specialize( /** @lends Stim
 			if (!responseEvent) {
 				throw "Cannot add response without the x y information found in the touch/click responseEvent";
 			}
-
+			this.audioPlayStartTime = 0;
+			if (this.application.audioPlayer.src && this.application.audioPlayer.src === this.model.audioFile) {
+				this.audioPlayStartTime = this.application.audioPlayer.audioPlayStartTime;
+			} else {
+				this.audioPlayStartTime = 0;
+			}
 			var reactionTimeEnd = Date.now();
 			var audioDuration = this.application.audioPlayer.getDuration(this.model.audioFile) || 0;
 			if (audioDuration) {
@@ -102,8 +107,10 @@ exports.AbstractStimulus = ContextualizableComponent.specialize( /** @lends Stim
 				}
 			}
 			var response = {
-				"reactionTimeAudioOffset": reactionTimeEnd - this.reactionTimeStart - audioDuration,
-				"reactionTimeAudioOnset": reactionTimeEnd - this.reactionTimeStart,
+				"reactionTimeAudioOffset": reactionTimeEnd - this.audioPlayStartTime - audioDuration,
+				"reactionTimeAudioOnset": reactionTimeEnd - this.audioPlayStartTime,
+				"reactionTimeVisualOffset": reactionTimeEnd - this.reactionTimeStart,
+				"reactionTimeVisualOnset": reactionTimeEnd - this.reactionTimeStart,
 				"x": responseEvent.x,
 				"y": responseEvent.y,
 				"pageX": responseEvent.pageX,
