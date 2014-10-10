@@ -10,7 +10,7 @@ var ContextualizableComponent = require("core/contextualizable-component").Conte
     RangeController = require("montage/core/range-controller").RangeController,
     PromiseController = require("montage/core/promise-controller").PromiseController,
     Promise = require("montage/core/promise").Promise,
-    AudioPlayer = require("core/audio-player").AudioPlayer,
+    AudioPlayer = require("fielddb/api/audio_video/AudioPlayer").AudioPlayer,
 
     Corpus = require("fielddb/api/corpus/Corpus").Corpus,
     SubExperiment = require("fielddb/api/data_list/SubExperimentDataList").SubExperimentDataList,
