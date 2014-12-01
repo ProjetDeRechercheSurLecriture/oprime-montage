@@ -383,17 +383,21 @@ exports.Experiment = ContextualizableComponent.specialize( /** @lends Experiment
         value: function() {
             this.super();
             var self = this;
-            window.setTimeout(function() {
-                /* hack to make the tutorial mode seem like its working */
-                if (!self.currentlyPlaying && !self.experimentIsComplete && !self.soundCheckHasBeenOpened) {
-                    self.confirm(self.application.contextualizer.localize("locale_prompt_show_tutorial")).then(function() {
-                        console.log("Showing tutorial mode");
-                        self.toggleTutorialArea();
-                    }, function(reason) {
-                        console.log("Not showing tutorial");
-                    });
-                }
-            }, 30000);
+            if (navigator.userAgent.indexOf("Android") > -1) {
+                window.setTimeout(function() {
+                    /* hack to make the tutorial mode seem like its working */
+                    if (!self.currentlyPlaying && !self.experimentIsComplete && !self.soundCheckHasBeenOpened) {
+                        self.confirm(self.application.contextualizer.localize("locale_prompt_show_tutorial")).then(function() {
+                            console.log("Showing tutorial mode");
+                            self.toggleTutorialArea();
+                        }, function(reason) {
+                            console.log("Not showing tutorial");
+                        });
+                    }
+                }, 30000);
+            } else {
+                console.log("not showing tutorial");
+            }
         }
     },
     /**
