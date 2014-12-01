@@ -6,6 +6,8 @@ var ContextualizableComponent = require("core/contextualizable-component").Conte
 	Contextualizer = require("core/experiment-contextualizer").Contextualizer,
 	FieldDB = require("fielddb/api/fielddb").FieldDB;
 
+console.log = function(){};
+
 var enLocales = require("locale/en/messages.json");
 var frLocales = require("locale/fr/messages.json");
 /**
@@ -21,8 +23,11 @@ exports.Main = ContextualizableComponent.specialize( /** @lends Main# */ {
 			FieldDB.FieldDBObject.warn = function() {
 				//dont warn
 			};
+			FieldDB.FieldDBObject.todo = function() {
+				//dont todo
+			};
 			FieldDB.FieldDBObject.bug = function(message) {
-				console.log(message);
+				console.warn(message);
 			};
 
 			FieldDB.Database.prototype.BASE_DB_URL = "https://corpusdev.example.org";
